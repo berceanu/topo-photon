@@ -1,0 +1,5 @@
+* is the intensity spectrum for a gaussian pump in the sym gauge identical to the one of a delta pump in the landau gauge?
+** are the 3 other spectra in the sym gauge identical to their landau counterparts
+** if so, Fig. 4 can be omitted and explained in words
+* are the real space state in the sym gauge identical to their counterparts in the landau gauge
+** if so, top row of Fig. 5 can be omitted
