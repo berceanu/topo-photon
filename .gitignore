@@ -17,6 +17,9 @@
 *.png
 *.svg
 
+## AUCTeX
+auto
+
 ## Bibliography auxiliary files (bibtex/biblatex/biber):
 *.bbl
 *.bcf
@@ -25,6 +28,7 @@
 *-blx.bib
 *.brf
 *.run.xml
+*Notes.bib
 
 ## Build tool auxiliary files:
 *.fdb_latexmk
