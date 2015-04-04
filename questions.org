@@ -3,3 +3,20 @@
 ** if so, Fig. 4 can be omitted and explained in words
 * are the real space state in the sym gauge identical to their counterparts in the landau gauge
 ** if so, top row of Fig. 5 can be omitted
+* sign of eta
+** try larger lattice: 60x60
+** check Fock-Darwin paper
+** check contribution from perturbation theory
+* experimental figure
+** pump on the upper edge
+** try with alpha = 0.15
+* exploratory
+** symmetric gauge
+*** try with large centered gaussian
+** landau gauge
+*** explain minimum in gaussian
+**** destructive interference
+**** momentum space effect
+**** phase of w.f.
+* more py resolution for analytics comparison
+* draw gaussian pump profile on top of real-space w.f.
