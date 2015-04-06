@@ -20,6 +20,9 @@
 ## AUCTeX
 auto
 
+## Julia
+.juliahistory
+
 ## Bibliography auxiliary files (bibtex/biblatex/biber):
 *.bbl
 *.bcf

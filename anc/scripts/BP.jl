@@ -1,8 +1,8 @@
 module BP
 
 using Polynomials
-#import PyPlot
-#using LaTeXStrings
+import PyPlot; const plt = PyPlot
+using LaTeXStrings
 
 #golden ratio
 ϕgold = 1.618
@@ -139,12 +139,12 @@ function mbz(data, q, N)
     #l = div(N-1, q)
     l = N
 
-    V = zeros(Float64,N,l)
+    V = zeros(Float64,size(data)[1],l)
     
     for i in 1:l
         idx = i
         while idx <= q*N+1
-            V[:,i] += data[:,idx]
+               V[:,i] += data[:,idx]
             idx += l
         end
     end
@@ -246,7 +246,7 @@ function myfft2(ψr::Matrix{Complex{Float64}}, k1::Float64, k2::Float64, xs1::Fl
     end
     s
 end
-function myfft2(ψr::Matrix{Complex{Float64}}, k1::FloatRange{Float64}, k2::FloatRange{Float64})
+function myfft2(ψr::Matrix{Complex{Float64}}, k1, k2)
     N1 = length(k2); N2 = length(k1)
     
 
@@ -258,13 +258,14 @@ function myfft2(ψr::Matrix{Complex{Float64}}, k1::FloatRange{Float64}, k2::Floa
 end
 
 
+
 ########################################
 #publication-quality plots in matplotlib
 ########################################
 function matplotspect(ν::Vector{Float64}, I::Vector{Float64}, spect::Vector{Float64}, ω::Float64; vert=true)
     mx = maximum(I)
     
-    fig, ax = PyPlot.plt.subplots(1, 1, figsize=(4ϕgold, 4))
+    fig, ax = plt.subplots(1, 1, figsize=(4ϕgold, 4))
 
     ax[:plot](ν, I, "k")
 
@@ -278,12 +279,12 @@ function matplotspect(ν::Vector{Float64}, I::Vector{Float64}, spect::Vector{Flo
     ax[:set_xlabel](L"$\omega_0 [J]$")
 
     fig[:savefig]("spectrum", bbox_inches="tight")
-    PyPlot.plt.close(fig);
+    plt.close(fig);
 end
 function matplotcomp(ky::Vector{Float64}, D::Matrix{Float64}, χ::Vector{Complex{Float64}},ζ::Int)
     l=size(D)[2]
     
-    fig, ax = PyPlot.plt.subplots(1, 1, figsize=(4ϕgold, 4))
+    fig, ax = plt.subplots(1, 1, figsize=(4ϕgold, 4))
 
     ax[:plot](ky, abs2(χ), "r")
     ax[:plot](ky, D[:,div(l-1,2)+1]/ζ, "k")
@@ -294,13 +295,13 @@ function matplotcomp(ky::Vector{Float64}, D::Matrix{Float64}, χ::Vector{Complex
     ax[:set_xlabel](L"$p_y$")
 
     fig[:savefig]("compare", bbox_inches="tight")
-    PyPlot.plt.close(fig);
+    plt.close(fig);
 end
 function matplot2D(m::Matrix{Float64}, xdata::Vector{Float64}, ydata::Vector{Float64}
     ;ratio=1., xlabel=L"$\kappa$", ylabel=L"$q$", zlabel=L"$\eta_{ZPE}$", figname="sample")
 
-    fig, ax = PyPlot.plt.subplots(figsize=(4, 4))
-    img = ax[:imshow](m, origin="upper", PyPlot.ColorMap("hot"), interpolation="none",
+    fig, ax = plt.subplots(figsize=(4, 4))
+    img = ax[:imshow](m, origin="upper", plt.ColorMap("hot"), interpolation="none",
     extent=[minimum(xdata), maximum(xdata), minimum(ydata), maximum(ydata)], aspect=ratio)
     
     ax[:set_xlim](minimum(xdata), maximum(xdata))
@@ -313,7 +314,7 @@ function matplot2D(m::Matrix{Float64}, xdata::Vector{Float64}, ydata::Vector{Flo
     cbar[:set_label](zlabel)
     
     fig[:savefig](figname, bbox_inches="tight")
-    PyPlot.plt.close(fig);
+    plt.close(fig);
 end
 function saveplots(ψreal,ψrealpmp,ψmom,ψmompmp,ψmbz,ψmbzpmp, x,y,kx,ky,kxmbz, q)
     matplot2D(ψreal,x,y; xlabel=L"$m$", ylabel=L"$n$", zlabel=L"$|a_{m,n}|^2$", figname="real")
@@ -325,3 +326,17 @@ function saveplots(ψreal,ψrealpmp,ψmom,ψmompmp,ψmbz,ψmbzpmp, x,y,kx,ky,kxm
 end
 
 end
+
+
+
+
+
+
+
+
+
+
+
+
+
+

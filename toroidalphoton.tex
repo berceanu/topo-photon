@@ -205,7 +205,7 @@ of the system at that frequency.  To exemplify, we compare 4 different
 pumping schemes.
 
 \begin{figure}[htb]
-  \centerline{\includegraphics[width=0.7\linewidth]{pumps/pumps.png}}
+  \centerline{\includegraphics[width=\linewidth]{selection}}
   \caption{Intensity spectra for different pumping conditions: (a)
     homogeneous pump, (b) pumping with a random phase, (c) pumping a
     single site and (d) a pump with a Gaussian profile. The dashed
@@ -262,6 +262,12 @@ visible.
 
 
 \paragraph{Gaussian pump}
+Last but not least, one can use a more extended, Gaussian pump, given
+by \(f(x,y) = A \exp- \frac{1}{2\sigma^2} \left[(x-x_0)^2 + (y-y_0)^2
+\right]\). We take one which is also centered at \((m_0,n_0) = (5,5)\),
+with \(\sigma =1\) . The main effect is that now the range of visible
+states becomes extended in both directions of smaller radii (smaller
+\(\beta\)) and larger radii (larger \(\beta\)).
 
 \subsection{Gauge dependence}
 \label{sec:gauge}
@@ -278,7 +284,7 @@ single-site-pump result.
 
 \begin{figure}[htb]
   \centerline{\includegraphics[width=0.7\linewidth]{symmetric/spectrum_gauss.png}}
-  \caption{\emph{Position}: Intensity spectrum for a pump with Gaussian profile centered at (5,5), now using the symmetric gauge.}
+  \caption{Intensity spectrum for a pump with Gaussian profile centered at (5,5), now using the symmetric gauge.}
   \label{fig:gauss_symm_spectrum}
 \end{figure}
 
@@ -296,35 +302,29 @@ single-site-pump result.
 We now focus on a realistic system, with $11 \times 11$ sites. The new
 value of the dissipation constant is now closer to experiments,
 $\gamma = 0.0505$. This makes the states harder to resolve, so we must
-also take a stronger trap and a smaller value of $\alpha$ to increase
-the level spacing. We chose $\kappa = 0.2$ and $\alpha = 1/13$. We
-work in the Landau gauge and pump the single site (3,3). 
+also take a stronger trap to increase the level spacing. We chose
+$\kappa = 0.2$ and $\alpha = 1/7$. We work in the Landau gauge and
+pump the single site situated on the upper edge of the system, at
+$(m_0,n_0)= (0,5)$.
 
 \begin{figure}[htb]
-  \centerline{\includegraphics[width=0.7\linewidth]{experiment/expspect.png}}
-  \caption{Intensity spectrum for $N=11$ and $\gamma = 0.0505$. We filter at the energy of the third eigenstate, $\beta=2$.}
+  \centerline{\includegraphics[width=0.9\linewidth]{exp_spect}}
+  \caption{\emph{Top}: Intensity spectrum for $N=11$ and $\gamma = 0.0505$. We filter at the energy of the eigenstate $\beta=7$ (long red dashed line).
+\emph{Bottom}: Slice along the $p_x^0 = 0$ line in the MBZ (cont line, black) compared to the analytical prediction (dotted line, red). The orange dashed line shows the same slice for the non-dissipative case.}
   \label{fig:exp_spectrum}
 \end{figure}
 
 
 \begin{figure}[htb]
-  \centerline{\includegraphics[width=0.7\linewidth]{experiment/experiment.png}}
-  \caption{\emph{Bottom row}: emission from the state at $\omega_0 =
--2.63$ in real (left column), momentum-space (middle column) and MBZ
-(right column). The $\delta$-like pump at (3,3) is visible as a white
-dot.
- \emph{Top row}: emission at the same energy, but with no pumping or
-decay.}
+  \centerline{\includegraphics[width=0.9\linewidth]{experimental}}
+  \caption{\emph{Bottom row}: Emission from the state at $\omega_0 =
+-1.63$ in real (left column), momentum-space (middle column) and MBZ
+(right column). The $\delta$-like pump at (0,5) is visible as a black
+square.  \emph{Top row}: Emission at the same energy, but with no
+pumping or decay.}
   \label{fig:exp_states}
 \end{figure}
 
-
-
-\begin{figure}[htb]
-  \centerline{\includegraphics[width=0.7\linewidth]{experiment/expcomp.png}}
-  \caption{\emph{Position}: Slice along the $p_x^0 = 0$ line in the MBZ (black) compared to the analytical prediction (red). }
-  \label{fig:exp_analytics}
-\end{figure}
 
 
 

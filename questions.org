@@ -20,3 +20,6 @@
 **** phase of w.f.
 * more py resolution for analytics comparison
 * draw gaussian pump profile on top of real-space w.f.
+* what gives the intensity of the peaks in the spectrum?
+** why for different pumps we get different orders of magnitude
+
