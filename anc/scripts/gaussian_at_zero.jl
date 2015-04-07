@@ -94,19 +94,32 @@ plt.close(f)
 xm = [-div(sN-1,2):div(sN-1,2)]
 yn = [-div(sN-1,2):div(sN-1,2)]
 
+
 f, axes = plt.subplots(length(pumps), figsize=(5, 10))
 for (i, ax) in enumerate(axes)
     data = abs2(pumps[i])
     im = ax[:imshow](reshape(data, sN,sN), origin="upper", ColorMap("gist_heat_r"), interpolation="none",
                     extent=[minimum(xm), maximum(xm), minimum(yn), maximum(yn)],
-                    vmin=0, vmax=1)
-    ax[:set_ylabel](L"$n$")
+                     vmin=0, vmax=1)
+    ax[:set_xticks]([-20,0,20])
+    ax[:set_yticks]([-20,0,20])
+
+    ax[:set_ylabel](L"$n$", labelpad=-10)
     if i == 4 #bottom
-        ax[:set_xlabel](L"$m$")
+        ax[:set_xlabel](L"$m$", labelpad=-6)
     else
         ax[:set_xticklabels]([])
     end
+
+    cbaxes = f[:add_axes]([0.3, 0., 0.4, 0.015])
+cbar = f[:colorbar](im, cax=cbaxes, orientation="horizontal")
+cbar[:set_ticks]([0, 1])
+cbar[:set_ticklabels]([L"$0$", L"$1$"])
+cbar[:set_label](L"$|f_{m,n}|^2$", rotation=0, labelpad=-15, y=0.5)
+cbar[:solids][:set_edgecolor]("face")
+
 end 
+
 
 f[:savefig]("../../figures/gaussian_pumps.pdf", transparent=true, pad_inches=0.0, bbox_inches="tight")
 plt.close(f)

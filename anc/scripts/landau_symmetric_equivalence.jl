@@ -1,3 +1,9 @@
+#both gauges
+#fixed β
+#δ pump @ (5,5)
+#L: R I ||^2
+#S: R I ||^2
+
 using PyPlot
 import BP
 
@@ -9,9 +15,6 @@ sκ=0.02
 sN=45
 n=5
 m=5
-tbσ=1.0
-
-
 
 #Landau gauge
 ftlan = ( 
@@ -37,47 +40,31 @@ M = full(BP.genspmat(ftex...,(n,m,a) -> 1/2*sκ*(n^2+m^2) + zero(Complex{Float64
 #exact spectrum
 spectrum =  eigvals(Hermitian(M), 1:29)
 
-#BP.δpmp, BP.gausspmp, BP.homopmp, BP.randpmp
-#(sN; A=1., seed=1234, σ=tbσ, n0=n, m0=m)
-Plan = BP.homopmp(sN)
-#Psym = BP.homopmp(sN)
-Psym = BP.gausspmp(sN; A=1., σ=tbσ, n0=n, m0=m)
 
+P = BP.δpmp(sN; A=1., n0=n, m0=m)
 
-βlan = [0,1,3,5]
-βsym = [0,1,9,20]
+β = 15
 #we filter state η
-ηlan = βlan + 1
-ηsym = βsym + 1
+η = β + 1
 #at energy
-sω0lan = [spectrum[state]::Float64 for state in ηlan]
-sω0sym = [spectrum[state]::Float64 for state in ηsym]
+sω0 = spectrum[η]
 
 
-Np = 200 #no MBZ here
-kx = linspace(-π, π, Np)
-ky = linspace(-π, π, Np)
 
-
-function wfmom(gauge, ω, P)
+function wfreal(gauge)
     #matrix of linear system with dissipation
-    S = BP.genspmat(gauge..., (n,m,a) -> ω + im*sγ - 1/2*sκ*(n^2+m^2), sN,nz,α)
-    X = reshape(S\P, sN,sN)
-    abs2(BP.myfft2(X, kx, ky))
+    S = BP.genspmat(gauge..., (n,m,a) -> sω0 + im*sγ - 1/2*sκ*(n^2+m^2), sN,nz,α)
+    reshape(S\P, sN,sN)
 end 
 
-#calculating all mom space wfs
-ψL = Array(Float64, (Np, Np, length(βlan)))
-ψS = Array(Float64, (Np, Np, length(βsym)))
-for (i,ω) in enumerate(sω0lan)
-    ψL[:,:,i] = wfmom(ftlan, ω, Plan)
-end
-for (i,ω) in enumerate(sω0sym)
-    ψS[:,:,i] = wfmom(ftsym, ω, Psym)
-end
 
+ψ = Array(Float64, (sN, sN, 2, 2))
 
-
+for (i,ft) in enumerate((ftlan,ftsym))
+    X = wfreal(ft)
+    ψ[:,:,1,i] = abs(X)
+    ψ[:,:,2,i] = angle(X)
+end 
 
 
 # matplotlib parameters
@@ -97,43 +84,55 @@ matplotlib["rcParams"][:update](["axes.labelsize" => 22,
                                  "text.usetex" => true,
                                  "figure.autolayout" => true])
 
-#plot w.f. in  mom space
-f, axes = plt.subplots(2,length(βlan), figsize=(10, 5))
+#full plot range, both in x and y
+xm = [-div(sN-1,2):div(sN-1,2)]
 
-for i = 1:length(βlan) #loop over columns
-    #top row
+#zoom in :)
+edge = 10
+st = findin(xm, -edge)[1]
+en = findin(xm, edge)[1]
+
+
+
+f, axes = plt.subplots(2,2, figsize=(5,4.7))
+for i = 1:2 #loop over columns
+    #top row: L
     ax = axes[1,i]
-    im = ax[:imshow](ψL[:,:,i], origin="upper", ColorMap("gist_heat_r"), interpolation="none",
-                     extent=[minimum(kx), maximum(kx), minimum(ky), maximum(ky)])
+    im = ax[:imshow](ψ[st:en,st:en,i,1], origin="upper", ColorMap("gist_heat_r"), interpolation="none",
+                     extent=[-edge,edge,-edge,edge])
     ax[:set_xticklabels]([])
-    ax[:set_xticks]([-π,0,π])
-    ax[:set_yticks]([-π,0,π])
+    ax[:set_xticks]([-edge,0,edge])
+    ax[:set_yticks]([-edge,0,edge])
     if i == 1 #leftmost panel
-        ax[:set_ylabel](L"$p_y$")
-        ax[:set_yticklabels]([L"$-\pi$",L"$0$",L"$\pi$"])
+        ax[:set_ylabel](L"$n$")
     else
         ax[:set_yticklabels]([])
     end
 
-    #bottom row
+    #bottom row: S
     ax = axes[2,i]
-    im = ax[:imshow](ψS[:,:,i], origin="upper", ColorMap("gist_heat_r"), interpolation="none",
-                     extent=[minimum(kx), maximum(kx), minimum(ky), maximum(ky)])
-    ax[:set_xlabel](L"$p_x$")
-    ax[:set_xticks]([-π,0,π])
-    ax[:set_yticks]([-π,0,π])
-    ax[:set_xticklabels]([L"$-\pi$",L"$0$",L"$\pi$"])
+    im = ax[:imshow](ψ[st:en,st:en,i,2], origin="upper", ColorMap("gist_heat_r"), interpolation="none",
+                     extent=[-edge,edge,-edge,edge])
+    ax[:set_xlabel](L"$m$")
+    ax[:set_xticks]([-edge,0,edge])
+    ax[:set_yticks]([-edge,0,edge])
     if i == 1 #leftmost panel
-        ax[:set_ylabel](L"$p_y$")
-        ax[:set_yticklabels]([L"$-\pi$",L"$0$",L"$\pi$"])
+        ax[:set_ylabel](L"$n$")
     else
         ax[:set_yticklabels]([])
     end
 end 
 
-
-f[:savefig]("../../figures/momentum.pdf", transparent=true, pad_inches=0.0, bbox_inches="tight")
+f[:tight_layout]()
+f[:savefig]("../../figures/equivalence.pdf", transparent=true, pad_inches=0.0, bbox_inches="tight")
 plt.close(f)
 
-#TODO: normalization issue
-#TODO: add colorbar(s)
+#in absolute value they are the same, but the phase is different
+using Base.Test
+@test_approx_eq_eps(ψ[:,:,1,1], ψ[:,:,1,2], 1e-10)
+
+#ranges: abs|0,10 phase|-π,π
+
+
+
+
