@@ -42,6 +42,20 @@ M = full(BP.genspmat(ftex...,(n,m,a) -> 1/2*sκ*(n^2+m^2) + zero(Complex{Float64
 #exact spectrum
 spectrum =  eigvals(Hermitian(M), 1:29)
 
+#for plotting filter markers
+βlan = [0,1,3,5]
+βsym = [0,1,9,20]
+βreal = [0,6,15,26]
+#we filter state η
+ηlan = βlan + 1
+ηsym = βsym + 1
+ηreal = βreal + 1
+#at energy
+sω0lan = [spectrum[state]::Float64 for state in ηlan]
+sω0sym = [spectrum[state]::Float64 for state in ηsym]
+sω0real= [spectrum[state]::Float64 for state in ηreal]
+
+
 pumps = (BP.δpmp, BP.gausspmp, BP.homopmp, BP.randpmp)
 
 function spect()
@@ -92,7 +106,15 @@ for (i, ax) in enumerate(axes)
     ax[:plot](freq, Ilan, "k")
     ax[:plot](freq, Isym, color="green", ls="dotted", linewidth=1.5)
 
-    
+    #Landau, δ
+    i == 1 && ax[:vlines](sω0real, 0, mx,  colors="k", linestyles="dashed")
+
+    #Symmetric g, gaussian
+    i == 2 && ax[:vlines](sω0sym, 0, mx,  colors="green", linestyles="dashed")
+
+    #Landau g, homogeneous
+    i == 3 && ax[:vlines](sω0lan, 0, mx,  colors="k", linestyles="dashed")
+
     ax[:set_xlim](freq[1], freq[end])
     ax[:set_ylim](0, mx/2)
 

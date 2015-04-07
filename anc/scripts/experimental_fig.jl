@@ -125,9 +125,10 @@ for (i,ax) in enumerate(axes)
 
         ax[:set_xlim](freq[1], freq[end])
         ax[:set_ylim](0, mx)
+        ax[:yaxis][:set_ticks]([0.,1.7,3.5])
 
         ax[:set_xlabel](L"$\omega_0 [J]$")
-        ax[:set_ylabel](L"$\sum_{m,n} |a_{m,n}|^2$ [a.u.]")
+        ax[:set_ylabel](L"$\sum_{m,n} |a_{m,n}|^2$ [a.u.]")     
     else
         ax[:plot](ky, abs2(χ), "blue", ls="dotted", linewidth=1.5)
         ax[:plot](ky, ψkmbz[:,div(l-1,2)+1]/sζ, "k")
@@ -138,12 +139,14 @@ for (i,ax) in enumerate(axes)
         ax[:set_xticklabels]([L"$-\pi$",L"$-\pi/2$",L"$0$",L"$\pi/2$",L"$\pi$"])        
         ax[:set_ylabel](L"$|\chi_{\beta}(p_x^0=0, p_y)|^2$")
         ax[:set_xlabel](L"$p_y$")
+        ax[:yaxis][:set_ticks]([0.,0.2,0.4])
     end
 end 
 
 f[:savefig]("../../figures/exp_spect.pdf", transparent=true, pad_inches=0.0, bbox_inches="tight")
 plt.close(f)
 
+#TODO: fix y ticks/tick labels
 
 #plot w.f. in real and mom space
 f, axes = plt.subplots(2,3, figsize=(10, 7.3))

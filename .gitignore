@@ -23,6 +23,9 @@ auto
 ## Julia
 .juliahistory
 
+## emacs
+*#
+
 ## Bibliography auxiliary files (bibtex/biblatex/biber):
 *.bbl
 *.bcf
