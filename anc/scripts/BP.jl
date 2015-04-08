@@ -1,11 +1,71 @@
 module BP
 
 using Polynomials
-import PyPlot; const plt = PyPlot
-using LaTeXStrings
 
-#golden ratio
-ϕgold = 1.618
+#import PyPlot; const plt = PyPlot
+#using LaTeXStrings
+
+##
+
+type WaveFunction
+    N::Int
+    int::Float64
+    ψ::Vector{Complex{Float64}}
+end
+
+function WaveFunction(ω::Float64,P::Vector{Complex{Float64}},gauge::Symbol,
+                      α::Float64,γ::Float64,κ::Float64)
+
+    gauges = [:landau => 
+              ((n,m,a) -> one(Complex{Float64}), (n,m,a) -> one(Complex{Float64}),
+               (n,m,a) -> exp(-im*2π*a*m), (n,m,a) -> exp(im*2π*a*m)),
+              :symmetric =>
+              ((n,m,a) -> exp(-im*π*a*n), (n,m,a) -> exp(im*π*a*n),
+               (n,m,a) -> exp(-im*π*a*m), (n,m,a) -> exp(im*π*a*m))]
+
+    N::Int = sqrt(length(P))
+    nz::Int = countnonzeros(N)
+
+    S = genspmat(gauges[gauge]...,(n,m,a) -> ω + im*γ - 1/2*κ*(n^2+m^2), N,nz,α)
+    X = S\P
+
+    return WaveFunction(N,sum(abs2(X)),X)
+end
+
+WaveFunction(ω::Float64,P::Vector{Complex{Float64}},gauge::Symbol) =
+    WaveFunction(ω,P,gauge,1/11,0.001,0.02)
+
+WaveFunction(ω::Float64,P::Vector{Complex{Float64}}) = WaveFunction(ω,P,:landau)
+
+type Spectrum
+    N::Int
+    gauge::Symbol
+    pump::Vector{Complex{Float64}}
+    νs::Vector{Float64}
+    intensity::Vector{Float64}
+    states::Vector{WaveFunction}
+end
+
+function Spectrum(ν::Vector{Float64},P::Vector{Complex{Float64}},gauge::Symbol)
+    statevec = Array(WaveFunction, length(ν))
+    intvec = Array(Float64, length(ν))
+    for (i,ω) in enumerate(ν)
+        statevec[i] = WaveFunction(ω, P, gauge)
+        intvec[i] = statevec[i].int
+    end 
+
+    N::Int = sqrt(length(P))
+        
+    return Spectrum(N, gauge, P, ν, intvec, statevec)
+end
+
+Spectrum(ν::Vector{Float64},P::Vector{Complex{Float64}}) = Spectrum(ν,P,:landau)
+
+function getstate(s::Spectrum, ω::Float64)
+    i::Int = indmin(abs(s.νs .- ω))
+    return s.states[i]
+end 
+##
 
 getm(i::Int64,N::Int64) = div(i-1,N)-div(N-1,2)
 getn(i::Int64,N::Int64) = div(N-1,2)-rem(i-1,N)
@@ -59,7 +119,7 @@ function genspmat(l::Function,r::Function,u::Function,d::Function,s::Function, N
     J = Array(Int64,nz)
     V = Array(Complex{Float64},nz)
 
-    function setnzelem(i::Int,n::Int,m::Int; pos="self")
+    function setnzelem(i::Int,n::Int,m::Int; pos::ASCIIString = "self")
         if pos=="left"
             k += 1
             J[k] = i-N; I[k] = i; V[k] = l(n,m,α)
@@ -262,68 +322,68 @@ end
 ########################################
 #publication-quality plots in matplotlib
 ########################################
-function matplotspect(ν::Vector{Float64}, I::Vector{Float64}, spect::Vector{Float64}, ω::Float64; vert=true)
-    mx = maximum(I)
+## function matplotspect(ν::Vector{Float64}, I::Vector{Float64}, spect::Vector{Float64}, ω::Float64; vert=true)
+##     mx = maximum(I)
     
-    fig, ax = plt.subplots(1, 1, figsize=(4ϕgold, 4))
+##     fig, ax = plt.subplots(1, 1, figsize=(4ϕgold, 4))
 
-    ax[:plot](ν, I, "k")
+##     ax[:plot](ν, I, "k")
 
-    vert && ax[:axvline](x = ω, color="red", ls="dashed")
-    ax[:vlines](spect, 0, mx/2, colors="orange", linestyles="dashed")
+##     vert && ax[:axvline](x = ω, color="red", ls="dashed")
+##     ax[:vlines](spect, 0, mx/2, colors="orange", linestyles="dashed")
     
-    ax[:set_xlim](ν[1], ν[end])
-    ax[:set_ylim](0, mx)
+##     ax[:set_xlim](ν[1], ν[end])
+##     ax[:set_ylim](0, mx)
 
-    ax[:set_ylabel](L"$\sum_{m,n} |a_{m,n}|^2$ [a.u.]")
-    ax[:set_xlabel](L"$\omega_0 [J]$")
+##     ax[:set_ylabel](L"$\sum_{m,n} |a_{m,n}|^2$ [a.u.]")
+##     ax[:set_xlabel](L"$\omega_0 [J]$")
 
-    fig[:savefig]("spectrum", bbox_inches="tight")
-    plt.close(fig);
-end
-function matplotcomp(ky::Vector{Float64}, D::Matrix{Float64}, χ::Vector{Complex{Float64}},ζ::Int)
-    l=size(D)[2]
+##     fig[:savefig]("spectrum", bbox_inches="tight")
+##     plt.close(fig);
+## end
+## function matplotcomp(ky::Vector{Float64}, D::Matrix{Float64}, χ::Vector{Complex{Float64}},ζ::Int)
+##     l=size(D)[2]
     
-    fig, ax = plt.subplots(1, 1, figsize=(4ϕgold, 4))
+##     fig, ax = plt.subplots(1, 1, figsize=(4ϕgold, 4))
 
-    ax[:plot](ky, abs2(χ), "r")
-    ax[:plot](ky, D[:,div(l-1,2)+1]/ζ, "k")
+##     ax[:plot](ky, abs2(χ), "r")
+##     ax[:plot](ky, D[:,div(l-1,2)+1]/ζ, "k")
 
-    ax[:set_xlim](-π, π)
+##     ax[:set_xlim](-π, π)
 
-    ax[:set_ylabel](L"$|\chi_{\beta}(p_x^0=0, p_y)|^2$")
-    ax[:set_xlabel](L"$p_y$")
+##     ax[:set_ylabel](L"$|\chi_{\beta}(p_x^0=0, p_y)|^2$")
+##     ax[:set_xlabel](L"$p_y$")
 
-    fig[:savefig]("compare", bbox_inches="tight")
-    plt.close(fig);
-end
-function matplot2D(m::Matrix{Float64}, xdata::Vector{Float64}, ydata::Vector{Float64}
-    ;ratio=1., xlabel=L"$\kappa$", ylabel=L"$q$", zlabel=L"$\eta_{ZPE}$", figname="sample")
+##     fig[:savefig]("compare", bbox_inches="tight")
+##     plt.close(fig);
+## end
+## function matplot2D(m::Matrix{Float64}, xdata::Vector{Float64}, ydata::Vector{Float64}
+##     ;ratio=1., xlabel=L"$\kappa$", ylabel=L"$q$", zlabel=L"$\eta_{ZPE}$", figname="sample")
 
-    fig, ax = plt.subplots(figsize=(4, 4))
-    img = ax[:imshow](m, origin="upper", plt.ColorMap("hot"), interpolation="none",
-    extent=[minimum(xdata), maximum(xdata), minimum(ydata), maximum(ydata)], aspect=ratio)
+##     fig, ax = plt.subplots(figsize=(4, 4))
+##     img = ax[:imshow](m, origin="upper", plt.ColorMap("hot"), interpolation="none",
+##     extent=[minimum(xdata), maximum(xdata), minimum(ydata), maximum(ydata)], aspect=ratio)
     
-    ax[:set_xlim](minimum(xdata), maximum(xdata))
-    ax[:set_ylim](minimum(ydata), maximum(ydata))
-    ax[:set_xlabel](xlabel)
-    ax[:set_ylabel](ylabel)
+##     ax[:set_xlim](minimum(xdata), maximum(xdata))
+##     ax[:set_ylim](minimum(ydata), maximum(ydata))
+##     ax[:set_xlabel](xlabel)
+##     ax[:set_ylabel](ylabel)
 
-    cbar = fig[:colorbar](img, shrink=0.8, aspect=20, fraction=.12,pad=.02)
-    cbar[:ax][:tick_params](labelsize=7)
-    cbar[:set_label](zlabel)
+##     cbar = fig[:colorbar](img, shrink=0.8, aspect=20, fraction=.12,pad=.02)
+##     cbar[:ax][:tick_params](labelsize=7)
+##     cbar[:set_label](zlabel)
     
-    fig[:savefig](figname, bbox_inches="tight")
-    plt.close(fig);
-end
-function saveplots(ψreal,ψrealpmp,ψmom,ψmompmp,ψmbz,ψmbzpmp, x,y,kx,ky,kxmbz, q)
-    matplot2D(ψreal,x,y; xlabel=L"$m$", ylabel=L"$n$", zlabel=L"$|a_{m,n}|^2$", figname="real")
-    matplot2D(ψrealpmp,x,y; xlabel=L"$m$", ylabel=L"$n$", zlabel=L"$|a_{m,n}|^2$", figname="realpmp")
-    matplot2D(ψmom,kx,ky; xlabel=L"$p_x$", ylabel=L"$p_y$", zlabel=L"$|a_{p_x,p_y}|^2$", figname="mom")
-    matplot2D(ψmompmp,kx,ky; xlabel=L"$p_x$", ylabel=L"$p_y$", zlabel=L"$|a_{p_x,p_y}|^2$", figname="mompmp")
-    matplot2D(ψmbz,kxmbz,ky; ratio=1/q, xlabel=L"$p_x^0$", ylabel=L"$p_y$", zlabel=L"$|a_{p_x^0,p_y}|^2$", figname="mbz")
-    matplot2D(ψmbzpmp,kxmbz,ky; ratio=1/q, xlabel=L"$p_x^0$", ylabel=L"$p_y$", zlabel=L"$|a_{p_x^0,p_y}|^2$", figname="mbzpmp")
-end
+##     fig[:savefig](figname, bbox_inches="tight")
+##     plt.close(fig);
+## end
+## function saveplots(ψreal,ψrealpmp,ψmom,ψmompmp,ψmbz,ψmbzpmp, x,y,kx,ky,kxmbz, q)
+##     matplot2D(ψreal,x,y; xlabel=L"$m$", ylabel=L"$n$", zlabel=L"$|a_{m,n}|^2$", figname="real")
+##     matplot2D(ψrealpmp,x,y; xlabel=L"$m$", ylabel=L"$n$", zlabel=L"$|a_{m,n}|^2$", figname="realpmp")
+##     matplot2D(ψmom,kx,ky; xlabel=L"$p_x$", ylabel=L"$p_y$", zlabel=L"$|a_{p_x,p_y}|^2$", figname="mom")
+##     matplot2D(ψmompmp,kx,ky; xlabel=L"$p_x$", ylabel=L"$p_y$", zlabel=L"$|a_{p_x,p_y}|^2$", figname="mompmp")
+##     matplot2D(ψmbz,kxmbz,ky; ratio=1/q, xlabel=L"$p_x^0$", ylabel=L"$p_y$", zlabel=L"$|a_{p_x^0,p_y}|^2$", figname="mbz")
+##     matplot2D(ψmbzpmp,kxmbz,ky; ratio=1/q, xlabel=L"$p_x^0$", ylabel=L"$p_y$", zlabel=L"$|a_{p_x^0,p_y}|^2$", figname="mbzpmp")
+## end
 
 end
 

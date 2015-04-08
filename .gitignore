@@ -23,6 +23,9 @@ auto
 ## Julia
 .juliahistory
 
+## IJulia
+.ipynb_checkpoints
+
 ## emacs
 *#
 .#*
