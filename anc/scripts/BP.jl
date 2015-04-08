@@ -2,8 +2,6 @@ module BP
 
 using Polynomials
 
-#import PyPlot; const plt = PyPlot
-#using LaTeXStrings
 
 ##
 
@@ -317,73 +315,6 @@ function myfft2(ψr::Matrix{Complex{Float64}}, k1, k2)
     out
 end
 
-
-
-########################################
-#publication-quality plots in matplotlib
-########################################
-## function matplotspect(ν::Vector{Float64}, I::Vector{Float64}, spect::Vector{Float64}, ω::Float64; vert=true)
-##     mx = maximum(I)
-    
-##     fig, ax = plt.subplots(1, 1, figsize=(4ϕgold, 4))
-
-##     ax[:plot](ν, I, "k")
-
-##     vert && ax[:axvline](x = ω, color="red", ls="dashed")
-##     ax[:vlines](spect, 0, mx/2, colors="orange", linestyles="dashed")
-    
-##     ax[:set_xlim](ν[1], ν[end])
-##     ax[:set_ylim](0, mx)
-
-##     ax[:set_ylabel](L"$\sum_{m,n} |a_{m,n}|^2$ [a.u.]")
-##     ax[:set_xlabel](L"$\omega_0 [J]$")
-
-##     fig[:savefig]("spectrum", bbox_inches="tight")
-##     plt.close(fig);
-## end
-## function matplotcomp(ky::Vector{Float64}, D::Matrix{Float64}, χ::Vector{Complex{Float64}},ζ::Int)
-##     l=size(D)[2]
-    
-##     fig, ax = plt.subplots(1, 1, figsize=(4ϕgold, 4))
-
-##     ax[:plot](ky, abs2(χ), "r")
-##     ax[:plot](ky, D[:,div(l-1,2)+1]/ζ, "k")
-
-##     ax[:set_xlim](-π, π)
-
-##     ax[:set_ylabel](L"$|\chi_{\beta}(p_x^0=0, p_y)|^2$")
-##     ax[:set_xlabel](L"$p_y$")
-
-##     fig[:savefig]("compare", bbox_inches="tight")
-##     plt.close(fig);
-## end
-## function matplot2D(m::Matrix{Float64}, xdata::Vector{Float64}, ydata::Vector{Float64}
-##     ;ratio=1., xlabel=L"$\kappa$", ylabel=L"$q$", zlabel=L"$\eta_{ZPE}$", figname="sample")
-
-##     fig, ax = plt.subplots(figsize=(4, 4))
-##     img = ax[:imshow](m, origin="upper", plt.ColorMap("hot"), interpolation="none",
-##     extent=[minimum(xdata), maximum(xdata), minimum(ydata), maximum(ydata)], aspect=ratio)
-    
-##     ax[:set_xlim](minimum(xdata), maximum(xdata))
-##     ax[:set_ylim](minimum(ydata), maximum(ydata))
-##     ax[:set_xlabel](xlabel)
-##     ax[:set_ylabel](ylabel)
-
-##     cbar = fig[:colorbar](img, shrink=0.8, aspect=20, fraction=.12,pad=.02)
-##     cbar[:ax][:tick_params](labelsize=7)
-##     cbar[:set_label](zlabel)
-    
-##     fig[:savefig](figname, bbox_inches="tight")
-##     plt.close(fig);
-## end
-## function saveplots(ψreal,ψrealpmp,ψmom,ψmompmp,ψmbz,ψmbzpmp, x,y,kx,ky,kxmbz, q)
-##     matplot2D(ψreal,x,y; xlabel=L"$m$", ylabel=L"$n$", zlabel=L"$|a_{m,n}|^2$", figname="real")
-##     matplot2D(ψrealpmp,x,y; xlabel=L"$m$", ylabel=L"$n$", zlabel=L"$|a_{m,n}|^2$", figname="realpmp")
-##     matplot2D(ψmom,kx,ky; xlabel=L"$p_x$", ylabel=L"$p_y$", zlabel=L"$|a_{p_x,p_y}|^2$", figname="mom")
-##     matplot2D(ψmompmp,kx,ky; xlabel=L"$p_x$", ylabel=L"$p_y$", zlabel=L"$|a_{p_x,p_y}|^2$", figname="mompmp")
-##     matplot2D(ψmbz,kxmbz,ky; ratio=1/q, xlabel=L"$p_x^0$", ylabel=L"$p_y$", zlabel=L"$|a_{p_x^0,p_y}|^2$", figname="mbz")
-##     matplot2D(ψmbzpmp,kxmbz,ky; ratio=1/q, xlabel=L"$p_x^0$", ylabel=L"$p_y$", zlabel=L"$|a_{p_x^0,p_y}|^2$", figname="mbzpmp")
-## end
 
 end
 
