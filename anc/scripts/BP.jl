@@ -3,8 +3,6 @@ module BP
 using Polynomials
 
 
-##
-
 type WaveFunction
     N::Int
     int::Float64
@@ -68,15 +66,6 @@ end
 getm(i::Int64,N::Int64) = div(i-1,N)-div(N-1,2)
 getn(i::Int64,N::Int64) = div(N-1,2)-rem(i-1,N)
 
-
-## function extractpath(l1::Int,l2::Int,c1::Int,c2::Int, M::Matrix{Float64})
-##     path=Float64[]
-##     append!(path, M[l1:l2,c1])
-##     append!(path, vec(M[l2,c1:c2])[2:end])
-##     append!(path, M[l2:-1:l1,c2][2:end])
-##     append!(path, vec(M[l1,c2:-1:c1])[2:end-1])
-##     path
-## end
 
 function countnonzeros(N::Int)
     k = N^2 #elements on the diagonal are all nonzero
@@ -193,67 +182,6 @@ function genspmat(l::Function,r::Function,u::Function,d::Function,s::Function, N
 end
 
 
-function mbz(data, q, N)
-    #l = div(N-1, q)
-    l = N
-
-    V = zeros(Float64,size(data)[1],l)
-    
-    for i in 1:l
-        idx = i
-        while idx <= q*N+1
-               V[:,i] += data[:,idx]
-            idx += l
-        end
-    end
-
-    V/(4π^2)
-end
-
-
-function momsphhmat(kx0::Float64, ky::Float64, α::Float64,q::Int)
-    du = ones(Complex{Float64}, q-1) #upper diagonal
-    d = Complex{Float64}[2*cos(kx0 + 2*π*α*j) for j in 1:q] #main diagonal
-    mat = full(SymTridiagonal(d, du))
-    mat[1,q] = exp(-im*q*ky)
-    mat[q,1] = exp(im*q*ky)
-    return -mat
-end
-
-
-function hhladder(α::Float64, q::Int)
-    kx0 = 0.
-    ky = linspace(-π, π, 100)
-    E = Array(Float64, 100,q)
-    for c in 1:100
-        M = Hermitian(momsphhmat(kx0, ky[c], α, q))
-        E[c,:] = eigvals(M) #q eigenvalues
-    end
-
-    E
-end
-
-
-function compute_hermite_polynomial(n)
-    P = Poly([1])
-    const x = Poly([0; 1])                                                                                 
-    for i = 1:n
-        P = 2x*P - polyder(P)
-    end
-    P
-end
-
-function χ(kx0, ky, α, β)
-    l = sqrt(2π*α)
-
-    sum = zero(Complex{Float64})
-    for j in -20:20 #truncate the sum
-        H = polyval(compute_hermite_polynomial(β), kx0/l + j*l)
-        sum += exp(-im*ky*j) * exp(-(kx0 + j*l^2)^2/(2l^2)) * H
-    end
-
-    sum
-end
 
 ########################
 #various pumping schemes
@@ -315,19 +243,45 @@ function myfft2(ψr::Matrix{Complex{Float64}}, k1, k2)
     out
 end
 
+# Magnetic Brillouin Zone
+function mbz(data, q, N)
+    #l = div(N-1, q)
+    l = N
 
+    V = zeros(Float64,size(data)[1],l)
+    
+    for i in 1:l
+        idx = i
+        while idx <= q*N+1
+               V[:,i] += data[:,idx]
+            idx += l
+        end
+    end
+
+    V/(4π^2)
 end
 
+########################
+#comparison to analytics
+########################
+function compute_hermite_polynomial(n)
+    P = Poly([1])
+    const x = Poly([0; 1])                                                                                 
+    for i = 1:n
+        P = 2x*P - polyder(P)
+    end
+    P
+end
+function χ(kx0, ky, α, β)
+    l = sqrt(2π*α)
 
+    sum = zero(Complex{Float64})
+    for j in -20:20 #truncate the sum
+        H = polyval(compute_hermite_polynomial(β), kx0/l + j*l)
+        sum += exp(-im*ky*j) * exp(-(kx0 + j*l^2)^2/(2l^2)) * H
+    end
 
+    sum
+end
 
-
-
-
-
-
-
-
-
-
-
+end
