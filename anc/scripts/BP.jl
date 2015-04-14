@@ -9,29 +9,28 @@ type WaveFunction
     ψ::Vector{Complex{Float64}}
 end
 
-function WaveFunction(ω::Float64,P::Vector{Complex{Float64}},gauge::Symbol,
+function WaveFunction(S::SparseMatrixCSC{Complex{Float64},Int64},
+                      ω::Float64,P::Vector{Complex{Float64}},gauge::Symbol,
                       α::Float64,γ::Float64,κ::Float64)
 
-    gauges = [:landau => 
-              ((n,m,a) -> one(Complex{Float64}), (n,m,a) -> one(Complex{Float64}),
-               (n,m,a) -> exp(-im*2π*a*m), (n,m,a) -> exp(im*2π*a*m)),
-              :symmetric =>
-              ((n,m,a) -> exp(-im*π*a*n), (n,m,a) -> exp(im*π*a*n),
-               (n,m,a) -> exp(-im*π*a*m), (n,m,a) -> exp(im*π*a*m))]
+    gauges = [:landau => buildham_landau!,
+              :symmetric => buildham_symmetric!]
+
 
     N::Int = sqrt(length(P))
-    nz::Int = countnonzeros(N) #
 
-    S = genspmat(gauges[gauge]...,(n,m,a) -> ω + im*γ - 1/2*κ*(n^2+m^2), N,nz,α)
+    gauges[gauge](S, N,α,κ,γ,ω) 
     X = S\P
 
     return WaveFunction(N,sum(abs2(X)),X)
 end
 
-WaveFunction(ω::Float64,P::Vector{Complex{Float64}},gauge::Symbol) =
-    WaveFunction(ω,P,gauge,1/11,0.001,0.1)
+WaveFunction(S::SparseMatrixCSC{Complex{Float64},Int64},
+             ω::Float64,P::Vector{Complex{Float64}},gauge::Symbol) =
+    WaveFunction(S,ω,P,gauge,1/11,0.001,0.02)
 
-WaveFunction(ω::Float64,P::Vector{Complex{Float64}}) = WaveFunction(ω,P,:landau)
+WaveFunction(S::SparseMatrixCSC{Complex{Float64},Int64},
+             ω::Float64,P::Vector{Complex{Float64}}) = WaveFunction(S,ω,P,:landau)
 
 type Spectrum
     N::Int
@@ -45,13 +44,13 @@ end
 function Spectrum(ν::Vector{Float64},P::Vector{Complex{Float64}},gauge::Symbol)
     statevec = Array(WaveFunction, length(ν))
     intvec = Array(Float64, length(ν))
+    N::Int = sqrt(length(P))
+    A = spzeros(Complex{Float64}, N^2,N^2)
     for (i,ω) in enumerate(ν)
-        statevec[i] = WaveFunction(ω, P, gauge)
+        statevec[i] = WaveFunction(A, ω, P, gauge)
         intvec[i] = statevec[i].int
     end 
 
-    N::Int = sqrt(length(P))
-        
     return Spectrum(N, gauge, P, ν, intvec, statevec)
 end
 
@@ -59,7 +58,7 @@ Spectrum(ν::Vector{Float64},P::Vector{Complex{Float64}}) = Spectrum(ν,P,:landa
 
 function getstate(s::Spectrum, ω::Float64)
     i::Int = indmin(abs(s.νs .- ω))
-    return s.states[i]
+    return s.states[i].ψ
 end 
 ##
 

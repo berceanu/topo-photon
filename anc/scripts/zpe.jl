@@ -2,11 +2,12 @@ using Base.Test
 
 import HH
 
-#reload("HH")
+reload("HH")
 
 
-#@test_approx_eq_eps(HH.ηzpe(11, 0.02), 0.9368071126414523, 1e-5)
-#HH.ηzpe(11, 0.02)
+@test_approx_eq_eps(HH.ηzpe(11, 0.02), 0.9368071126414523, 1e-5)
+
+HH.ηzpe(11, 0.02)
 
 
 
@@ -27,3 +28,5 @@ BP.buildham_exact!(A, N,1/11, 0.02)
 
 ## for sym in {:landau,:symmetric,:exact}
 ##     @eval function $(symbol(string("buildham_", sym)))($(symbol(string("args_",sym))))
+
+#TODO: add test based on eigenvalues from Hannah

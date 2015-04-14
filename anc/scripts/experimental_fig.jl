@@ -30,7 +30,7 @@ q =  div(sq,g)
 α =  p/q
 
 #number of nonzero elements in sparse Hamiltonian matrix
-nz = BP.countnonzeros(sN)
+nz = BP.countentries(sN)
 # we need to convert from sparse to dense in order to use eigvals
 M = full(BP.genspmat(ftex...,(n,m,a) -> 1/2*sκ*(n^2+m^2) + zero(Complex{Float64}),sN,nz,α))
 #M is the "exact" hamiltonian matrix, without dissipation and pumping

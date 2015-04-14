@@ -28,7 +28,7 @@ p =  div(sp,g)
 q =  div(sq,g)
 α =  p/q
 
-nz = BP.countnonzeros(sN)
+nz = BP.countentries(sN)
 
 pumps = (BP.gausspmp(sN; A=1., σ=1., n0=n, m0=m),
          BP.gausspmp(sN; A=1., σ=5., n0=n, m0=m),

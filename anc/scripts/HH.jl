@@ -79,23 +79,18 @@ end
 
 #finding energy difference
 ηzpe(q::Int, κ::Float64) = ηzpe(1, q, κ)
-ηzpe(p::Int, q::Int, κ::Float64) = ηzpe(15, p, q, κ)
+ηzpe(p::Int, q::Int, κ::Float64) = (N=15; A = spzeros(Complex{Float64}, N^2,N^2); ηzpe(A, p, q, κ))
 
 
-function ηzpe(N::Int, p::Int, q::Int, κ::Float64)
-    α = p/q
-    gs = Array(Float64, 50)
+function ηzpe(M::SparseMatrixCSC{Complex{Float64},Int}, p::Int, q::Int, κ::Float64)
+    N::Int = sqrt(size(M,1))
+    α::Float64 = p/q
+    gs = Array(Float64, 25)
     hhgrstate!(gs, p, q)
     e1 = mean(gs)
     et = e1 + 1/2*κ/(2π*α)
 
-
-    nz = BP.countnonzeros(N)
-    ft = ((n,m,a) -> one(Complex{Float64}), (n,m,a) -> one(Complex{Float64}),
-          (n,m,a) -> exp(-im*2π*a*m), (n,m,a) -> exp(im*2π*a*m))
-    ftex =  map(f -> (x, y, z) -> -f(x, y, z), ft)
-    M = BP.genspmat(ftex...,(n,m,a) -> 1/2*κ*(n^2+m^2) + zero(Complex{Float64}), N,nz,α)
-
+    BP.buildham_exact!(M, N,α,κ)
 
     er = real(eigs(M, nev=1, which=:SR, ritzvec=false)[1][1])
 
@@ -104,14 +99,20 @@ end
 
 
 ηzpe(q::Int, κs::Vector{Float64}) = vec(ηzpe([q], κs))
+
+ηzpe(qs::UnitRange{Int}, κ::Float64) = ηzpe([qs], κ)
 ηzpe(qs::Vector{Int}, κ::Float64) = vec(ηzpe(qs, [κ]))
 
-ηzpe(qs::Vector{Int}, κs::Vector{Float64}) = [ηzpe(q, κ)::Float64 for q in qs, κ in κs]
-
-ηzpe(N::Int, q::Int, κs::Vector{Float64}) = vec(ηzpe(N, [q], κs))
-ηzpe(N::Int,qs::Vector{Int}, κ::Float64) = vec(ηzpe(N, qs, [κ]))
-
-ηzpe(N::Int, qs::Vector{Int}, κs::Vector{Float64}) = [ηzpe(N, 1, q, κ)::Float64 for q in qs, κ in κs] 
+ηzpe(qs::UnitRange{Int}, κs::Vector{Float64}) = ηzpe([qs], κs)
+function ηzpe(qs::Vector{Int}, κs::Vector{Float64})
+    N=15
+    A = spzeros(Complex{Float64}, N^2,N^2)
+    η = Array(Float64, length(qs), length(κs))
+    for col=1:length(κs), row=1:length(qs)
+        η[row,col] = ηzpe(A, 1, qs[row], κs[col])
+    end
+    return η
+end 
 
 
 
@@ -144,7 +145,7 @@ function ηl(q::Int,κ::Float64; N=35)
     α=1/q
 
     # generate Hamiltonian for HH+trap
-    nonz = BP.countnonzeros(N)
+    nonz = BP.countentries(N)
     ft = ((n,m) -> -one(Complex{Float64}), (n,m) -> -one(Complex{Float64}), (n,m) -> -exp(-im*2π*α*m), (n,m) -> -exp(im*2π*α*m), (n,m) -> 1/2*κ*(n^2+m^2)+zero(Complex{Float64}))
     x = full(BP.genspmat(ft..., N,nonz))
     
@@ -185,7 +186,7 @@ end #module
 ##     e2 = mean(E[:,2])
 ##     b = e2 - e1
     
-##     nonz = BP.countnonzeros(N)
+##     nonz = BP.countentries(N)
 ##     ft = ((n,m) -> -one(Complex{Float64}), (n,m) -> -one(Complex{Float64}), (n,m) -> -exp(-im*2π*α*m), (n,m) -> -exp(im*2π*α*m), (n,m) -> 1/2*κ*(n^2+m^2)+zero(Complex{Float64}))
 ##     x = full(BP.genspmat(ft..., N,nonz))
 ##     e0o = eigvals(Hermitian(x), 1:1)[1]   
