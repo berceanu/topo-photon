@@ -20,7 +20,7 @@ function WaveFunction(ω::Float64,P::Vector{Complex{Float64}},gauge::Symbol,
                (n,m,a) -> exp(-im*π*a*m), (n,m,a) -> exp(im*π*a*m))]
 
     N::Int = sqrt(length(P))
-    nz::Int = countnonzeros(N)
+    nz::Int = countnonzeros(N) #
 
     S = genspmat(gauges[gauge]...,(n,m,a) -> ω + im*γ - 1/2*κ*(n^2+m^2), N,nz,α)
     X = S\P
@@ -29,7 +29,7 @@ function WaveFunction(ω::Float64,P::Vector{Complex{Float64}},gauge::Symbol,
 end
 
 WaveFunction(ω::Float64,P::Vector{Complex{Float64}},gauge::Symbol) =
-    WaveFunction(ω,P,gauge,1/11,0.001,0.02)
+    WaveFunction(ω,P,gauge,1/11,0.001,0.1)
 
 WaveFunction(ω::Float64,P::Vector{Complex{Float64}}) = WaveFunction(ω,P,:landau)
 
@@ -65,42 +65,52 @@ end
 
 getm(i::Int64,N::Int64) = div(i-1,N)-div(N-1,2)
 getn(i::Int64,N::Int64) = div(N-1,2)-rem(i-1,N)
+geti(m::Int,n::Int,N::Int)=(m+div(N-1,2))*N+(div(N-1,2)-n)+1
 
+countentries(N::Int) = N^2 + 8 + 4*(N-2)*3 + (N-2)^2*4
 
-function countnonzeros(N::Int)
-    k = N^2 #elements on the diagonal are all nonzero
-
-    # maximum value of m or n indices
-    maxm = div(N-1,2)
-
-    for i in 1:N^2
-        m = getm(i,N)
-        n = getn(i,N)
-        if n==maxm && m==-maxm #tl corner
-            k+=2
-        elseif n==maxm && m==maxm #tr corner
-            k+=2
-        elseif n==-maxm && m==maxm #br corner
-            k+=2
-        elseif n==-maxm && m==-maxm #bl corner
-            k+=2
-        elseif n==maxm #t edge
-            k+=3
-        elseif m==maxm # r edge
-            k+=3
-        elseif n==-maxm # b edge
-            k+=3
-        elseif m==-maxm # l edge
-            k+=3
-        else # bulk
-            k+=4
+macro hambody(fself, fleft, fright, fup, fdown)
+    return quote
+        border::Int = div(N-1,2)
+        for m in -border:border, n in -border:border
+            i  = geti(m,n,N)
+            S[i,i] = $fself
+        end 
+        for m in -border+1:border, n in -border:border
+            i  = geti(m,n,N)
+            S[i,i-N] = $fleft
+        end 
+        for m in -border:border-1, n in -border:border
+            i  = geti(m,n,N)
+            S[i,i+N] = $fright
+        end 
+        for m in -border:border, n in -border:border-1
+            i  = geti(m,n,N)
+            S[i,i-1] = $fup
+        end 
+        for m in -border:border, n in -border+1:border
+            i  = geti(m,n,N)
+            S[i,i+1] = $fdown
         end
-    end
-    return k
+    end 
+end 
+
+function buildham_landau!(S::SparseMatrixCSC{Complex{Float64},Int}, N::Int,α::Float64,κ::Float64,γ::Float64,ω::Float64)
+    @hambody(ω + im*γ - 1/2*κ*(n^2+m^2), 1, 1, exp(-im*2π*α*m), exp(im*2π*α*m))
+end
+
+function buildham_exact!(S::SparseMatrixCSC{Complex{Float64},Int}, N::Int,α::Float64,κ::Float64)
+    @hambody(1/2*κ*(n^2+m^2), -1, -1, -exp(-im*2π*α*m), -exp(im*2π*α*m))
+end
+
+function buildham_symmetric!(S::SparseMatrixCSC{Complex{Float64},Int}, N::Int,α::Float64,κ::Float64,γ::Float64,ω::Float64)
+    @hambody(ω + im*γ - 1/2*κ*(n^2+m^2), exp(-im*π*a*n), exp(im*π*a*n), exp(-im*π*a*m), exp(im*π*a*m))
 end
 
 
+
 function genspmat(l::Function,r::Function,u::Function,d::Function,s::Function, N::Int,nz::Int,α::Float64)
+    iseven(N) && throw(ArgumentError("invalid system size N=$N. N must be odd"))
     # Preallocate
     I = Array(Int64,nz)
     J = Array(Int64,nz)
@@ -178,6 +188,7 @@ function genspmat(l::Function,r::Function,u::Function,d::Function,s::Function, N
             setnzelem(i,n,m; pos="left")
         end
     end
+
     return sparse(I,J,V)
 end
 

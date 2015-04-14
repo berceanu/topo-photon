@@ -1,26 +1,29 @@
-using HH
 using Base.Test
 
+import HH
 
-## bw = [bwidth(q) for q in qs]
-## bg = [bgap(q) for q in qs]
-
-
-## hheig = HH.hhladder(α,q)
-## ladder = [mean(hheig[:,1]) + (β + 1/2)*κ/(2π*α) for β in 0:14]
-## ## using Color
-## ## dc = distinguishable_colors(q)
-## a = Layer[]
-## for i = 1:q
-##     push!(a, layer(x=linspace(-π, π, 100), y=hheig[:,i], Geom.line, Theme(default_color=dc[i]))[1] )
-## end
-## plot(a)
-## [ηzpe(q,κ) for q in qs, κ in κs] #
+#reload("HH")
 
 
-@test_approx_eq_eps(HH.ηzpe(0.02, 11), 0.9368071126414523, 1e-5)
-@test_approx_eq_eps(HH.ηzpe(11, 0.02), 0.9368071126414523, 1e-5)
+#@test_approx_eq_eps(HH.ηzpe(11, 0.02), 0.9368071126414523, 1e-5)
+#HH.ηzpe(11, 0.02)
 
 
-@time HH.ηzpe(0.02, 11);
-@time HH.ηzpe(11, 0.02);
+
+N=45
+nz = BP.countentries(N)
+ft = ((n,m,a) -> one(Complex{Float64}), (n,m,a) -> one(Complex{Float64}),
+      (n,m,a) -> exp(-im*2π*a*m),       (n,m,a) -> exp(im*2π*a*m))
+ftex =  map(f -> (x, y, z) -> -f(x, y, z), ft)
+#N²xN² matrix
+M = BP.genspmat(ftex...,(n,m,a) -> 1/2*0.02*(n^2+m^2) + zero(Complex{Float64}), N,nz,1/11)
+
+A = spzeros(Complex{Float64}, N^2,N^2)
+BP.buildham_exact!(A, N,1/11, 0.02)
+@test_approx_eq_eps(M, A, 1e-5)
+
+@time for i=1:10^3; BP.buildham_exact!(A, N,1/11,0.02); end 
+
+
+## for sym in {:landau,:symmetric,:exact}
+##     @eval function $(symbol(string("buildham_", sym)))($(symbol(string("args_",sym))))

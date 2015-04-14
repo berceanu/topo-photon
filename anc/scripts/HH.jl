@@ -1,10 +1,12 @@
 module HH
 
+
 import BP
 
-##
 
 #in-place builder of the q x q HH matrix in mom. sp.
+momsphhmat!(A::Matrix{Complex{Float64}}, kx0::Float64,ky::Float64) = momsphhmat!(A, kx0,ky, 1)
+
 function momsphhmat!(A::Matrix{Complex{Float64}},
                      kx0::Float64,ky::Float64,
                      p::Int)
@@ -33,7 +35,9 @@ function momsphhmat!(A::Matrix{Complex{Float64}},
     nothing
 end
 
-momsphhmat!(A::Matrix{Complex{Float64}}, kx0::Float64,ky::Float64) = momsphhmat!(A, kx0,ky, 1)
+
+hhladder(q::Int) = hhladder(1,q)
+hhladder!(E::Matrix{Float64}) = hhladder!(E, 1)
 
 function hhladder(p::Int, q::Int)
     ky = linspace(-π, π, 100)
@@ -46,12 +50,7 @@ function hhladder(p::Int, q::Int)
     return E
 end
 
-hhladder(q::Int) = hhladder(1,q)
-
-
-
 function hhladder!(E::Matrix{Float64}, p::Int)
-
     ky = linspace(-π, π, size(E,1))
     q = size(E,2)
     H = zeros(Complex{Float64}, (q,q))
@@ -62,14 +61,34 @@ function hhladder!(E::Matrix{Float64}, p::Int)
     nothing
 end
 
-hhladder!(E::Matrix{Float64}) = hhladder!(E, 1)
+
+# ground state energy of the HH hamiltonian
+hhgrstate!(ve::Vector{Float64}, q::Int) = hhgrstate!(ve, 1, q)
+
+function hhgrstate!(ve::Vector{Float64}, p::Int, q::Int)
+    ky = linspace(-π, π, length(ve))
+
+    H = zeros(Complex{Float64}, (q,q))
+    for (i,k) in enumerate(ky)
+        momsphhmat!(H, 0.,k, p)
+        ve[i] = eigmin(H)
+    end
+    nothing
+end
+
 
 #finding energy difference
+ηzpe(q::Int, κ::Float64) = ηzpe(1, q, κ)
+ηzpe(p::Int, q::Int, κ::Float64) = ηzpe(15, p, q, κ)
+
+
 function ηzpe(N::Int, p::Int, q::Int, κ::Float64)
     α = p/q
-    E = Array(Float64, (100,q))
-    hhladder!(E, p)
-    e0g = mean(E[:,1]) + .5*κ/(2π*α)
+    gs = Array(Float64, 50)
+    hhgrstate!(gs, p, q)
+    e1 = mean(gs)
+    et = e1 + 1/2*κ/(2π*α)
+
 
     nz = BP.countnonzeros(N)
     ft = ((n,m,a) -> one(Complex{Float64}), (n,m,a) -> one(Complex{Float64}),
@@ -77,25 +96,23 @@ function ηzpe(N::Int, p::Int, q::Int, κ::Float64)
     ftex =  map(f -> (x, y, z) -> -f(x, y, z), ft)
     M = BP.genspmat(ftex...,(n,m,a) -> 1/2*κ*(n^2+m^2) + zero(Complex{Float64}), N,nz,α)
 
-    e0o = real(eigs(M, nev=1, which=:SR, ritzvec=false)[1][1])
 
-    return (e0o - e0g)/ (.5*κ/(2π*α))
+    er = real(eigs(M, nev=1, which=:SR, ritzvec=false)[1][1])
+
+    return 4π*α/κ * (er - et)
 end
 
-ηzpe(p::Int, q::Int, κ::Float64) = ηzpe(35, p, q, κ)
-ηzpe(q::Int, κ::Float64) = ηzpe(35, 1, q, κ)
 
-#TODO: investigate Hermitian(), ishermitian().. may no longer need real()
-#TODO: calculate only the first energy level of the q x q HH mat
-#TODO: implement data type which gives Vector output for fixed κ OR q.
+ηzpe(q::Int, κs::Vector{Float64}) = vec(ηzpe([q], κs))
+ηzpe(qs::Vector{Int}, κ::Float64) = vec(ηzpe(qs, [κ]))
 
-## 1. for each of the 100 ky values in [-π,­π], build the
-## corresponding q x q HH matrix (which depends on k)
-## and diagonalize it. we get q energy levels E(ky, 1..q) for each ky point.
-## 2. take the mean (over all ky) of the *first* energy level E(ky,1)
-## 3. generate the sparse matrix corresponding to HH + trap (no dissipation)
-## 4. take its *first* eigenvalue
-## 5. do the difference of the energies calculated at points 2. and 4.
+ηzpe(qs::Vector{Int}, κs::Vector{Float64}) = [ηzpe(q, κ)::Float64 for q in qs, κ in κs]
+
+ηzpe(N::Int, q::Int, κs::Vector{Float64}) = vec(ηzpe(N, [q], κs))
+ηzpe(N::Int,qs::Vector{Int}, κ::Float64) = vec(ηzpe(N, qs, [κ]))
+
+ηzpe(N::Int, qs::Vector{Int}, κs::Vector{Float64}) = [ηzpe(N, 1, q, κ)::Float64 for q in qs, κ in κs] 
+
 
 
 ##################################################
@@ -178,3 +195,16 @@ end #module
 ## end
 # Usage:
 # map(relpos, qs, κò)
+
+## bw = [bwidth(q) for q in qs]
+## bg = [bgap(q) for q in qs]
+
+## hheig = HH.hhladder(α,q)
+## ladder = [mean(hheig[:,1]) + (β + 1/2)*κ/(2π*α) for β in 0:14]
+## ## using Color
+## ## dc = distinguishable_colors(q)
+## a = Layer[]
+## for i = 1:q
+##     push!(a, layer(x=linspace(-π, π, 100), y=hheig[:,i], Geom.line, Theme(default_color=dc[i]))[1] )
+## end
+## plot(a)
