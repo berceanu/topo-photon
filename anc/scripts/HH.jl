@@ -77,7 +77,7 @@ function hhgrstate!(ve::Vector{Float64}, p::Int, q::Int)
 end
 
 
-#finding energy difference
+# zero point energy error
 ηzpe(q::Int, κ::Float64) = ηzpe(1, q, κ)
 ηzpe(p::Int, q::Int, κ::Float64) = (N=15; A = spzeros(Complex{Float64}, N^2,N^2); ηzpe(A, p, q, κ))
 
@@ -114,7 +114,41 @@ function ηzpe(qs::Vector{Int}, κs::Vector{Float64})
     return η
 end 
 
+##
+# level error
+ηlev(q::Int, κ::Float64) = ηlev(1, q, κ)
+ηlev(p::Int, q::Int, κ::Float64) = (N=15; A = spzeros(Complex{Float64}, N^2,N^2); ηlev(A, p, q, κ))
 
+
+function ηlev(M::SparseMatrixCSC{Complex{Float64},Int}, p::Int, q::Int, κ::Float64)
+    N::Int = sqrt(size(M,1))
+    α::Float64 = p/q
+
+    BP.buildham_exact!(M, N,α,κ)
+
+    # get first 2 levels of spectrum of HH+trap
+    bilevel = real(eigs(M, nev=2, which=:SR, ritzvec=false)[1])
+
+    #calculate level spacing
+    return 2π*α/κ*diff(bilevel)[1] - 1 
+end
+
+
+ηlev(q::Int, κs::Vector{Float64}) = vec(ηlev([q], κs))
+
+ηlev(qs::UnitRange{Int}, κ::Float64) = ηlev([qs], κ)
+ηlev(qs::Vector{Int}, κ::Float64) = vec(ηlev(qs, [κ]))
+
+ηlev(qs::UnitRange{Int}, κs::Vector{Float64}) = ηlev([qs], κs)
+function ηlev(qs::Vector{Int}, κs::Vector{Float64})
+    N=15
+    A = spzeros(Complex{Float64}, N^2,N^2)
+    η = Array(Float64, length(qs), length(κs))
+    for col=1:length(κs), row=1:length(qs)
+        η[row,col] = ηlev(A, 1, qs[row], κs[col])
+    end
+    return η
+end 
 
 ##################################################
 ##################################################
@@ -143,21 +177,6 @@ end
 #TODO: rehabilitate the level spacing error function
 #TODO: find minimum zpe error with constraint that level error also be small
 
-# level error
-function ηl(q::Int,κ::Float64; N=35)
-    α=1/q
-
-    # generate Hamiltonian for HH+trap
-    nonz = BP.countentries(N)
-    ft = ((n,m) -> -one(Complex{Float64}), (n,m) -> -one(Complex{Float64}), (n,m) -> -exp(-im*2π*α*m), (n,m) -> -exp(im*2π*α*m), (n,m) -> 1/2*κ*(n^2+m^2)+zero(Complex{Float64}))
-    x = full(BP.genspmat(ft..., N,nonz))
-    
-    # get first 2 levels of spectrum of HH+trap
-    spectrum = eigvals(Hermitian(x), 1:2)   
-
-    #calculate level spacing
-    2π*(α/κ) * (spectrum[2] - spectrum[1]) - 1
-end
 
 
 #finding bandwidth

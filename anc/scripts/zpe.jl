@@ -2,7 +2,7 @@ using Base.Test
 
 import HH
 
-reload("HH")
+#reload("HH")
 
 
 @test_approx_eq_eps(HH.ηzpe(11, 0.02), 0.9368071126414523, 1e-5)
@@ -26,7 +26,10 @@ BP.buildham_exact!(A, N,1/11, 0.02)
 @time for i=1:10^3; BP.buildham_exact!(A, N,1/11,0.02); end 
 
 
-## for sym in {:landau,:symmetric,:exact}
-##     @eval function $(symbol(string("buildham_", sym)))($(symbol(string("args_",sym))))
 
-#TODO: add test based on eigenvalues from Hannah
+# test based on eigenvalues from Hannah
+hanspect = vec(readdlm("energy_levels_hannah.txt", Float64));
+H = spzeros(Complex{Float64}, 45^2,45^2);
+BP.buildham_exact!(H, 45,1/11,0.02);
+myspect = real(eigs(H, nev=60, which=:SR, ritzvec=false)[1]);
+@test_approx_eq_eps(myspect,hanspect, 1e-5)

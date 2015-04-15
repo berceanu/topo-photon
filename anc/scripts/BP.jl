@@ -13,13 +13,9 @@ function WaveFunction(S::SparseMatrixCSC{Complex{Float64},Int64},
                       ω::Float64,P::Vector{Complex{Float64}},gauge::Symbol,
                       α::Float64,γ::Float64,κ::Float64)
 
-    gauges = [:landau => buildham_landau!,
-              :symmetric => buildham_symmetric!]
-
-
     N::Int = sqrt(length(P))
 
-    gauges[gauge](S, N,α,κ,γ,ω) 
+    eval(:($(symbol(string("buildham_", gauge, "!")))))(S, N,α,κ,γ,ω) 
     X = S\P
 
     return WaveFunction(N,sum(abs2(X)),X)
@@ -106,6 +102,8 @@ function buildham_symmetric!(S::SparseMatrixCSC{Complex{Float64},Int}, N::Int,α
     @hambody(ω + im*γ - 1/2*κ*(n^2+m^2), exp(-im*π*a*n), exp(im*π*a*n), exp(-im*π*a*m), exp(im*π*a*m))
 end
 
+## for sym in {:landau,:symmetric,:exact}
+##     @eval function $(symbol(string("buildham_", sym)))(n::Int)
 
 
 function genspmat(l::Function,r::Function,u::Function,d::Function,s::Function, N::Int,nz::Int,α::Float64)

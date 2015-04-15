@@ -136,3 +136,4 @@ plt.close(f)
 #TODO: use figtext() to add common y label
 #TODO: add labels for 0 and maximum intensity
 #TODO: add (a), (b), (c), (d)
+#TODO: average over multiple disorder realisations
