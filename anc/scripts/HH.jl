@@ -140,6 +140,9 @@ function hhladder(α::Float64, q::Int)
     E
 end
 
+#TODO: rehabilitate the level spacing error function
+#TODO: find minimum zpe error with constraint that level error also be small
+
 # level error
 function ηl(q::Int,κ::Float64; N=35)
     α=1/q
