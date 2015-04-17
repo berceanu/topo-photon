@@ -56,7 +56,7 @@ sprandl = vec(readdlm("sprandl.txt", Float64));
 ## end 
 ## sprandl = intvec./100;
 
-## extrema(sprandl)
+#extrema(sprandl)
 
 ## writedlm("sprandl.txt", sprandl)
 
@@ -68,6 +68,7 @@ for sp in (spδl,spgaussl,sphoml)
     println(extrema(sp.intensity))
 end
 
+println()
 for sp in (spgausss, sphoms)
     println(extrema(sp.intensity))
 end
@@ -94,48 +95,46 @@ matplotlib["rcParams"][:update](["axes.labelsize" => 22,
 f, axes = plt.subplots(4, figsize=(10, 7.3))
 axes[1][:plot](spδl.νs,spδl.intensity,"k") 
 for ω in sω0real
-    axes[1][:axvline](x = ω, color="k", ls="dashed")
-end 
+    axes[1][:axvline](x = ω, color="k", ls="dotted")
+end
+axes[1][:set_ylim](0, 1e3)
+axes[1][:yaxis][:set_ticks]([0, 1e3])
+axes[1][:yaxis][:set_ticklabels]([L"$0$", L"$10^3$"])
 
 axes[2][:plot](spgaussl.νs,spgaussl.intensity,"k") 
-axes[2][:plot](spgausss.νs,spgausss.intensity, color="green", ls="dotted", linewidth=1.5)
+axes[2][:plot](spgausss.νs,spgausss.intensity, color="green", ls="dashed", linewidth=1.5)
 for ω in sω0sym
-    axes[2][:axvline](x = ω, color="green", ls="dashed")
+    axes[2][:axvline](x = ω, color="green", ls="dotted")
 end 
-axes[2][:set_ylim](0, 1500)
+axes[2][:set_ylim](0, 1e3)
+axes[2][:yaxis][:set_ticks]([0, 1e3])
+axes[2][:yaxis][:set_ticklabels]([L"$0$", L"$10^3$"])
+
 
 axes[3][:plot](sphoml.νs,sphoml.intensity,"k") 
-axes[3][:plot](sphoms.νs,sphoms.intensity, color="green", ls="dotted", linewidth=1.5)
+axes[3][:plot](sphoms.νs,sphoms.intensity, color="green", ls="dashed", linewidth=1.5)
 for ω in sω0lan
-    axes[3][:axvline](x = ω, color="k", ls="dashed")
+    axes[3][:axvline](x = ω, color="k", ls="dotted")
 end 
-axes[3][:set_ylim](0, 1e7)
+axes[3][:set_ylim](0, 1e6)
+axes[3][:yaxis][:set_ticks]([0, 1e6])
+axes[3][:yaxis][:set_ticklabels]([L"$0$", L"$10^6$"])
+
 
 axes[4][:plot](ν,sprandl,"k") 
 for ω in spectrum
-    axes[4][:axvline](x = ω, color="orange", ls="dashed")
+    axes[4][:axvline](x = ω, color="orange", ls="dotted")
 end 
 axes[4][:set_xlabel](L"$\omega_0 [J]$")
 axes[4][:set_ylim](0, 1e6)
+axes[4][:yaxis][:set_ticks]([0, 1e6])
+axes[4][:yaxis][:set_ticklabels]([L"$0$", L"$10^6$"])
 
 for (i, ax) in enumerate(axes)
     ax[:set_xlim](ν[1], ν[end])
 
     i != 4 && ax[:set_xticklabels]([])
-
-    ax[:set_yticklabels]([])
-    ax[:set_yticks]([])
 end 
 
-#TODO: add labels for 0 and maximum intensity
-
-f[:savefig]("../../figures/selection.svg", transparent=true, pad_inches=0.0, bbox_inches="tight")
+f[:savefig]("../../figures/selection.pdf", transparent=true, pad_inches=0.0, bbox_inches="tight")
 plt.close(f)
-
-
-#TODO: add common y label $\sum_{m,n} |a_{m,n}|^2$ [a.u.]
-#TODO: add (a), (b), (c), (d)
-#TODO: add labels for the filtered states (vert lines)
-#TODO: update article text/captions
-#TODO: add article paragraph titles
-
