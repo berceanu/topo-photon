@@ -135,5 +135,16 @@ end
 f[:savefig]("../../figures/momentum.pdf", transparent=true, pad_inches=0.0, bbox_inches="tight")
 plt.close(f)
 
-#TODO: normalization issue
-#TODO: add colorbar(s)
+#TODO: normalization issue/colorbar(s)
+
+println("Landau g. extrema (top row):")
+for i = 1:length(βlan) #loop over columns
+    println(extrema(ψL[:,:,i]))
+end
+
+println("Symmetric g. extrema (bottom row):")
+for i = 1:length(βlan) #loop over columns
+    println(extrema(ψS[:,:,i]))
+end
+
+

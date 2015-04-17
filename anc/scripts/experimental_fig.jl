@@ -146,7 +146,6 @@ end
 f[:savefig]("../../figures/exp_spect.pdf", transparent=true, pad_inches=0.0, bbox_inches="tight")
 plt.close(f)
 
-#TODO: fix y ticks/tick labels
 
 #plot w.f. in real and mom space
 f, axes = plt.subplots(2,3, figsize=(10, 7.3))

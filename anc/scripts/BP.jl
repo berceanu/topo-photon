@@ -9,6 +9,13 @@ type WaveFunction
     ψ::Vector{Complex{Float64}}
 end
 
+WaveFunction(S::SparseMatrixCSC{Complex{Float64},Int64},
+             ω::Float64,P::Vector{Complex{Float64}}) = WaveFunction(S,ω,P,:landau)
+
+WaveFunction(S::SparseMatrixCSC{Complex{Float64},Int64},
+             ω::Float64,P::Vector{Complex{Float64}},gauge::Symbol) =
+    WaveFunction(S,ω,P,gauge,1/11,0.001,0.02)
+
 function WaveFunction(S::SparseMatrixCSC{Complex{Float64},Int64},
                       ω::Float64,P::Vector{Complex{Float64}},gauge::Symbol,
                       α::Float64,γ::Float64,κ::Float64)
@@ -21,12 +28,7 @@ function WaveFunction(S::SparseMatrixCSC{Complex{Float64},Int64},
     return WaveFunction(N,sum(abs2(X)),X)
 end
 
-WaveFunction(S::SparseMatrixCSC{Complex{Float64},Int64},
-             ω::Float64,P::Vector{Complex{Float64}},gauge::Symbol) =
-    WaveFunction(S,ω,P,gauge,1/11,0.001,0.02)
 
-WaveFunction(S::SparseMatrixCSC{Complex{Float64},Int64},
-             ω::Float64,P::Vector{Complex{Float64}}) = WaveFunction(S,ω,P,:landau)
 
 type Spectrum
     N::Int
@@ -36,6 +38,9 @@ type Spectrum
     intensity::Vector{Float64}
     states::Vector{WaveFunction}
 end
+
+
+Spectrum(ν::Vector{Float64},P::Vector{Complex{Float64}}) = Spectrum(ν,P,:landau)
 
 function Spectrum(ν::Vector{Float64},P::Vector{Complex{Float64}},gauge::Symbol)
     statevec = Array(WaveFunction, length(ν))
@@ -50,7 +55,22 @@ function Spectrum(ν::Vector{Float64},P::Vector{Complex{Float64}},gauge::Symbol)
     return Spectrum(N, gauge, P, ν, intvec, statevec)
 end
 
-Spectrum(ν::Vector{Float64},P::Vector{Complex{Float64}}) = Spectrum(ν,P,:landau)
+
+function Spectrum(ν::Vector{Float64},P::Vector{Complex{Float64}},gauge::Symbol,
+                  α::Float64,γ::Float64,κ::Float64)
+    statevec = Array(WaveFunction, length(ν))
+    intvec = Array(Float64, length(ν))
+    N::Int = sqrt(length(P))
+    A = spzeros(Complex{Float64}, N^2,N^2)
+    for (i,ω) in enumerate(ν)
+        statevec[i] = WaveFunction(A, ω, P, gauge, α,γ,κ)
+        intvec[i] = statevec[i].int
+    end 
+
+    return Spectrum(N, gauge, P, ν, intvec, statevec)
+end
+
+
 
 function getstate(s::Spectrum, ω::Float64)
     i::Int = indmin(abs(s.νs .- ω))
@@ -99,7 +119,7 @@ function buildham_exact!(S::SparseMatrixCSC{Complex{Float64},Int}, N::Int,α::Fl
 end
 
 function buildham_symmetric!(S::SparseMatrixCSC{Complex{Float64},Int}, N::Int,α::Float64,κ::Float64,γ::Float64,ω::Float64)
-    @hambody(ω + im*γ - 1/2*κ*(n^2+m^2), exp(-im*π*a*n), exp(im*π*a*n), exp(-im*π*a*m), exp(im*π*a*m))
+    @hambody(ω + im*γ - 1/2*κ*(n^2+m^2), exp(-im*π*α*n), exp(im*π*α*n), exp(-im*π*α*m), exp(im*π*α*m))
 end
 
 ## for sym in {:landau,:symmetric,:exact}

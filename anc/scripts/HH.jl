@@ -35,7 +35,7 @@ function momsphhmat!(A::Matrix{Complex{Float64}},
     nothing
 end
 
-
+# Computes the q energy levels E(p_y)
 hhladder(q::Int) = hhladder(1,q)
 hhladder!(E::Matrix{Float64}) = hhladder!(E, 1)
 
@@ -72,6 +72,19 @@ function hhgrstate!(ve::Vector{Float64}, p::Int, q::Int)
     for (i,k) in enumerate(ky)
         momsphhmat!(H, 0.,k, p)
         ve[i] = eigmin(H)
+    end
+    nothing
+end
+
+hhgrstate!(ve::Matrix{Float64}, q::Int) = hhgrstate!(ve, 1, q)
+function hhgrstate!(ve::Matrix{Float64}, p::Int, q::Int)
+    ky = linspace(-π, π, size(ve,1))
+    kx₀= linspace(-π/q, π/q, size(ve,2))
+    
+    H = zeros(Complex{Float64}, (q,q))
+    for col=1:length(kx₀), row=1:length(ky)
+        momsphhmat!(H, kx₀[col], ky[row], p)
+        ve[row,col] = eigmin(H)
     end
     nothing
 end
@@ -114,7 +127,6 @@ function ηzpe(qs::Vector{Int}, κs::Vector{Float64})
     return η
 end 
 
-##
 # level error
 ηlev(q::Int, κ::Float64) = ηlev(1, q, κ)
 ηlev(p::Int, q::Int, κ::Float64) = (N=15; A = spzeros(Complex{Float64}, N^2,N^2); ηlev(A, p, q, κ))
@@ -150,84 +162,31 @@ function ηlev(qs::Vector{Int}, κs::Vector{Float64})
     return η
 end 
 
-##################################################
-##################################################
 
-# Computes the Harper-Hofstadter Hamiltonian matrix in momentum space
-function momsphhmat(kx0::Float64, ky::Float64, α::Float64,q::Int)
-    du = ones(Complex{Float64}, q-1) #upper diagonal
-    d = Complex{Float64}[2*cos(kx0 + 2*π*α*j) for j in 1:q] #main diagonal
-    mat = full(SymTridiagonal(d, du))
-    mat[1,q] = exp(-im*q*ky)
-    mat[q,1] = exp(im*q*ky)
-    return -mat
-end
-# Computes the q energy levels E(p_y)
-function hhladder(α::Float64, q::Int)
-    kx0 = 0.
-    ky = linspace(-π, π, 100)
-    E = Array(Float64, 100,q)
-    for c in 1:100
-        M = Hermitian(momsphhmat(kx0, ky[c], α, q))
-        E[c,:] = eigvals(M)
-    end
-    E
+bwidth(qs::UnitRange{Int}) = bwidth([qs])
+bwidth(qs::Vector{Int}) = [bwidth(q) for q in qs]
+bwidth(q::Int) = bwidth(1, q)
+
+function bwidth(p::Int, q::Int)
+    gstate = Array(Float64, 25)
+    hhgrstate!(gstate, p, q)
+
+    a,b = extrema(gstate)
+    return b-a
 end
 
-#TODO: rehabilitate the level spacing error function
-#TODO: find minimum zpe error with constraint that level error also be small
+bgap(qs::UnitRange{Int}) = bgap([qs])
+bgap(qs::Vector{Int}) = [bgap(q) for q in qs]
+bgap(q::Int) = bgap(1, q)
 
+function bgap(p::Int, q::Int)
+    ladder = Array(Float64, (25,q))
+    hhladder!(ladder, p)
+    
+    e1 = mean(ladder[:,1])
+    e2 = mean(ladder[:,2])
 
-
-#finding bandwidth
-#hhladder
-function bwidth(q::Int)
-    α=1/q
-    E = hhladder(α,q)
-    v = E[:,1]
-    maximum(v) - minimum(v)
-end
-#finding bandgap
-#hhladder
-function bgap(q::Int)
-    α=1/q
-    E = hhladder(α,q)
-    e1 = mean(E[:,1])
-    e2 = mean(E[:,2])
-    e2 - e1
+    return e2-e1
 end
 
 end #module
-
-
-#finding relative position
-## function relpos(q::Int,κ::Float64; N=35)
-##     α=1/q
-##     E = hhladder(α,q)
-##     e1 = mean(E[:,1])
-##     e2 = mean(E[:,2])
-##     b = e2 - e1
-    
-##     nonz = BP.countentries(N)
-##     ft = ((n,m) -> -one(Complex{Float64}), (n,m) -> -one(Complex{Float64}), (n,m) -> -exp(-im*2π*α*m), (n,m) -> -exp(im*2π*α*m), (n,m) -> 1/2*κ*(n^2+m^2)+zero(Complex{Float64}))
-##     x = full(BP.genspmat(ft..., N,nonz))
-##     e0o = eigvals(Hermitian(x), 1:1)[1]   
-##     a = e0o - e1
-    
-##     a/b*100
-## end
-# Usage:
-# map(relpos, qs, κò)
-
-## bw = [bwidth(q) for q in qs]
-## bg = [bgap(q) for q in qs]
-
-## hheig = HH.hhladder(α,q)
-## ladder = [mean(hheig[:,1]) + (β + 1/2)*κ/(2π*α) for β in 0:14]
-## ## using Color
-## ## dc = distinguishable_colors(q)
-## a = Layer[]
-## for i = 1:q
-##     push!(a, layer(x=linspace(-π, π, 100), y=hheig[:,i], Geom.line, Theme(default_color=dc[i]))[1] )
-## end
-## plot(a)

@@ -1,46 +1,17 @@
 using PyPlot
 import BP
 
-#system parameters
-sp=1
-sq=11
-sγ=0.001
-sκ=0.02
-sN=45
-n=5
-m=5
-tbσ=1.0
-sω1=-3.45
-sω2=-2.47
-dδ=0.001
-#Landau gauge
-ftlan = ( 
-         (n,m,a) -> one(Complex{Float64}), (n,m,a) -> one(Complex{Float64}),
-         (n,m,a) -> exp(-im*2π*a*m), (n,m,a) -> exp(im*2π*a*m))
+const N = 45
+const α = 1/11
+const κ = 0.02
+const γ = 0.001
+const ν = linspace(-3.45,-2.47,981);
+##
 
+M = spzeros(Complex{Float64}, N^2,N^2)
+BP.buildham_exact!(M, N,α,κ)
+spectrum = real(eigs(M, nev=29, which=:SR, ritzvec=false)[1])
 
-freq =  sω1:dδ:sω2
-ftex =  map(f -> (x, y, z) -> -f(x, y, z), ftlan)
-
-# Is `spectrum` affected by the gauge? NO
-# Is symmetric gauge spectrum with a gaussian *identical* to landau gauge with delta? NO
-
-#Symmetric gauge
-ftsym = (
-         (n,m,a) -> exp(-im*π*a*n), (n,m,a) -> exp(im*π*a*n),
-         (n,m,a) -> exp(-im*π*a*m), (n,m,a) -> exp(im*π*a*m))
-
-g =  gcd(sp,sq)
-p =  div(sp,g)
-q =  div(sq,g)
-α =  p/q
-
-nz = BP.countentries(sN)
-# we need to convert from sparse to dense in order to use eigvals
-M = full(BP.genspmat(ftex...,(n,m,a) -> 1/2*sκ*(n^2+m^2) + zero(Complex{Float64}),sN,nz,α))
-#M is the "exact" hamiltonian matrix, without dissipation and pumping
-#exact spectrum
-spectrum =  eigvals(Hermitian(M), 1:29)
 
 #for plotting filter markers
 βlan = [0,1,3,5]
@@ -56,26 +27,50 @@ sω0sym = [spectrum[state]::Float64 for state in ηsym]
 sω0real= [spectrum[state]::Float64 for state in ηreal]
 
 
-pumps = (BP.δpmp, BP.gausspmp, BP.homopmp, BP.randpmp)
+δpmp(n₀::Int,m₀::Int) = BP.δpmp(N; n0=n₀, m0=m₀)
+gausspmp(n₀::Int,m₀::Int) = BP.gausspmp(N; σ=1., n0=n₀, m0=m₀)
+homopmp() = BP.homopmp(N)
+randpmp(s::Int) = BP.randpmp(N; seed=s) #1234
 
-function spect()
-    vlan = Array(Float64, length(pumps),length(freq))
-    vsym = Array(Float64, length(pumps),length(freq))
-    for (j,ω) in enumerate(freq)
-        Slan = BP.genspmat(ftlan...,(n,m,a) -> ω + im*sγ - 1/2*sκ*(n^2+m^2), sN,nz,α)
-        Ssym = BP.genspmat(ftsym...,(n,m,a) -> ω + im*sγ - 1/2*sκ*(n^2+m^2), sN,nz,α)
-        for (i,pump) in enumerate(pumps)
-            P = pump(sN; A=1., seed=1234, σ=tbσ, n0=n, m0=m)
-            Xlan = Slan\P
-            Xsym = Ssym\P
-            vlan[i,j] = sum(abs2(Xlan))
-            vsym[i,j] = sum(abs2(Xsym))
-        end
-    end
-    (vlan, vsym)
-end 
+           
+prm = (α,γ,κ);
 
-(ⅈlan, ⅈsym) = spect()
+spδl = BP.Spectrum(ν,δpmp(5,5), :landau, prm...)
+spgaussl = BP.Spectrum(ν,gausspmp(5,5), :landau, prm...)
+sphoml = BP.Spectrum(ν,homopmp(), :landau, prm...)
+
+
+spgausss = BP.Spectrum(ν,gausspmp(5,5), :symmetric, prm...)
+sphoms = BP.Spectrum(ν,homopmp(), :symmetric, prm...)
+
+sprandl = vec(readdlm("sprandl.txt", Float64));
+
+## intvec = zeros(Float64, length(ν));
+## A = spzeros(Complex{Float64}, N^2,N^2);
+## for j=1:100
+##     P=randpmp(j)
+##     for (i,ω) in enumerate(ν)
+##         BP.buildham_landau!(A, N,α,κ,γ, ω)
+##         intvec[i] += sum(abs2(A\P))
+##     end 
+## end 
+## sprandl = intvec./100;
+
+## extrema(sprandl)
+
+## writedlm("sprandl.txt", sprandl)
+
+
+
+
+##
+for sp in (spδl,spgaussl,sphoml)
+    println(extrema(sp.intensity))
+end
+
+for sp in (spgausss, sphoms)
+    println(extrema(sp.intensity))
+end
 
 
 # matplotlib parameters
@@ -96,44 +91,51 @@ matplotlib["rcParams"][:update](["axes.labelsize" => 22,
                                  "figure.autolayout" => true])
 
 
-f, axes = plt.subplots(length(pumps),1, figsize=(10, 7.3))
-
-for (i, ax) in enumerate(axes)
-    Ilan = vec(ⅈlan[i,:])
-    Isym = vec(ⅈsym[i,:])
-    mx = maximum(Ilan)
-
-    ax[:plot](freq, Ilan, "k")
-    ax[:plot](freq, Isym, color="green", ls="dotted", linewidth=1.5)
-
-    #Landau, δ
-    i == 1 && ax[:vlines](sω0real, 0, mx,  colors="k", linestyles="dashed")
-
-    #Symmetric g, gaussian
-    i == 2 && ax[:vlines](sω0sym, 0, mx,  colors="green", linestyles="dashed")
-
-    #Landau g, homogeneous
-    i == 3 && ax[:vlines](sω0lan, 0, mx,  colors="k", linestyles="dashed")
-
-    ax[:set_xlim](freq[1], freq[end])
-    ax[:set_ylim](0, mx/2)
-
-    if i != length(pumps)
-        ax[:set_xticklabels]([])
-    else
-        ax[:vlines](spectrum, 0, mx/2, colors="orange", linestyles="dashed")
-        ax[:set_xlabel](L"$\omega_0 [J]$")
-    end
-    ax[:set_yticklabels]([])
-    ax[:set_yticks]([])
-#   ax[:set_ylabel](L"$\sum_{m,n} |a_{m,n}|^2$ [a.u.]")
+f, axes = plt.subplots(4, figsize=(10, 7.3))
+axes[1][:plot](spδl.νs,spδl.intensity,"k") 
+for ω in sω0real
+    axes[1][:axvline](x = ω, color="k", ls="dashed")
 end 
 
-f[:savefig]("../../figures/selection.pdf", transparent=true, pad_inches=0.0, bbox_inches="tight")
+axes[2][:plot](spgaussl.νs,spgaussl.intensity,"k") 
+axes[2][:plot](spgausss.νs,spgausss.intensity, color="green", ls="dotted", linewidth=1.5)
+for ω in sω0sym
+    axes[2][:axvline](x = ω, color="green", ls="dashed")
+end 
+axes[2][:set_ylim](0, 1500)
+
+axes[3][:plot](sphoml.νs,sphoml.intensity,"k") 
+axes[3][:plot](sphoms.νs,sphoms.intensity, color="green", ls="dotted", linewidth=1.5)
+for ω in sω0lan
+    axes[3][:axvline](x = ω, color="k", ls="dashed")
+end 
+axes[3][:set_ylim](0, 1e7)
+
+axes[4][:plot](ν,sprandl,"k") 
+for ω in spectrum
+    axes[4][:axvline](x = ω, color="orange", ls="dashed")
+end 
+axes[4][:set_xlabel](L"$\omega_0 [J]$")
+axes[4][:set_ylim](0, 1e6)
+
+for (i, ax) in enumerate(axes)
+    ax[:set_xlim](ν[1], ν[end])
+
+    i != 4 && ax[:set_xticklabels]([])
+
+    ax[:set_yticklabels]([])
+    ax[:set_yticks]([])
+end 
+
+#TODO: add labels for 0 and maximum intensity
+
+f[:savefig]("../../figures/selection.svg", transparent=true, pad_inches=0.0, bbox_inches="tight")
 plt.close(f)
 
-#TODO: use subplots_adjust() to add space to the left side of the figure
-#TODO: use figtext() to add common y label
-#TODO: add labels for 0 and maximum intensity
+
+#TODO: add common y label $\sum_{m,n} |a_{m,n}|^2$ [a.u.]
 #TODO: add (a), (b), (c), (d)
-#TODO: average over multiple disorder realisations
+#TODO: add labels for the filtered states (vert lines)
+#TODO: update article text/captions
+#TODO: add article paragraph titles
+
