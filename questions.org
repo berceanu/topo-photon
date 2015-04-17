@@ -1,20 +1,2 @@
 * is the intensity spectrum for a gaussian pump in the sym gauge identical to the one of a delta pump in the landau gauge? NO
 * are the real space state in the sym gauge identical to their counterparts in the landau gauge YES, but their phase is different
-
-* sign of eta
-** try larger lattice: 60x60
-** check Fock-Darwin paper
-** check contribution from perturbation theory
-
-
-
-* exploratory
-** landau gauge
-*** explain minimum in gaussian
-**** destructive interference
-**** momentum space effect
-**** phase of w.f.
-
-
-
-

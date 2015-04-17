@@ -85,7 +85,6 @@ Universit\`{a} di Trento, I-38123 Povo, Italy}
 \maketitle
 
 
-
 \section{Introduction}
 
 \paragraph{First paragraph.}
@@ -158,7 +157,7 @@ In the MBZ, the analytical expression for an eigenstate labeled $\beta$ (with
 $\beta= 0,1,2,\dots$) reads
 
 \begin{multline}
- \chi_\beta ( {\bf p}) = \mathcal{N}_\beta^{l_{\Omega_n}} \sum_{j = -
+ \chi_\beta (\vt{p}) = \mathcal{N}_\beta^{l_{\Omega_n}} \sum_{j = -
  \infty}^{\infty} e^{- i p_y j a} e^{ - ( p_x + j a l_{\Omega_n}^2 )
  ^2 / 2 l_{\Omega_n}^2}\\
  \times H_\beta ( p_x / l_{\Omega_n} + j a
@@ -204,13 +203,15 @@ is determined by the overlap between the pump state and the eigenstate
 of the system at that frequency.  To exemplify, we compare 4 different
 pumping schemes.
 
-\begin{figure}[htb]
-  \centerline{\includegraphics[width=\linewidth]{selection}}
+\begin{figure}[htb]\centering
+  \includegraphics[width=\linewidth]{selection}
   \caption{Intensity spectra for different pumping conditions: (a)
-    homogeneous pump, (b) pumping with a random phase, (c) pumping a
-    single site and (d) a pump with a Gaussian profile. The dashed
-    orange lines are the positions of the exact eigenstates for an
-    equilibrium system.}
+    pumping the single site (5,5), (b) pumping with a Gaussian
+    profile, (c) homogeneous pumping and (d) pumping with a random
+    phase. Black lines correspond to using the Landau gauge while
+    green (dashed) ones to the symmetric gauge. The dotted vertical
+    lines (with labels indicating the value of $\beta$)
+    mark the states which were selected for later analysis.}
   \label{fig:pumping_schemes}
 \end{figure}
 
@@ -218,9 +219,11 @@ pumping schemes.
 
 \paragraph{Random phase}
 The pumping term in this scheme is given by
-$f_{m,n}=fe^{i\phi_{m,n}}$. The phases $\phi_{m,n}$ are chosen
-from a random nomal distribution, and have values in the interval
-$[0,2\pi)$ . Using this scheme, all states become visible.
+$f_{m,n}=fe^{i\phi_{m,n}}$. The phases $\phi_{m,n}$ are chosen from a
+random normal distribution, and have values in the interval
+$[0,2\pi)$. The bottom panel of Fig.~\ref{fig:pumping_schemes} was
+obtained by averaging over 100 realizations of the random phases.
+Using this scheme, all states become visible.
 
 \paragraph{Homogeneous pumping}
 In the case of homogeneous pumping, $f_{m,n} = f$. Here we see only
@@ -233,10 +236,14 @@ polynomials in the analytical expression in the MBZ). Therefore the
 overlap between this set of states and a homogeneous pump, which is a
 $\delta$ function in momentum space centered at (0,0) is zero.
 
-\begin{figure}[htb]
-  \centerline{\includegraphics[width=0.9\linewidth]{momentum}}
-  \caption{Momentum space representation of the eigenstates
-    corresponding to $\beta=1$ (a), $\beta=3$ (b) and $\beta=5$ (c).}
+\begin{figure}[htb]\centering
+  \includegraphics[width=0.9\linewidth]{momentum}
+  \caption{\emph{Top}: Homonegeous pumping, Landau gauge. Momentum
+    space representation of the eigenstates corresponding to
+    $\beta=0$, 1, 3 and 5.  
+    \emph{Bottom}: Gaussian pump in the
+    symmetric gauge. Momentum space representation of the eigenstates
+    corresponding to $\beta=0$, 1, 9 and 20.}
   \label{fig:hom_mom_sp}
 \end{figure}
 
@@ -342,8 +349,8 @@ increasing the possibility of band mixing. We have that $\Delta E =
 E_2 - E_1 = \frac{A}{q}$ , with $A=9.63$ .
 
 
-\begin{figure}[htb]
-  \centerline{\includegraphics[width=0.7\linewidth]{bands}}
+\begin{figure}[htb]\centering
+  \includegraphics[width=0.7\linewidth]{bands}
   \caption{Bandwidth and bandgap behaviour for the HH model (no trap).}
   \label{fig:energy_bands}
 \end{figure}
@@ -369,8 +376,8 @@ differences. One is the ``zero-point energy" error $\eta_{\text{ZPE}} =
 ``level-spacing error" $\eta_{\text{L}} (\beta) = \frac{2\pi
 \alpha}{\kappa} [E_R(\beta+1) - E_R(\beta)] -1$ .
 
-\begin{figure}[htb]
-  \centerline{\includegraphics[width=0.7\linewidth]{zpe}}
+\begin{figure}[htb]\centering
+  \includegraphics[width=0.7\linewidth]{zpe}
   \caption{Zero point energy error.}
   \label{fig:zpe}
 \end{figure}
@@ -384,8 +391,8 @@ starts to play an important role. In between these two regimes there
 is a transition line along which the error goes to zero.
 
 
-\begin{figure}[htb]
-  \centerline{\includegraphics[width=0.7\linewidth]{weak_trap}}
+\begin{figure}[htb]\centering
+  \includegraphics[width=0.7\linewidth]{weak_trap}
   \caption{Small $\kappa$ limit.}
   \label{fig:error_small_kappa}
 \end{figure}
