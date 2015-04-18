@@ -1,0 +1,12 @@
+* introduction
+* model
+** hh hamiltonian (no trap)
+** harmonic trapping of a dissipative system
+** magnetic brillouin zone
+** symmetric gauge
+* results and discussion
+** selection rules
+*** random phase
+*** homogeneous pumping
+*** delta pump
+* approximations
