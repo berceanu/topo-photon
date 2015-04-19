@@ -77,9 +77,12 @@ Universit\`{a} di Trento, I-38123 Povo, Italy}
 \date{\today}
 
 \begin{abstract}
-  We propose an experimental scheme for the observation of toroidal
-  Landau levels, in momentum space, using a driven dissipative
-  photonic system.
+  We study the Harper-Hofstadter model on a 2D square lattice in the
+  presence of a weak harmonic trap, in the context of a
+  driven-dissipative system. We extend the results of
+  Ref.~\onlinecite{price2014magnetic} and propose an experimental
+  scheme for the direct observation of toroidal Landau levels in
+  momentum space in linear photonic systems.
 \end{abstract}
 
 \maketitle
@@ -87,76 +90,131 @@ Universit\`{a} di Trento, I-38123 Povo, Italy}
 
 \section{Introduction}
 
-\paragraph{First paragraph.}
-The main objective of this work was to extend the formalism introduced
-in Ref.~\onlinecite{price2014magnetic} to the case of a driven
-dissipative system. In light of the recent surge in popularity of the
-study of topological effects in photonic systems, we propose an
-experimental scheme for observing Landau levels in momentum space in
-such a system.
+\paragraph{Quantum magnetism is interesting, even more so in momentum space.}
+The study of electrons in a planar geometry under the influence of a
+strong magnetic field gave rise to such interesting physics as the
+integer and fractional quantum Hall effects. Quantum magnetism on
+topologically nontrivial manifolds in momentum space, however, is less
+well studied.  With the advent of synthetic gauge fields, new horizons
+were opened for simulating quantum magnetism with neutral particles,
+both in an atomic and photonic context.
 
+\paragraph{Photonic systems are a good canditate for magnetism.}
+Photonic systems are particularly advantageous for this type of
+studies, since magnetic fluxes of the order of the flux quantum per
+unit cell are now within experimental reach. Further advantages are
+the ability to work at room temperature and the possibility of local
+access to the optical field in driven-dissipative
+systems~\cite{carusotto2013fluids}. This allows one to directly
+observe the effects of such strong artificial gauge fields, by imaging
+the photonic wavefunction.
+
+\paragraph{Momentum space dual of HH model provides new insights.}
+In Ref.~\onlinecite{price2014magnetic}, the authors considered the
+Harper-Hofstadter model~\cite{hofstadter1976butterfly} on a 2D lattice
+with the additional presence of a weak harmonic trapping potential. It
+was shown that the energy spectrum is analogous to that of a particle
+moving in momentum space on the surface of a torus, in constant
+magnetic field.  The toroidal topology arises from the translational
+symmetry of the model, while the constant magnetic field is provided
+by the Berry curvature of the energy dispersion. Finally, the weak
+quadratic potential plays the role of a kinetic energy term in
+momentum space.
+
+\paragraph{The main goal and its importance.}
+The main goal of the current work is to extend the above-mentioned
+results from the atomic case to the case of driven-dissipative
+photonic systems. This would pave the way for the first direct
+observation of toroidal Landau levels in momentum space.
+
+
+\paragraph{Hafezi's arrays could be used for HH physics.}
+Experimental developments have allowed the engineering of
+topologically nontrivial energy bands, for example in the context of
+exciton-polariton systems, where arrays of coupled micropillars were
+used~\cite{jacqmin2014dirac}. However, the presence of optical
+nonlinearities in such systems adds an extra layer of complexity.  We
+therefore focus our present study on linear optical systems, such as
+arrays of silicon-based coupled ring resonators.  With a proper design
+of the resonator array~\cite{hafezi2013imaging}, this latter system
+has been demonstrated to be accurately described by the
+Harper-Hofstadter model with a strong and uniform artificial gauge
+field piercing the lattice.  The harmonic trapping potential could
+then be easily added as a modulation of the resonator size.
+
+
+\paragraph{Summary of the manuscript}
+After a short theoretical introduction to the model, we present the
+main results of numerical simulations, followed by a viable proposal
+for a photonics-based experiment. The validity of the approximations
+we employ is discussed in the Appendix.
 
 \section{Model}
 \label{sec:model}
 
-\subsection{Harper-Hofstadter Hamiltonian (no trap)}
-\label{sec:hh_notrap}
+We consider a tight-binding model of non-interacting photons hopping
+on a 2D square lattice, with nontrivial hopping phases created, for
+instance, by using a synthetic gauge field. We also include an
+additional harmonic trapping potential, so one can write the full Hamiltonian as
 
-Without the harmonic trap, we have the celebrated Harper-Hofstadter
-Hamiltonian (unless otherwise specified, we work in the Landau gauge):
-
-\begin{equation}\label{eq:gigi}
-  \mathcal{H}_0=-J\sum_{m,n}(\hat{a}_{m+1,n}^{\dagger}\hat{a}_{m,n}+e^{i2\pi\alpha m}\hat{a}_{m,n+1}^{\dagger}\hat{a}_{m,n}) + \text{h.c.}
-\end{equation}
-
-In order to solve this Hamiltonian, the $q \times q$ matrix one has to diagonalize is
-
-\begin{equation}
--J\begin{pmatrix}
-    v_1 & 1 & 0 & 0 & \cdots & e^{-iqp_y}\\
-    1 & v_2 & 1 & 0 & \cdots & 0\\
-    \cdots & \cdots & \cdots & \cdots & \cdots & \cdots\\
-    0 & 0 & \cdots & 1 & v_{q-1} & 1\\
-    e^{i q p_y} & 0 & \cdots & 0 & 1 & v_q\\
-  \end{pmatrix}
-\end{equation}
-
-where $v_j = 2\cos(p_x^0 + 2\pi \alpha j)$, with $j$ running from 1 to $q$.
-
-\subsection{Harmonic trapping of a dissipative system}
-\label{sec:hh_trap}
-
-In the presence of a harmonic trap, one needs to solve Hamilton's
-equation of motion for the following Hamiltonian:
-
-\begin{equation}
+\begin{equation}\label{eq:model}
 H=\mathcal{H}_0+\frac{1}{2}\kappa
-a^{2}\sum_{m,n}(m^{2}+n^{2})\hat{a}_{m,n}^{\dagger}\hat{a}_{m,n}
+\sum_{m,n}(m^{2}+n^{2})\hat{a}_{m,n}^{\dagger}\hat{a}_{m,n}.
 \end{equation}
 
-Introducing pumping and decay, Hamilton's equation reads
-\begin{equation}
-i\partial_{t}a_{i,j}(t)+i\gamma
-a_{i,j}(t)-f_{i,j}e^{-i\omega_{0}t}=\left[a_{i,j}(t),H\right]
-\end{equation}
+Here $\hat{a}_{m,n}^{\dagger}$ ($\hat{a}_{m,n}$) are the creation
+(annihilation) operators for a photon at site $(m,n)$ and $\kappa$ is the
+strength of the trap.
 
-Expressing $\omega_{0}$, $\gamma$, $\kappa$ and $f$ in units of $J$
-and setting $a=1$ we get
-
+$\mathcal{H}_0$ is the Harper-Hofstadter Hamiltonian, the exact form
+of which depends on the particular choice of gauge, through the
+hopping phases $\phi = (\phi_x, \phi_y)$ (here $J$ is the real hoping
+amplitude)
+%
 \begin{multline}
-a_{m+1,n}+a_{m-1,n}+e^{-i2\pi\alpha ma}a_{m,n+1}+e^{i2\pi\alpha
-ma}a_{m,n-1}\\
-+\left[\omega_{0}+i\gamma-\frac{1}{2}\kappa
-a^{2}(m^{2}+n^{2})\right]a_{m,n}=f_{m,n}
+\mathcal{H}_0=-J\sum_{m,n}(e^{i \phi_x}\hat{a}_{m+1,n}^{\dagger}\hat{a}_{m,n}\\
++e^{i \phi_y}\hat{a}_{m,n+1}^{\dagger}\hat{a}_{m,n}) + \text{h.c.}
 \end{multline}
 
-This has a similar form to Eq.~(2) of Ref.~\onlinecite{ozawa2014qhe}.
 
-\subsection{Magnetic Brillouin zone}
-In the MBZ, the analytical expression for an eigenstate labeled $\beta$ (with
-$\beta= 0,1,2,\dots$) reads
+In the Landau gauge only the hopping amplitude along $y$ is affected,
+so we have $\phi = (0, 2\pi\alpha m)$, where $\alpha = \frac{p}{q}$ is
+the number of magnetic flux quanta per unit cell ($p$ and $q$ are
+coprime integers).
 
-\begin{multline}
+The symmetric gauge preserves rotational invariance so hopping terms
+along both $x$ and $y$ are now affected: $\phi = (-\pi\alpha n,  \pi\alpha m)$.
+
+Assuming the Landau gauge, one can diagonalize $\mathcal{H}_0$ in
+momentum space, after defining a new, magnetic Brillouin zone (MBZ),
+by introducing $p_x = p_x^0 + 2\pi \alpha m$. The resulting energy
+bands $E_n(\vt{p})$ ($n = 1 \dots q$) have nontrivial topology, as
+their Berry curvature $\Omega_n(\vt{p})$ is nonzero.
+
+We work in the particular case of $\alpha=1/q$, the general case of
+$p \neq 1$ involving degenerate energy bands with a non-Abelian Berry
+connection.  For odd $q$, the Chern number of each band (except the
+middle one) is -1. For large $q$, the Berry curvature of these bands
+can be considered uniform, $\Omega_n(\vt{p}) = \Omega_n$, with an
+average value $|\Omega_n| = \frac{1}{2\pi\alpha}$. Furthermore, if
+the bandwidth is much smaller than the trapping energy we can also
+assume $E_n(\vt{p}) = E_n$.
+
+Using the dual momentum space interpretation of Eq.~\eqref{eq:model},
+the eigenstates of $H$ for fixed $\alpha$ can then be written
+as $q$ semi-infinite ladders:~\cite{price2014magnetic}
+%
+\begin{equation}\label{eq:ladders}
+  \epsilon_{n,\beta} = E_n + \left(\beta + \frac{1}{2}\right) \kappa |\Omega_n|
+\end{equation}
+where we have introduced the Landau level quantum number
+$\beta = 0,1,2,\dots$.
+
+In the MBZ, the analytical expression (in the Landau gauge) for an
+eigenstate $\beta$ as a function of the Hermite polynomials $H_\beta$
+is known~\cite{price2014magnetic}:
+%
+\begin{multline}\label{eq:chi}
  \chi_\beta (\vt{p}) = \mathcal{N}_\beta^{l_{\Omega_n}} \sum_{j = -
  \infty}^{\infty} e^{- i p_y j a} e^{ - ( p_x + j a l_{\Omega_n}^2 )
  ^2 / 2 l_{\Omega_n}^2}\\
@@ -164,45 +222,73 @@ $\beta= 0,1,2,\dots$) reads
  l_{\Omega_n})
 \end{multline}
 
-and the normalisation constant is
+Here $l_{\Omega_n} = \sqrt{\frac{1}{|\Omega_n|}}$ is the analogue of
+the magnetic length and the normalisation constant is
 
 \begin{equation}
 \mathcal{N}_\beta^{l_{\Omega_n}} = \left( \frac{\sqrt{2/q}} {(2^\beta
 \beta! \times 2 \pi l_{\Omega_n}^2)} \right)^{1/2}
 \end{equation}
 
-Here $H_\beta$ are the Hermite polynomials, $l_{\Omega_n} =
-\sqrt{\frac{1}{|\Omega_n|}}$ is the characteristic momentum scale,
-with the average Berry curvature $|\Omega_n| = \frac{a^2}{2\pi\alpha}$.
+Following the treatment of Ref.~\onlinecite{ozawa2014qhe}, we now
+include dissipation in the model by assuming uniform and local losses
+characterized by the loss rate $\gamma$. The pump is assumed to be
+monochromatic, with frequency $\omega_0$ and spatial profile
+$f_{m,n}$.  Furthermore, as we are dealing with a noninteracting
+system, we can safely replace the operators with their expectation
+values and assume that their steady state evolution follows that of
+the pump: $a_{m,n}(t) = a_{m,n} e^{-i \omega_0 t}$.
 
-\subsection{Symmetric gauge}
-So far we have used the Landau gauge, which preserves translational
-invariance along the $y$-axis: $A = (0, Bx)$. In the Landau gauge,
-only the hopping amplitude along $y$ is affected.  But one can also
-use the symmetric gauge, which preserves rotational invariance: $A =
-\frac{B}{2}(-y, x)$. Hopping terms along both $x$ and $y$ are now
-affected.  The new Hamiltonian is
-\begin{multline}
-\mathcal{H}_0=-J\sum_{m,n}(e^{-i\pi\alpha
-n}\hat{a}_{m+1,n}^{\dagger}\hat{a}_{m,n}\\
-+e^{i\pi\alpha
-m}\hat{a}_{m,n+1}^{\dagger}\hat{a}_{m,n}) + \text{h.c.}
+One then needs to solve the resulting Hamilton's equation of motion:
+%
+\begin{equation}
+i\partial_{t}a_{i,j}(t)+i\gamma
+a_{i,j}(t)-f_{i,j}e^{-i\omega_{0}t}=\left[a_{i,j}(t),H\right]
+\end{equation}
+
+Expressing $\omega_{0}$, $\gamma$, $\kappa$ and $f$ in units of $J$
+and measuring distances in units of the lattice spacing we get
+%
+\begin{multline}\label{eq:linear_problem}
+e^{-i\phi_x}a_{m+1,n}+e^{i\phi_x}a_{m-1,n}+e^{-i\phi_y}a_{m,n+1}+e^{i\phi_y}a_{m,n-1}\\
++\left[\omega_{0}+i\gamma-\frac{1}{2}\kappa
+(m^{2}+n^{2})\right]a_{m,n}=f_{m,n}
 \end{multline}
+which is a set of linear equations to be solved numerically for each
+lattice site.
+
 
 \section{Results and discussion}
 \label{sec:results}
 
-In the following plots, if not otherwise specified, we use a system of $N \times N = 45 \times 45$ sites, with $\kappa =
-0.02$, $\gamma = 0.001$ and $\alpha = 1/11$.
+We now present the main results of numerically solving
+Eq.~\eqref{eq:linear_problem} for a lattice of
+$N \times N = 45 \times 45$ sites, with $\kappa = 0.02$,
+$\gamma = 0.001$ and $\alpha = 1/11$.  The numerical code was written
+in Julia~\cite{bezanson2014julia} and is available online as ancillary
+files for this preprint.
+
+For simplicity we limit ourselves to pump frequencies which lie
+withing the first ladder of states, given by Eq.~\eqref{eq:ladders}
+for the case of $n = 1$.
+
 
 \subsection{Selection rules}
 \label{sec:selection}
 
-The visibility of a state in the intensity vs pump frequency spectrum
-is determined by the overlap between the pump state and the eigenstate
-of the system at that frequency.  To exemplify, we compare 4 different
-pumping schemes.
-
+\paragraph{The overlap between the pump state and the eigenstate determines the intensity.}
+We first look at the intensity spectrum as a function of pump
+frequency Fig.~\ref{fig:pumping_schemes}.  Whenever the pump frequency
+$\omega_0$ is resonant with an eigenstate $\epsilon_{1,\beta}$ of the
+Hamiltonian Eq.~\eqref{eq:model}, we should get a peak in the
+spectrum. The peaks are of course broadened by the decay rate
+$\gamma$, and their height depends on the overlap between the spatial
+amplitude profile of the pump and the underlying eigenstate of $H$ at
+that energy ($\hbar = 1$). Furthermore, as we are dealing with
+gauge-dependent effects, the particular choice of gauge will also
+affect the spectrum. To exemplify, we compare 4 different pumping
+schemes in both the Landau and symmetric gauge.
+%
 \begin{figure}[htb]\centering
   \includegraphics[width=\linewidth]{selection}
   \caption{Intensity spectra for different pumping conditions: (a)
@@ -215,27 +301,26 @@ pumping schemes.
   \label{fig:pumping_schemes}
 \end{figure}
 
+We must emphasize that, while the absolute value of the real-space
+wavefunction is identical in both gauges, its phase is not, and
+neither is its momentum space representation (see
+Fig.~\ref{fig:hom_mom_sp}). It is only the symmetric gauge which has a
+well defined angular momentum. This is important when examining the
+selection rules.
 
-
-\paragraph{Random phase}
-The pumping term in this scheme is given by
-$f_{m,n}=fe^{i\phi_{m,n}}$. The phases $\phi_{m,n}$ are chosen from a
-random normal distribution, and have values in the interval
-$[0,2\pi)$. The bottom panel of Fig.~\ref{fig:pumping_schemes} was
-obtained by averaging over 100 realizations of the random phases.
-Using this scheme, all states become visible.
-
-\paragraph{Homogeneous pumping}
-In the case of homogeneous pumping, $f_{m,n} = f$. Here we see only
-half the states (in the Landau gauge, that is). The reason for this
-particular selection rule becomes apparent as one plots the
-eigenstates in momentum space. We see that the states with an odd
-value of $\beta$ have an odd number of nodes, with one node in the
-center (this can be understood from the properties of the Hermite
-polynomials in the analytical expression in the MBZ). Therefore the
-overlap between this set of states and a homogeneous pump, which is a
-$\delta$ function in momentum space centered at (0,0) is zero.
-
+\paragraph{A δ pump in real space is homogeneous in momentum space.}
+The simplest case is that of pumping a single site, with a pump of the
+form $f_{m,n} = \delta_{m,m_0} \delta_{n,n_0}$. The pump is of course
+homogeneous in momentum space, so one must think of real space when
+explaining the shape Fig.~\ref{fig:pumping_schemes}, panel (a).
+Indeed, the wavefunctions of $H$ in real space are rings of finite
+width which increase in radius as the energy increases (see
+Fig.~\ref{fig:delta_real_sp}). Therefore, if one pumps an off-center
+site, there will only be a limited range of rings that will have radii
+such as to overlap with the pump spot. Those are the states that
+become visible. As the momentum space plays no role here, the result
+in the Landau gauge will be identical.
+%
 \begin{figure}[htb]\centering
   \includegraphics[width=0.9\linewidth]{momentum}
   \caption{\emph{Top}: Homonegeous pumping, Landau gauge. Momentum
@@ -248,19 +333,35 @@ $\delta$ function in momentum space centered at (0,0) is zero.
 \end{figure}
 
 
+\paragraph{Gaussian pumping is now bound also in momentum space.}
+The next logical step in complexity is to use a Gaussian pump, a more
+extended version of the $\delta$ pump. Its amplitude is given by
+$f_{m,n} = \exp- \frac{1}{2\sigma^2} \left[(m-m_0)^2 + (n-n_0)^2
+\right]$.
+We take one which is also centered at $(m_0,n_0) = (5,5)$, with
+$\sigma =1$. The main effect is, as expected, that now more states
+become visible in both the low (smaller $\beta$) and high-energy
+(larger $\beta$) sections of the spectrum. The intensity of the states
+however is more difficult to explain, due to the overlap with pump in
+momentum space. For example, as the symmetric gauge states have a
+ring-like structure also in momentum space, the high energy portion of
+the spectrum is washed out compared to its Landau gauge counterpart.
 
-\paragraph{$\delta$-like pump}
-If one pumps a single site, using a pump of the form $f_{m,n} =
-\delta_{m,m_0} \delta_{n,n_0}$, the pump profile will be homogeneous
-in momentum space.  However, one can now understand the associated
-selection rule by looking at the overlap in real-space. The real-space
-eigenstates are concentric circles with increasing radii (as one goes
-up the ladder of states). Therefore, is one pumps an off-center site,
-there will only be a small range of states, with radii close to
-distance between the origin and the pumped site, which will have
-considerable overlap with the pump. Those are the states that become
-visible.
-
+\paragraph{Homogeneous spectrum can be understood using a parity argument in momentum space.}
+The limit of a very wide Gaussian is a homogeneous pump profile, and
+that is what we consider in panel (c) of
+Fig.~\ref{fig:pumping_schemes}. Now $f_{m,n} = f$, and the situation
+looks very different in the 2 gauges.  In the Landau gauge we see only
+half of the states. The reason for this particular selection rule
+becomes apparent as one plots the eigenstates in momentum space, as
+shown in the top row of Fig.~\ref{fig:hom_mom_sp}. We see that the
+states with an odd value of $\beta$ have an odd number of nodes, with
+one node in the center. This also has an analytical justification
+given by the properties of the Hermite polynomials in
+Eq.~\eqref{eq:chi}. Therefore the overlap between this set of states
+and a homogeneous pump, which is a $\delta$ function in momentum
+space, is nonexistent. 
+%
 \begin{figure}[htb]
   \centering
   \includegraphics[width=0.9\linewidth]{real}
@@ -269,39 +370,35 @@ visible.
   \label{fig:delta_real_sp}
 \end{figure}
 
+The symmetric gauge, on the other hand, shows only the lowest
+eigenstate, corresponding to $\beta=0$. That is because the angular
+momentum of the pump itself is 0, therefore it cannot excite any state
+with nonzero angular momentum. However, one could use, for instance, a
+Gauss-Laguerre pump to address any particular state.
 
-\paragraph{Gaussian pump}
-Last but not least, one can use a more extended, Gaussian pump, given
-by \(f(x,y) = A \exp- \frac{1}{2\sigma^2} \left[(x-x_0)^2 + (y-y_0)^2
-\right]\). We take one which is also centered at \((m_0,n_0) = (5,5)\),
-with \(\sigma =1\) . The main effect is that now the range of visible
-states becomes extended in both directions of smaller radii (smaller
-\(\beta\)) and larger radii (larger \(\beta\)).
+\paragraph{One must use a random phase in order to see all the states.}
+In order to see the complete ladder of states, we chose a pump which
+has a random site-dependent phase $\phi_{m,n}$:
+$f_{m,n}=fe^{i\phi_{m,n}}$.  The phases are chosen from a random
+normal distribution, and have values in the interval $[0,2\pi)$. The
+bottom panel of Fig.~\ref{fig:pumping_schemes} was obtained by
+averaging over 100 distinct realizations of these random phases. That
+results in a relatively even intensity distribution, for both gauges.
 
-\subsection{Gauge dependence}
-\label{sec:gauge}
-It is important to realise that we are dealing with gauge-dependent
-physics here. For instance, if one uses a symmetric gauge instead of
-the Landau one, the selection rules are modified. Now the momentum
-space representation of the eigenstates are also concentric rings with
-increasing radii. So with a homogeneous pump, only the lowest
-eigenstate $\beta=0$ is visible because for higher states the ring
-opens in momentum space. The random phase and single-site pumping
-spectra show no difference from the Landau gauge results, while the
-Gaussian pump result is now limited also in momentum space.
-
-%TODO: add article paragraph titles
-
+%Lorentzian tails interfere.
 
 \section{Experimental proposal}
 \label{sec:experiment}
 
-We now focus on a realistic system, with $11 \times 11$ sites. The new
-value of the dissipation constant is now closer to experiments,
-$\gamma = 0.0505$. This makes the states harder to resolve, so we must
-also take a stronger trap to increase the level spacing. We chose
+\paragraph{Greater dissipation implies spectral broadening.}
+We now focus on a realistic system, within experimental reach. The
+lattice size is $11 \times 11$ sites and the new value of the loss
+rate is $\gamma = 0.0505$. This of course broadens the levels, making
+them harder to resolve. Looking at Eq.~\eqref{eq:ladders}, we see that
+the level spacing is given by $\frac{\kappa}{2\pi\alpha}$, so in order
+to increase the spacing we must consider a stronger trap. We chose
 $\kappa = 0.2$ and $\alpha = 1/7$. We work in the Landau gauge and
-pump the single site situated on the upper edge of the system, at
+pump the single site situated on the upper border of the system, at
 $(m_0,n_0)= (0,5)$.
 
 \begin{figure}[htb]
@@ -309,13 +406,17 @@ $(m_0,n_0)= (0,5)$.
   \includegraphics[width=0.9\linewidth]{exp_spect}
   \caption{\emph{Top}: Intensity spectrum for $N=11$ and
     $\gamma = 0.0505$. We filter at the energy of the eigenstate
-    $\beta=7$ (long dashed line).
-    \emph{Bottom}: Slice along the
-    $p_x^0 = 0$ line in the MBZ (cont line, black) compared to the
-    analytical prediction (dotted line, blue). The orange dashed line
-    shows the same slice for the non-dissipative case.}
+    $\beta=7$ (long dashed line). The orange vertical dashed lines
+    show the eigenstates of $H$ from Eq.~\eqref{eq:model}.
+    \emph{Bottom}: Slice along the $p_x^0 = 0$ line in the MBZ (cont
+    line, black) compared to the analytical prediction of
+    Eq.~\eqref{eq:chi}, $|\chi_7(0,p_y)|^2$ (dotted line, blue). The
+    orange dashed line shows the same slice for the non-dissipative
+    case.}
   \label{fig:exp_spectrum}
 \end{figure}
+
+The spectrum is shown in Fig.~\ref{fig:exp_spectrum} and ...
 
 
 \begin{figure}[htb]
@@ -329,7 +430,11 @@ $(m_0,n_0)= (0,5)$.
   \label{fig:exp_states}
 \end{figure}
 
+\section{Conclusion}
+\label{sec:conclusion}
 
+\paragraph{One possible outlook is to include interactions.}
+One interesting outlook would be to include the effect of photon-photon interactions in the model. When the synthetic gauge field is combined with strong interactions, one can hope to observe the hallmarks of the fractional quantum Hall physics.
 
 
 \acknowledgments

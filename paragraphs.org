@@ -1,12 +1,23 @@
-* introduction
-* model
-** hh hamiltonian (no trap)
-** harmonic trapping of a dissipative system
-** magnetic brillouin zone
-** symmetric gauge
 * results and discussion
-** selection rules
-*** random phase
-*** homogeneous pumping
-*** delta pump
+** experimental proposal
+*** Finite size effects.
+*** Levels of second and first ladder show up as one.
+*** We can compare the w.f. in the MBZ with its ananlytical expression.
+*** The band is still flat at q=7 and the bandwidth is larger.
+* conclusions
+** higher level of analysis
+** significance of the work
 * approximations
+** In the limit of small κ we need to consider the Fock Darwin state
+** There are two main approximations in Hannah's paper.
+** Their scaling of bandwidth and bandgap with q is different.
+** The level spacing error is dominated by band-mixing effects. 
+** We take the mean energy of the band as E₁.
+** There is a positive contribution to the zero point energy error.
+** For stronger traps, this contribution becomes negative.
+
+
+* TODO Plot pump in momentum space in exploratory IJulia notebook.
+* TODO Check finite size effects in exploratory IJulia notebook.
+
+
