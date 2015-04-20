@@ -171,7 +171,7 @@ of which depends on the particular choice of gauge, through the
 hopping phases $\phi = (\phi_x, \phi_y)$ (here $J$ is the real hoping
 amplitude)
 %
-\begin{multline}
+\begin{multline}\label{eq:hh_hamiltonian}
 \mathcal{H}_0=-J\sum_{m,n}(e^{i \phi_x}\hat{a}_{m+1,n}^{\dagger}\hat{a}_{m,n}\\
 +e^{i \phi_y}\hat{a}_{m,n+1}^{\dagger}\hat{a}_{m,n}) + \text{h.c.}
 \end{multline}
@@ -196,9 +196,10 @@ $p \neq 1$ involving degenerate energy bands with a non-Abelian Berry
 connection.  For odd $q$, the Chern number of each band (except the
 middle one) is -1. For large $q$, the Berry curvature of these bands
 can be considered uniform, $\Omega_n(\vt{p}) = \Omega_n$, with an
-average value $|\Omega_n| = \frac{1}{2\pi\alpha}$. Furthermore, if
-the bandwidth is much smaller than the trapping energy we can also
-assume $E_n(\vt{p}) = E_n$.
+average value $|\Omega_n| = \frac{1}{2\pi\alpha}$. Furthermore, if the
+bandwidth is much smaller than the trapping energy we can also assume
+$E_n(\vt{p}) = E_n$. For a detailed discussion of the approximations,
+see Appendix~\ref{app:approximations}.
 
 Using the dual momentum space interpretation of Eq.~\eqref{eq:model},
 the eigenstates of $H$ for fixed $\alpha$ can then be written
@@ -397,9 +398,15 @@ rate is $\gamma = 0.0505$. This of course broadens the levels, making
 them harder to resolve. Looking at Eq.~\eqref{eq:ladders}, we see that
 the level spacing is given by $\frac{\kappa}{2\pi\alpha}$, so in order
 to increase the spacing we must consider a stronger trap. We chose
-$\kappa = 0.2$ and $\alpha = 1/7$. We work in the Landau gauge and
-pump the single site situated on the upper border of the system, at
-$(m_0,n_0)= (0,5)$.
+$\kappa = 0.2$ and $\alpha = 1/7$. The first band of $\mathcal{H}_0$
+is still relatively flat compared to the hopping $J$ for this value of
+$\alpha$ and the bandwidth $E_2 - E_1$ is larger than before,
+preventing the band mixing due to the stronger trap potential. For an
+in-depth discussion we refer the reader to
+Appendix~\ref{app:approximations}.
+
+ We work in the Landau gauge and pump a single site,
+situated on the upper border of the system, at $(m_0,n_0)= (0,5)$.
 
 \begin{figure}[htb]
   \centering
@@ -413,10 +420,34 @@ $(m_0,n_0)= (0,5)$.
     Eq.~\eqref{eq:chi}, $|\chi_7(0,p_y)|^2$ (dotted line, blue). The
     orange dashed line shows the same slice for the non-dissipative
     case.}
+%TODO: change label to $|\chi_7(0,p_y)|^2$
   \label{fig:exp_spectrum}
 \end{figure}
 
-The spectrum is shown in Fig.~\ref{fig:exp_spectrum} and ...
+
+The spectrum is shown in Fig.~\ref{fig:exp_spectrum}. Apart from the
+expected broadening due to larger losses, we note that for frequencies
+larger than -1.5 $J$ we start to see states from the second ladder
+$\epsilon_{2,\beta}$. Their proximity to the first ladder states means
+they cannot be resolved as separate peaks in the dissipative spectrum.
+
+We filter at the energy indicated by the black dashed line and plot
+the resulting emission in real and momentum space (full BZ), as well
+as in the MBZ. For comparison, we also plot the wavefunction of the
+Hamiltonian $H$ in Eq.~\eqref{eq:model} as the top row of
+Fig.~\ref{fig:exp_states}. The difference between the two is of
+course, the lack of pumping and dissipation of the latter. We see
+that, even in the presence of finite size effects due to such a small
+system, one can still distinguish the nodal structure of the emission
+in momentum space, characteristic of a toroidal Landau level. 
+
+Furthermore, as the expression of the wavefunction in MBZ for the
+Landau gauge is given by Eq.~\eqref{eq:chi}, we can compare by taking
+a slice along the $p_x^0 = 0$ line in the third column of
+Fig.~\ref{fig:exp_states}. The result is shown in the bottom panel of
+Fig.~\ref{fig:exp_spectrum} and shows good agreement with the
+analytics.
+
 
 
 \begin{figure}[htb]
@@ -433,6 +464,16 @@ The spectrum is shown in Fig.~\ref{fig:exp_spectrum} and ...
 \section{Conclusion}
 \label{sec:conclusion}
 
+% higher level of analysis
+% significance of the work
+
+In conclusion, we have shown that toroidal Landau levels in momentum
+space can readily be observed in linear driven-dissipative photonic
+systems. Currently existing setups, such as the arrays of
+silicon-based coupled ring resonators of
+Ref.~\onlinecite{hafezi2013imaging} would make a prime candidate for
+such an experiment.
+
 \paragraph{One possible outlook is to include interactions.}
 One interesting outlook would be to include the effect of photon-photon interactions in the model. When the synthetic gauge field is combined with strong interactions, one can hope to observe the hallmarks of the fractional quantum Hall physics.
 
@@ -446,71 +487,132 @@ HMP, TO and IC acknowledge financial support by the Autonomous Province of Trent
 \bibliographystyle{apsrev4-1}
 \bibliography{topo}
 
+
 \appendix
 
 \section{Approximations}\label{app:approximations}
-The two main approximations are the flat-band approximation, where one
-neglects the momentum dependence of the lowest HH band and the weak
-potential approximation which implies that the trap is not strong
-enough to cause significant mixing with the other energy bands.  The
-HH Hamiltonian has $q$ bands, which get exponentially flat in the
-limit of large $q$. Quantitatively, we have that the bandwidth $BW =
-E_1^{\text{max}} - E_1^{\text{min}} = A e^{b q}$ , with $b = -1.09$
-and $A = 7.4$ . The bandgap however gets smaller with increasing $q$,
-increasing the possibility of band mixing. We have that $\Delta E =
-E_2 - E_1 = \frac{A}{q}$ , with $A=9.63$ .
 
+
+\paragraph{There are two main approximations in Hannah's paper.}
+There are two main approximations that allow one to write
+Eq.~\eqref{eq:ladders}. The first one is the so-called flat-band
+approximation, where one neglects the momentum dependence of the
+lowest Harper-Hofstadter band: $E_1(\vt{p}) = E_1$ and the second one is
+assuming the trap is weak enough not to induce significant mixing with
+the other energy bands (single-band approximation).
+
+The Harper-Hofstadter Hamiltonian in Eq.~\eqref{eq:hh_hamiltonian} has
+$q$ bands, which get exponentially flat in the limit of large
+$q$. Focusing on the lowest band, we can define its width as
+\begin{equation}
+ BW = \max_{\vt{p}}(E_1(\vt{p})) - \min_{\vt{p}}(E_1(\vt{p})) 
+\end{equation}
+
+\paragraph{The scaling of bandwidth and bandgap with q is different.}
+We also define the bandgap beween the lowest level and the next one as
+\begin{equation}
+  \Delta E = \left<E_2(\vt{p})\right>_{\vt{p}} - \left<E_1(\vt{p})\right>_{\vt{p}}
+\end{equation}
+Within this Appendix, as well as in the rest of the paper,
+$\alpha=\frac{1}{q}$ so we plot these 2 quantities as a function of
+$q$ in Fig.~\ref{fig:energy_bands}. We see indeed that the bandwidth
+goes as $e^{-q}$, while the bandgap decreases as roughly
+$\frac{1}{q}$.
 
 \begin{figure}[htb]\centering
   \includegraphics[width=0.9\linewidth]{bands}
-  \caption{Bandwidth and bandgap behaviour for the HH model (no trap).}
+  \caption{Scaling of the bandwidth and bandgap for the
+    Harper-Hofstadter Hamiltonian $\mathcal{H}_0$ of
+    Eq.~\eqref{eq:hh_hamiltonian}.}
   \label{fig:energy_bands}
 \end{figure}
 
-
-One can compare the theoretical expression for the ladder of states labeled by $\beta$ 
-to the ``real" energies given by exact diagonalization
+To quantify the deviations from the eigenspectrum predicted by
+Eq.~\eqref{eq:ladders} we introduce two dimensionless parameters,
+$\eta_{\text{zpe}}$ and $\eta_{\text{lev}}$. The former quantifies the
+deviations of the ``zero-point energy" from the predicted value while the
+latter has to do with the level spacing within each ladder. For
+simplicity, we only look at the first ladder of states and can write
+the theoretical (as predicted by Eq.~\eqref{eq:ladders}) and ``real"
+(as given by exact diagonalization of Eq.~\eqref{eq:model}) energies as
 
 \begin{subequations}
   \begin{align}
-    E_T &= E_1 + \frac{1}{2}\frac{\kappa}{2\pi\alpha} + \beta \frac{\kappa}{2\pi\alpha}\\
-    E_R &= E_1 +
-          (1+\eta_{\text{ZPE}})\frac{1}{2}\frac{\kappa}{2\pi\alpha} +
-          (1+\eta_{\text{L}})\beta \frac{\kappa}{2\pi\alpha}
+    E_T &= \left<E_1(\vt{p})\right>_{\vt{p}} + \frac{1}{2}\frac{\kappa}{2\pi\alpha} + \beta \frac{\kappa}{2\pi\alpha}\\
+    E_R &= \left<E_1(\vt{p})\right>_{\vt{p}} +
+          (1+\eta_{\text{zpe}})\frac{1}{2}\frac{\kappa}{2\pi\alpha} +
+          (1+\eta_{\text{lev}})\beta \frac{\kappa}{2\pi\alpha}
   \end{align}   
 \end{subequations}
-  
 
 
-Here we have introduced two parameters to quantify the observed
-differences. One is the ``zero-point energy" error $\eta_{\text{ZPE}} =
-\frac{4\pi\alpha}{\kappa} (E_R - E_T)$ and the other is the
-``level-spacing error" $\eta_{\text{L}} (\beta) = \frac{2\pi
-\alpha}{\kappa} [E_R(\beta+1) - E_R(\beta)] -1$ .
+Rearranging, we get extract the ``zero-point energy" deviation
+$\eta_{\text{zpe}} = \frac{4\pi\alpha}{\kappa} (E_R - E_T)$ and plot
+it in Fig.~\ref{fig:zpe} for a range of trap strengths.
+
+\paragraph{There is a positive contribution to the zero point energy error.}  
+The second order term in perturbation theory when considering band
+mixing induced by a external potential acts as a negative shift on the
+lower energy band (while the first order contribution is zero by
+definition). That would lead one to expect $\eta_{\text{zpe}}$ to be
+negative for weak traps, as the inclusion of extra bands should lower
+$E_R$ with respect to $E_T$.
+
+\paragraph{Eigenstates for weak traps form in the minima of the band dispersion.}
+We see that this is clearly not the case, as in fact
+$\eta_{\text{zpe}}$ only becomes negative for extremely small values
+of $\kappa \ll J$, as shown in Fig.~\ref{fig:error_small_kappa}.  That
+is because the eigenstates of Eq.~\eqref{eq:model} for such weak
+traps start forming in the minima of $E_1(\vt(p))$, which are below
+the average value $\left<E_1(\vt{p})\right>_{\vt{p}}$.
+
+\paragraph{This contribution is due to intra-band terms.}
+To understand the positive contribution to $\eta_{\text{zpe}}$, one
+has to realise that the single-band approximation of
+Ref.~\onlinecite{price2014magnetic} does not discard all the
+intra-band terms corresponding to first order in $\kappa$. It is these
+terms which shift the whole $\epsilon_{1,\beta}$ ladder higher in
+energy. Since the shift is uniform, the level spacing is not affected
+so we expect (and indeed observe) $\eta_{\text{lev}}$ to be
+negative. This contribution is dominant for small $\kappa$, where
+second order corrections can be safely neglected. We indeed observe
+that for stronger traps $\kappa > 1$, $\eta_{\text{zpe}}$ becomes
+negative. There is an intermediate regime where these two
+contributions cancel out and the ``zero-point energy" error is 0,
+however one cannot find a suitable parameter range such that both
+$\eta_{\text{zpe}}$ and $\eta_{\text{lev}}$ become zero.
+
+
+\paragraph{The level spacing error is dominated by band-mixing effects. }
+The level spacing error has a dependence on the Landau level quantum
+number $\beta$ as
+$\eta_{\text{lev}}(\beta) = \frac{2\pi \alpha}{\kappa} [E_R(\beta+1) -
+E_R(\beta)] -1$
+but in practice we only compute the energy difference between the
+first two ladder states, taking $\beta = 0$. We observed that
+$\eta_{\text{lev}}(0)$ has a similar profile to that of
+Fig.~\ref{fig:zpe}, but a negative sign, as it is dominated by
+band-mixing effects due to the breakdown of the single-band
+approximation.
+
 
 \begin{figure}[htb]\centering
   \includegraphics[width=0.5\linewidth]{zpe}
-  \caption{Zero point energy error.}
+  \caption{``Zero-point energy" error, quantifying the deviation of
+    $\epsilon_{1,0}$ from its predicted value given by Eq.~\eqref{eq:ladders}.}
   \label{fig:zpe}
 \end{figure}
 
 
-Looking at the plot of the zero-point energy error, one can
-distinguish two regimes. The first one is dominated by bandwidth
-effects (for small $q$ and small $\kappa$). The other regime (for
-larger $q$ and $\kappa$) is where the band is flat, but band mixing
-starts to play an important role. In between these two regimes there
-is a transition line along which the error goes to zero.
+
 
 
 \begin{figure}[htb]\centering
   \includegraphics[width=0.9\linewidth]{weak_trap}
-  \caption{Small $\kappa$ limit.}
+  \caption{In the limit of very weak traps $\kappa \ll J$, the
+    ``zero-point energy" error becomes negative.}
   \label{fig:error_small_kappa}
 \end{figure}
 
-
-In the limit of very weak traps, $\eta_{\text{ZPE}}$ is negative.
-The level spacing error seems to be dominated by band-mixing effects, due to the variation of the bandgap.
 
 \end{document}
