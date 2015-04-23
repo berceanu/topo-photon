@@ -1,6 +1,6 @@
 \RequirePackage[l2tabu, orthodox]{nag}
 \RequirePackage{fixltx2e}
-\documentclass[twocolumn, 10pt, aps, superscriptaddress, floatfix, showpacs, prb, citeautoscript]{revtex4-1}
+\documentclass[twocolumn, 10pt, aps, superscriptaddress, floatfix, showpacs, pra, citeautoscript]{revtex4-1}
 \usepackage{graphicx}
 \usepackage{amsmath}
 \usepackage{amssymb}
@@ -57,7 +57,7 @@
 
 \begin{document}
 
-\title{Proposal for observation of toroidal Landau levels in driven dissipative photonic systems}
+\title{Driven-dissipative toroidal Landau levels in cavity arrays}
 
 
 \author{A. C. Berceanu}
@@ -77,18 +77,27 @@ Universit\`{a} di Trento, I-38123 Povo, Italy}
 \date{\today}
 
 \begin{abstract}
-  We study the Harper-Hofstadter model on a 2D square lattice in the
-  presence of a weak harmonic trap, in the context of a
-  driven-dissipative system. We extend the results of
-  Ref.~\onlinecite{price2014magnetic} and propose an experimental
-  scheme for the direct observation of toroidal Landau levels in
-  momentum space in linear photonic systems.
+  We study a driven-dissipative bosonic Harper-Hofstadter model on a
+  2D square lattice in the presence of a weak harmonic trap. Recent
+  work has anticipated that the eigenstates have the form of momentum
+  space toroidal Landau levels. With an eye to optical implementations
+  in cavity arrays with an artificial magnetic field for photons, we
+  propose a spectroscopic protocol to experimentally characterize the
+%TODO: spectroscopic protocol: see intro in Grazia paper
+  energy and the structure of the eigenstates. The feasibility of our
+  proposal using state-of-the-art devices is finally assessed.
+%TODO: physical consequence of non-abelian Berry connection
 \end{abstract}
 
 \maketitle
 
 
 \section{Introduction}
+%TODO: add Hannah's HH references 
+%TODO: add non-Abelian references
+%TODO: refer to Grazia's paper
+%TODO: reference to Tomoki mom sp HH model
+%TODO: find some good references from Grazia's paper on spectroscopic methods
 
 \paragraph{Quantum magnetism is interesting, even more so in momentum space.}
 The study of electrons in a planar geometry under the influence of a
@@ -168,12 +177,12 @@ strength of the trap.
 
 $\mathcal{H}_0$ is the Harper-Hofstadter Hamiltonian, the exact form
 of which depends on the particular choice of gauge, through the
-hopping phases $\phi = (\phi_x, \phi_y)$ (here $J$ is the real hoping
+hopping phases $\phi = (\phi_{m,n}^x, \phi_{m,n}^y)$ (here $J$ is the real hoping
 amplitude)
 %
 \begin{multline}\label{eq:hh_hamiltonian}
-\mathcal{H}_0=-J\sum_{m,n}(e^{i \phi_x}\hat{a}_{m+1,n}^{\dagger}\hat{a}_{m,n}\\
-+e^{i \phi_y}\hat{a}_{m,n+1}^{\dagger}\hat{a}_{m,n}) + \text{h.c.}
+\mathcal{H}_0=-J\sum_{m,n}(e^{i \phi_{m,n}^x}\hat{a}_{m+1,n}^{\dagger}\hat{a}_{m,n}\\
++e^{i \phi_{m,n}^y}\hat{a}_{m,n+1}^{\dagger}\hat{a}_{m,n}) + \text{h.c.}
 \end{multline}
 
 
@@ -181,6 +190,7 @@ In the Landau gauge only the hopping amplitude along $y$ is affected,
 so we have $\phi = (0, 2\pi\alpha m)$, where $\alpha = \frac{p}{q}$ is
 the number of magnetic flux quanta per unit cell ($p$ and $q$ are
 coprime integers).
+%TODO: move L.g. discussion to just before "In the MBZ..."
 
 The symmetric gauge preserves rotational invariance so hopping terms
 along both $x$ and $y$ are now affected: $\phi = (-\pi\alpha n,  \pi\alpha m)$.
@@ -188,6 +198,7 @@ along both $x$ and $y$ are now affected: $\phi = (-\pi\alpha n,  \pi\alpha m)$.
 Assuming the Landau gauge, one can diagonalize $\mathcal{H}_0$ in
 momentum space, after defining a new, magnetic Brillouin zone (MBZ),
 by introducing $p_x = p_x^0 + 2\pi \alpha m$. The resulting energy
+%TODO: obscure, clarify
 bands $E_n(\vt{p})$ ($n = 1 \dots q$) have nontrivial topology, as
 their Berry curvature $\Omega_n(\vt{p})$ is nonzero.
 
@@ -201,12 +212,15 @@ bandwidth is much smaller than the trapping energy we can also assume
 $E_n(\vt{p}) = E_n$. For a detailed discussion of the approximations,
 see Appendix~\ref{app:approximations}.
 
+%TODO: explain dual momentum space hamiltonian
+\section{Eigenstates}\label{sec:eigenstates}
 Using the dual momentum space interpretation of Eq.~\eqref{eq:model},
 the eigenstates of $H$ for fixed $\alpha$ can then be written
 as $q$ semi-infinite ladders:~\cite{price2014magnetic}
 %
 \begin{equation}\label{eq:ladders}
   \epsilon_{n,\beta} = E_n + \left(\beta + \frac{1}{2}\right) \kappa |\Omega_n|
+%TODO: may need to include shift term
 \end{equation}
 where we have introduced the Landau level quantum number
 $\beta = 0,1,2,\dots$.
@@ -231,6 +245,13 @@ the magnetic length and the normalisation constant is
 \beta! \times 2 \pi l_{\Omega_n}^2)} \right)^{1/2}
 \end{equation}
 
+%TODO: add sentence about ring-shaped form of eigenstates in mom sp in sym g.
+
+\section{Non-Abelian shift}\label{sec:non-abelian-shift}
+%TODO: add discussion of non-abelian effects
+
+\section{Driving and dissipation}\label{sec:driven-dissipation}
+
 Following the treatment of Ref.~\onlinecite{ozawa2014qhe}, we now
 include dissipation in the model by assuming uniform and local losses
 characterized by the loss rate $\gamma$. The pump is assumed to be
@@ -251,7 +272,7 @@ Expressing $\omega_{0}$, $\gamma$, $\kappa$ and $f$ in units of $J$
 and measuring distances in units of the lattice spacing we get
 %
 \begin{multline}\label{eq:linear_problem}
-e^{-i\phi_x}a_{m+1,n}+e^{i\phi_x}a_{m-1,n}+e^{-i\phi_y}a_{m,n+1}+e^{i\phi_y}a_{m,n-1}\\
+e^{-i\phi_{m,n}^x}a_{m+1,n}+e^{i\phi_{m,n}^x}a_{m-1,n}+e^{-i\phi_{m,n}^y}a_{m,n+1}+e^{i\phi_{m,n}^y}a_{m,n-1}\\
 +\left[\omega_{0}+i\gamma-\frac{1}{2}\kappa
 (m^{2}+n^{2})\right]a_{m,n}=f_{m,n}
 \end{multline}
@@ -310,6 +331,8 @@ well defined angular momentum. This is important when examining the
 selection rules.
 
 \paragraph{A δ pump in real space is homogeneous in momentum space.}
+% TODO: add analytical expression for optimal β which gives the
+% best overlap; square root dependence of the radius on β
 The simplest case is that of pumping a single site, with a pump of the
 form $f_{m,n} = \delta_{m,m_0} \delta_{n,n_0}$. The pump is of course
 homogeneous in momentum space, so one must think of real space when
@@ -330,9 +353,14 @@ in the Landau gauge will be identical.
     \emph{Bottom}: Gaussian pump in the
     symmetric gauge. Momentum space representation of the eigenstates
     corresponding to $\beta=0$, 1, 9 and 20.}
+%TODO: comment on the white spot
+%TODO: change scale to make it visible also in 3rd panel
+%TODO: add formula for what I am plotting (BZ..)
   \label{fig:hom_mom_sp}
 \end{figure}
 
+% TODO: how does the ring radius in mom sp depend on β? what happens
+% when it touches the edges of the BZ?
 
 \paragraph{Gaussian pumping is now bound also in momentum space.}
 The next logical step in complexity is to use a Gaussian pump, a more
@@ -370,12 +398,19 @@ space, is nonexistent.
     and 26. The single site (5,5) was pumped.}
   \label{fig:delta_real_sp}
 \end{figure}
+% TODO: i am plotting reconstruction of the eigenstate when the pump
+% is set on resonance with the peak (see Grazia paper) and update all
+% text and captions
 
+
+%TODO: replace with argument about ring opening up in mom sp
 The symmetric gauge, on the other hand, shows only the lowest
 eigenstate, corresponding to $\beta=0$. That is because the angular
 momentum of the pump itself is 0, therefore it cannot excite any state
 with nonzero angular momentum. However, one could use, for instance, a
 Gauss-Laguerre pump to address any particular state.
+% TODO: comment of 1/4 state visibility in spectrum; lattice symmetry;
+% on the lattice, L is only conserved modulo 4
 
 \paragraph{One must use a random phase in order to see all the states.}
 In order to see the complete ladder of states, we chose a pump which
@@ -395,6 +430,7 @@ results in a relatively even intensity distribution, for both gauges.
 We now focus on a realistic system, within experimental reach. The
 lattice size is $11 \times 11$ sites and the new value of the loss
 rate is $\gamma = 0.0505$. This of course broadens the levels, making
+%TODO: use γ = 0.05 and relate it to Hafezi's value
 them harder to resolve. Looking at Eq.~\eqref{eq:ladders}, we see that
 the level spacing is given by $\frac{\kappa}{2\pi\alpha}$, so in order
 to increase the spacing we must consider a stronger trap. We chose
@@ -420,6 +456,7 @@ situated on the upper border of the system, at $(m_0,n_0)= (0,5)$.
     Eq.~\eqref{eq:chi}, $|\chi_7(0,p_y)|^2$ (dotted line, blue). The
     orange dashed line shows the same slice for the non-dissipative
     case.}
+%TODO: why non-dissipative curve is not exactly like analytics
 %TODO: change label to $|\chi_7(0,p_y)|^2$
   \label{fig:exp_spectrum}
 \end{figure}
@@ -430,6 +467,8 @@ expected broadening due to larger losses, we note that for frequencies
 larger than -1.5 $J$ we start to see states from the second ladder
 $\epsilon_{2,\beta}$. Their proximity to the first ladder states means
 they cannot be resolved as separate peaks in the dissipative spectrum.
+
+%TODO: add sentence about experimental study of Tomoki's mom sp HH model
 
 We filter at the energy indicated by the black dashed line and plot
 the resulting emission in real and momentum space (full BZ), as well
@@ -458,6 +497,7 @@ analytics.
     column) with no pumping or decay.
     \emph{Bottom row}: Emission from the state at $\omega_0 = -1.63$.
     The $\delta$-like pump at (0,5) is visible as a dark square.}
+%TODO: comment on cyclotron orbit. can i elaborate on effect of larger γ when more peaks are excited
   \label{fig:exp_states}
 \end{figure}
 
@@ -513,6 +553,7 @@ We also define the bandgap beween the lowest level and the next one as
 \begin{equation}
   \Delta E = \left<E_2(\vt{p})\right>_{\vt{p}} - \left<E_1(\vt{p})\right>_{\vt{p}}
 \end{equation}
+%TODO: say averages are taken over the MBZ
 Within this Appendix, as well as in the rest of the paper,
 $\alpha=\frac{1}{q}$ so we plot these 2 quantities as a function of
 $q$ in Fig.~\ref{fig:energy_bands}. We see indeed that the bandwidth
@@ -538,8 +579,8 @@ the theoretical (as predicted by Eq.~\eqref{eq:ladders}) and ``real"
 
 \begin{subequations}
   \begin{align}
-    E_T &= \left<E_1(\vt{p})\right>_{\vt{p}} + \frac{1}{2}\frac{\kappa}{2\pi\alpha} + \beta \frac{\kappa}{2\pi\alpha}\\
-    E_R &= \left<E_1(\vt{p})\right>_{\vt{p}} +
+    E_{\text{th}} &= \left<E_1(\vt{p})\right>_{\vt{p}} + \frac{1}{2}\frac{\kappa}{2\pi\alpha} + \beta \frac{\kappa}{2\pi\alpha}\\
+    E_{\text{ex}} &= \left<E_1(\vt{p})\right>_{\vt{p}} +
           (1+\eta_{\text{zpe}})\frac{1}{2}\frac{\kappa}{2\pi\alpha} +
           (1+\eta_{\text{lev}})\beta \frac{\kappa}{2\pi\alpha}
   \end{align}   
@@ -547,7 +588,7 @@ the theoretical (as predicted by Eq.~\eqref{eq:ladders}) and ``real"
 
 
 Rearranging, we get extract the ``zero-point energy" deviation
-$\eta_{\text{zpe}} = \frac{4\pi\alpha}{\kappa} (E_R - E_T)$ and plot
+$\eta_{\text{zpe}} = \frac{4\pi\alpha}{\kappa} (E_{\text{ex}} - E_{\text{th}})$ and plot
 it in Fig.~\ref{fig:zpe} for a range of trap strengths.
 
 \paragraph{There is a positive contribution to the zero point energy error.}  
@@ -556,7 +597,7 @@ mixing induced by a external potential acts as a negative shift on the
 lower energy band (while the first order contribution is zero by
 definition). That would lead one to expect $\eta_{\text{zpe}}$ to be
 negative for weak traps, as the inclusion of extra bands should lower
-$E_R$ with respect to $E_T$.
+$E_{\text{ex}}$ with respect to $E_{\text{th}}$.
 
 \paragraph{Eigenstates for weak traps form in the minima of the band dispersion.}
 We see that this is clearly not the case, as in fact
@@ -582,12 +623,13 @@ contributions cancel out and the ``zero-point energy" error is 0,
 however one cannot find a suitable parameter range such that both
 $\eta_{\text{zpe}}$ and $\eta_{\text{lev}}$ become zero.
 
+%TODO: clarify this discussion
 
 \paragraph{The level spacing error is dominated by band-mixing effects. }
 The level spacing error has a dependence on the Landau level quantum
 number $\beta$ as
-$\eta_{\text{lev}}(\beta) = \frac{2\pi \alpha}{\kappa} [E_R(\beta+1) -
-E_R(\beta)] -1$
+$\eta_{\text{lev}}(\beta) = \frac{2\pi \alpha}{\kappa} [E_{\text{ex}}(\beta+1) -
+E_{\text{ex}}(\beta)] -1$
 but in practice we only compute the energy difference between the
 first two ladder states, taking $\beta = 0$. We observed that
 $\eta_{\text{lev}}(0)$ has a similar profile to that of
@@ -601,9 +643,11 @@ approximation.
   \caption{``Zero-point energy" error, quantifying the deviation of
     $\epsilon_{1,0}$ from its predicted value given by Eq.~\eqref{eq:ladders}.}
   \label{fig:zpe}
+%TODO: add panel for level spacing error
+%TODO: fix colorbar labels
 \end{figure}
 
-
+%TODO: foolproof for B/W printer
 
 
 
@@ -612,6 +656,7 @@ approximation.
   \caption{In the limit of very weak traps $\kappa \ll J$, the
     ``zero-point energy" error becomes negative.}
   \label{fig:error_small_kappa}
+%TODO: only leave q=5 curve and use log scale for κ
 \end{figure}
 
 
