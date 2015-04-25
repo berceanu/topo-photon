@@ -28,7 +28,7 @@ function WaveFunction(S::SparseMatrixCSC{Complex{Float64},Int64},
     return WaveFunction(N,sum(abs2(X)),X)
 end
 
-
+#TODO: add type for nondissipative case
 
 type Spectrum
     N::Int
