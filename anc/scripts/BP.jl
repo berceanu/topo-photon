@@ -28,7 +28,35 @@ function WaveFunction(S::SparseMatrixCSC{Complex{Float64},Int64},
     return WaveFunction(N,sum(abs2(X)),X)
 end
 
-#TODO: add type for nondissipative case
+
+type ExactStates
+    N::Int
+    gauge::Symbol
+    νs::Vector{Float64}
+    states::Matrix{Complex{Float64}}
+end
+
+ExactStates(nev::Integer, gauge::Symbol) = ExactStates(nev, gauge, 45)
+ExactStates(nev::Integer, gauge::Symbol, N::Integer) = ExactStates(nev, gauge, N, 1/11, 0.02)
+
+function ExactStates(nev::Integer, gauge::Symbol, N::Integer, α::Float64, κ::Float64)
+    M = spzeros(Complex{Float64}, N^2,N^2)
+    eval(:($(symbol(string("buildhamexact", gauge, "!")))))(M, N,α,κ) 
+
+    (d, v, nconv, niter, nmult, resid) = eigs(M, nev=nev, which=:SR, ritzvec=true)
+
+    return ExactStates(N, gauge, real(d), v)
+end
+
+function getstate(s::ExactStates, ω::Float64)
+    i::Int = indmin(abs(s.νs .- ω))
+    return reshape(s.states[:,i], (s.N, s.N))
+end 
+
+function getstate(s::ExactStates, i::Integer)
+    return reshape(s.states[:,i], (s.N, s.N))
+end 
+
 
 type Spectrum
     N::Int
@@ -38,7 +66,6 @@ type Spectrum
     intensity::Vector{Float64}
     states::Vector{WaveFunction}
 end
-
 
 Spectrum(ν::Vector{Float64},P::Vector{Complex{Float64}}) = Spectrum(ν,P,:landau)
 
@@ -55,7 +82,6 @@ function Spectrum(ν::Vector{Float64},P::Vector{Complex{Float64}},gauge::Symbol)
     return Spectrum(N, gauge, P, ν, intvec, statevec)
 end
 
-
 function Spectrum(ν::Vector{Float64},P::Vector{Complex{Float64}},gauge::Symbol,
                   α::Float64,γ::Float64,κ::Float64)
     statevec = Array(WaveFunction, length(ν))
@@ -71,10 +97,9 @@ function Spectrum(ν::Vector{Float64},P::Vector{Complex{Float64}},gauge::Symbol,
 end
 
 
-
 function getstate(s::Spectrum, ω::Float64)
     i::Int = indmin(abs(s.νs .- ω))
-    return s.states[i].ψ
+    return reshape(s.states[i].ψ, (s.N, s.N))
 end 
 ##
 
@@ -114,12 +139,17 @@ function buildham_landau!(S::SparseMatrixCSC{Complex{Float64},Int}, N::Int,α::F
     @hambody(ω + im*γ - 1/2*κ*(n^2+m^2), 1, 1, exp(-im*2π*α*m), exp(im*2π*α*m))
 end
 
+function buildham_symmetric!(S::SparseMatrixCSC{Complex{Float64},Int}, N::Int,α::Float64,κ::Float64,γ::Float64,ω::Float64)
+    @hambody(ω + im*γ - 1/2*κ*(n^2+m^2), exp(-im*π*α*n), exp(im*π*α*n), exp(-im*π*α*m), exp(im*π*α*m))
+end
+
 function buildham_exact!(S::SparseMatrixCSC{Complex{Float64},Int}, N::Int,α::Float64,κ::Float64)
     @hambody(1/2*κ*(n^2+m^2), -1, -1, -exp(-im*2π*α*m), -exp(im*2π*α*m))
 end
 
-function buildham_symmetric!(S::SparseMatrixCSC{Complex{Float64},Int}, N::Int,α::Float64,κ::Float64,γ::Float64,ω::Float64)
-    @hambody(ω + im*γ - 1/2*κ*(n^2+m^2), exp(-im*π*α*n), exp(im*π*α*n), exp(-im*π*α*m), exp(im*π*α*m))
+buildhamexactlandau! = buildham_exact!
+function buildhamexactsymmetric!(S::SparseMatrixCSC{Complex{Float64},Int}, N::Int,α::Float64,κ::Float64)
+    @hambody(1/2*κ*(n^2+m^2), -exp(-im*π*α*n), -exp(im*π*α*n), -exp(-im*π*α*m), -exp(im*π*α*m))
 end
 
 ## for sym in {:landau,:symmetric,:exact}
