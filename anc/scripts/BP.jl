@@ -1,7 +1,7 @@
 module BP
 
 using Polynomials
-
+using Base.Test
 
 type WaveFunction
     N::Int
@@ -14,15 +14,22 @@ WaveFunction(S::SparseMatrixCSC{Complex{Float64},Int64},
 
 WaveFunction(S::SparseMatrixCSC{Complex{Float64},Int64},
              ω::Float64,P::Vector{Complex{Float64}},gauge::Symbol) =
-    WaveFunction(S,ω,P,gauge,1/11,0.001,0.02)
+    WaveFunction(S,ω,P,gauge,1/11,0.001,0.02,0,0)
+
+WaveFunction(S::SparseMatrixCSC{Complex{Float64},Int64},
+             ω::Float64,P::Vector{Complex{Float64}},gauge::Symbol,
+             α::Float64,γ::Float64,κ::Float64) =
+                 WaveFunction(S,ω,P,gauge,α,γ,κ, 0, 0)
+
+
 
 function WaveFunction(S::SparseMatrixCSC{Complex{Float64},Int64},
                       ω::Float64,P::Vector{Complex{Float64}},gauge::Symbol,
-                      α::Float64,γ::Float64,κ::Float64)
+                      α::Float64,γ::Float64,κ::Float64, m₀::Int, n₀::Int)
 
     N::Int = sqrt(length(P))
 
-    eval(:($(symbol(string("buildham_", gauge, "!")))))(S, N,α,κ,γ,ω) 
+    eval(:($(symbol(string("buildham_", gauge, "!")))))(S, N,α,κ,γ,ω,m₀,n₀) 
     X = S\P
 
     return WaveFunction(N,sum(abs2(X)),X)
@@ -36,12 +43,13 @@ type ExactStates
     states::Matrix{Complex{Float64}}
 end
 
-ExactStates(nev::Integer, gauge::Symbol) = ExactStates(nev, gauge, 45)
-ExactStates(nev::Integer, gauge::Symbol, N::Integer) = ExactStates(nev, gauge, N, 1/11, 0.02)
+ExactStates(nev::Int, gauge::Symbol) = ExactStates(nev, gauge, 45)
+ExactStates(nev::Int, gauge::Symbol, N::Int) = ExactStates(nev, gauge, N, 1/11, 0.02, 0, 0)
+ExactStates(nev::Int, gauge::Symbol, N::Int, α::Float64, κ::Float64) = ExactStates(nev, gauge, N, α, κ, 0, 0)
 
-function ExactStates(nev::Integer, gauge::Symbol, N::Integer, α::Float64, κ::Float64)
+function ExactStates(nev::Int, gauge::Symbol, N::Int, α::Float64, κ::Float64, m₀::Int, n₀::Int)
     M = spzeros(Complex{Float64}, N^2,N^2)
-    eval(:($(symbol(string("buildhamexact", gauge, "!")))))(M, N,α,κ) 
+    eval(:($(symbol(string("buildhamexact", gauge, "!")))))(M, N,α,κ,m₀,n₀) 
 
     (d, v, nconv, niter, nmult, resid) = eigs(M, nev=nev, which=:SR, ritzvec=true)
 
@@ -50,11 +58,14 @@ end
 
 function getstate(s::ExactStates, ω::Float64)
     i::Int = indmin(abs(s.νs .- ω))
+
     return reshape(s.states[:,i], (s.N, s.N))
 end 
 
-function getstate(s::ExactStates, i::Integer)
-    return reshape(s.states[:,i], (s.N, s.N))
+
+
+function getstate(s::ExactStates, η::Int)
+    return reshape(s.states[:,η], (s.N, s.N))
 end 
 
 
@@ -103,6 +114,30 @@ function getstate(s::Spectrum, ω::Float64)
 end 
 ##
 
+#Check that matrix is square
+function chksquare(A::AbstractMatrix)
+    m,n = size(A)
+    m == n || throw(DimensionMismatch("matrix is not square"))
+    m
+end
+
+#Find radius of ring
+function radius(M::Matrix{Float64}, axis::Vector)
+    N = chksquare(M)
+    isodd(N) || throw(DimensionMismatch("invalid matrix size N=$N. N must be odd"))
+    length(axis) == N || throw(DimensionMismatch("axis size must match matrix dimensions"))
+    @test_approx_eq_eps(M, transpose(M), 1e-5)
+    
+    half = div(N-1, 2) + 1
+    v1 = axis[half:end]
+    v2 = M[half:end, half]
+    
+    i = indmax(v2)
+    r = v1[i]
+
+    return r
+end
+
 getm(i::Int64,N::Int64) = div(i-1,N)-div(N-1,2)
 getn(i::Int64,N::Int64) = div(N-1,2)-rem(i-1,N)
 geti(m::Int,n::Int,N::Int)=(m+div(N-1,2))*N+(div(N-1,2)-n)+1
@@ -135,21 +170,23 @@ macro hambody(fself, fleft, fright, fup, fdown)
     end 
 end 
 
-function buildham_landau!(S::SparseMatrixCSC{Complex{Float64},Int}, N::Int,α::Float64,κ::Float64,γ::Float64,ω::Float64)
-    @hambody(ω + im*γ - 1/2*κ*(n^2+m^2), 1, 1, exp(-im*2π*α*m), exp(im*2π*α*m))
+
+
+function buildham_landau!(S::SparseMatrixCSC{Complex{Float64},Int}, N::Int,α::Float64,κ::Float64,γ::Float64,ω::Float64, m₀::Int, n₀::Int)
+    @hambody(ω + im*γ - 1/2*κ*((n-n₀)^2+(m-m₀)^2), 1, 1, exp(-im*2π*α*m), exp(im*2π*α*m))
 end
 
-function buildham_symmetric!(S::SparseMatrixCSC{Complex{Float64},Int}, N::Int,α::Float64,κ::Float64,γ::Float64,ω::Float64)
-    @hambody(ω + im*γ - 1/2*κ*(n^2+m^2), exp(-im*π*α*n), exp(im*π*α*n), exp(-im*π*α*m), exp(im*π*α*m))
+function buildham_symmetric!(S::SparseMatrixCSC{Complex{Float64},Int}, N::Int,α::Float64,κ::Float64,γ::Float64,ω::Float64, m₀::Int, n₀::Int)
+    @hambody(ω + im*γ - 1/2*κ*((n-n₀)^2+(m-m₀)^2), exp(-im*π*α*n), exp(im*π*α*n), exp(-im*π*α*m), exp(im*π*α*m))
 end
 
-function buildham_exact!(S::SparseMatrixCSC{Complex{Float64},Int}, N::Int,α::Float64,κ::Float64)
-    @hambody(1/2*κ*(n^2+m^2), -1, -1, -exp(-im*2π*α*m), -exp(im*2π*α*m))
+function buildham_exact!(S::SparseMatrixCSC{Complex{Float64},Int}, N::Int,α::Float64,κ::Float64, m₀::Int, n₀::Int)
+    @hambody(1/2*κ*((n-n₀)^2+(m-m₀)^2), -1, -1, -exp(-im*2π*α*m), -exp(im*2π*α*m))
 end
 
 buildhamexactlandau! = buildham_exact!
-function buildhamexactsymmetric!(S::SparseMatrixCSC{Complex{Float64},Int}, N::Int,α::Float64,κ::Float64)
-    @hambody(1/2*κ*(n^2+m^2), -exp(-im*π*α*n), -exp(im*π*α*n), -exp(-im*π*α*m), -exp(im*π*α*m))
+function buildhamexactsymmetric!(S::SparseMatrixCSC{Complex{Float64},Int}, N::Int,α::Float64,κ::Float64, m₀::Int, n₀::Int)
+    @hambody(1/2*κ*((n-n₀)^2+(m-m₀)^2), -exp(-im*π*α*n), -exp(im*π*α*n), -exp(-im*π*α*m), -exp(im*π*α*m))
 end
 
 ## for sym in {:landau,:symmetric,:exact}
