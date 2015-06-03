@@ -1,8 +1,14 @@
-δE(1,11,1, linspace(-π/11, π/11, 20),linspace (-π, π, 20),0.02)
+# calculates average over MBZ of the non-abelian correction to the 1(st) band for p=1
+δE(q::Int) = δE(1,q,1, linspace(-π/q, π/q, 20),linspace (-π, π, 20), 0.01)
+
+
+# calculates average over MBZ of the non-abelian correction to the 1(st) band for p=1 for certain trap
+δE(q::Int,κ::Float64) =
+    δE(1,q,1, linspace(-π/q, π/q, 20),linspace (-π, π, 20), κ)
+
 
 # -> Float64
 # calculates the average (over specified points) non-abelian energy correction to n(th) band
-# Note: MBZ:: (px, py) -> linspace(-π/q, π/q, N), linspace (-π, π, N)
 δE(n::Int,q::Int,p::Int, px::Array{Float64, 1},py::Array{Float64, 1},κ::Float64) = mean([δE(n,q,p, x,y,κ) for y in py, x in px])
 
 # -> Float64
