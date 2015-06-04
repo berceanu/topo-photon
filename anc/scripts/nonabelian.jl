@@ -1,9 +1,6 @@
 import HH
 import BP
 
-qs = 5:20;
-y1 = [endiff(q, 0.01)::Float64 for q in qs];
-y2 = [endiffnonab(q, 0.01)::Float64 for q in qs];
 
 
 # calculates energy difference between numerical (exact) and theoretical energies, with the nonab corr.
@@ -13,6 +10,7 @@ endiffnonab(q::Int, κ::Float64) = er(q,κ) - (et(q,κ) + δE(q,κ))
 endiff(q::Int, κ::Float64) =  er(q,κ) - et(q,κ)
 
 
+
 et(q::Int,κ::Float64) =  et(q,1,κ)
 
 # -> Float64
@@ -20,7 +18,7 @@ et(q::Int,κ::Float64) =  et(q,1,κ)
 function et(q::Int,p::Int,κ::Float64)
     α = p/q
 
-    gs = Array(Float64, 25)
+    gs = Array(Float64, 25, 25)
     HH.hhgrstate!(gs, p, q)
 
     e1 = mean(gs)
@@ -136,6 +134,12 @@ v2 = Complex{Float64}[-0.0-0.518207im, -0.518207+0.0im];
 @test_approx_eq_eps v1 v2 1e-6
 
 #plotting
+
+qs = 5:20;
+y1 = [endiff(q, 0.01)::Float64 for q in qs];
+y2 = [endiffnonab(q, 0.01)::Float64 for q in qs];
+
+
 using PyPlot
 
 # matplotlib parameters
@@ -161,8 +165,8 @@ fig, ax = plt.subplots(figsize=(8, 3))
 ax[:plot](qs, y1, "black", marker="o") # label=L"$E_{ex} - E_{th}$"
 ax[:plot](qs, y2, "black", marker="o", ls="dashed") # label=L"$E_{ex} - E_{th} - δE$", ls="dashed")
 
-ax[:set_ylim](-0.004, 0.014)
-#ax[:yaxis][:set_ticks]([0,1.5,3])
+ax[:set_ylim](-0.004, 0.016)
+ax[:yaxis][:set_ticks]([0,1.5,3])
 ax[:set_xlim](qs[1], qs[end])
 
 ax[:set_xlabel](L"$q$")
