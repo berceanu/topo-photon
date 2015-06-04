@@ -1,3 +1,48 @@
+import HH
+import BP
+
+# -> Float64
+# calculates energy difference between numerical (exact) and theoretical energies, with the nonab corr.
+function endiffnonab(q::Int, κ::Float64)
+    N = 15
+    p = 1
+    M = spzeros(Complex{Float64}, N^2,N^2)
+    
+    α = p/q
+    gs = Array(Float64, 25)
+    HH.hhgrstate!(gs, p, q)
+    e1 = mean(gs)
+    et = e1 + 1/2*κ/(2π*α) + δE(q,κ)
+
+    BP.buildham_exact!(M, N,α,κ)
+
+    er = real(eigs(M, nev=1, which=:SR, ritzvec=false)[1][1])
+
+    return er - et
+end 
+
+
+# -> Float64
+# calculates energy difference between numerical (exact) and theoretical energies (without nonab corr)
+function endiff(q::Int, κ::Float64)
+    N = 15
+    p = 1
+    M = spzeros(Complex{Float64}, N^2,N^2)
+    
+    α = p/q
+    gs = Array(Float64, 25)
+    HH.hhgrstate!(gs, p, q)
+    e1 = mean(gs)
+    et = e1 + 1/2*κ/(2π*α)
+
+    BP.buildham_exact!(M, N,α,κ)
+
+    er = real(eigs(M, nev=1, which=:SR, ritzvec=false)[1][1])
+
+    return e1
+    #return er - et
+end 
+
 # calculates average over MBZ of the non-abelian correction to the 1(st) band for p=1
 δE(q::Int) = δE(1,q,1, linspace(-π/q, π/q, 20),linspace (-π, π, 20), 0.01)
 
@@ -38,8 +83,8 @@ function A(n::Int,n′::Int,q::Int,p::Int, k₀x::Float64,ky::Float64)
     #lower subdiagonal
     ils = diagind(H,-1)
     
-    for M = (:H, :∇Hx, :∇Hy), idx = (ius, ils)
-        @eval ($M)[$idx] = -one(Complex{Float64})
+    for idx = (ius, ils)
+        H[idx] = -one(Complex{Float64})
     end 
     
     #main diagonal
@@ -88,3 +133,51 @@ R = foo(linspace(1,10,10), linspace(1,5,5))
 S = bazz(linspace(1,10,10), linspace(1,5,5))
 
 @test_approx_eq R S
+
+#plotting
+using PyPlot
+
+# matplotlib parameters
+matplotlib["rcParams"][:update](["axes.labelsize" => 22,
+                                 "axes.titlesize" => 20,
+                                 "font.size" => 18,
+                                 "legend.fontsize" => 14,
+                                 "axes.linewidth" => 1.5,
+                                 "font.family" => "serif",
+                                 "font.serif" => "Computer Modern Roman",
+                                 "xtick.labelsize" => 20,
+                                 "xtick.major.size" => 5.5,
+                                 "xtick.major.width" => 1.5,
+                                 "ytick.labelsize" => 20,
+                                 "ytick.major.size" => 5.5,
+                                 "ytick.major.width" => 1.5,
+                                 "text.usetex" => true,
+                                 "figure.autolayout" => true])
+
+qs = 5:20;
+y1 = [endiff(q, 0.01)::Float64 for q in qs];
+y2 = [endiffnonab(q, 0.01)::Float64 for q in qs];
+
+## y1 = [q^2 for q in qs]
+## y2 = [q^3 for q in qs]
+
+fig, ax = plt.subplots(figsize=(8, 3))
+
+ax[:plot](qs, y1, "black", marker="o") 
+ax[:plot](qs, y2, "black", marker="o", ls="dashed")
+
+## ax[:plot](qs, y1, "black", marker="o", label=L"$E_{ex} - E_{th}$") 
+## ax[:plot](qs, y2, "black", marker="o", label=L"$E_{ex} - E_{th} - δE$", ls="dashed")
+
+
+ax[:set_ylim](-0.004, 0.014)
+#ax[:yaxis][:set_ticks]([0,1.5,3])
+ax[:set_xlim](qs[1], qs[end])
+
+ax[:set_xlabel](L"$q$")
+
+#ax[:legend](loc="upper left")
+
+#fig[:savefig]("../figures/nonabcorr.pdf", transparent=true, pad_inches=0.0, bbox_inches="tight")
+#plt.close(fig)
+
