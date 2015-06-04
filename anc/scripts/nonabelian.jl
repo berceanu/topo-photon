@@ -2,6 +2,9 @@ import HH
 import BP
 
 # -> Float64
+# calculates 
+
+# -> Float64
 # calculates energy difference between numerical (exact) and theoretical energies, with the nonab corr.
 function endiffnonab(q::Int, κ::Float64)
     N = 15
@@ -70,12 +73,12 @@ function A(n::Int,n′::Int,q::Int,p::Int, k₀x::Float64,ky::Float64)
     end 
 
     # top right corner
-    H[1,q] = -exp(-im*q*ky)
-    ∇Hy[1,q] = im*q*exp(-im*q*ky) # ∂ky
+    H[1,q] = -exp(-im*ky)
+    ∇Hy[1,q] = im*exp(-im*ky) # ∂ky
 
     #bottom left corner
-    H[q,1] = -exp(im*q*ky)
-    ∇Hy[q,1] = -im*q*exp(im*q*ky) # ∂ky
+    H[q,1] = -exp(im*ky)
+    ∇Hy[q,1] = -im*exp(im*ky) # ∂ky
 
 
     #upper subdiagonal
@@ -83,9 +86,12 @@ function A(n::Int,n′::Int,q::Int,p::Int, k₀x::Float64,ky::Float64)
     #lower subdiagonal
     ils = diagind(H,-1)
     
-    for idx = (ius, ils)
-        H[idx] = -one(Complex{Float64})
-    end 
+    H[ius] = -exp(im*ky)
+    H[ils] = -exp(-im*ky)
+
+    ∇Hy[ius] = -im*exp(im*ky)
+    ∇Hy[ils] = im*exp(-im*ky)
+
     
     #main diagonal
     α = p/q
@@ -113,26 +119,29 @@ end
 
 
 
-#import HH
 using Base.Test
 
 
-function foo(px::Array{Float64, 1}, py::Array{Float64, 1})
-    Q = Array(Float64, length(py), length(px))
+## function foo(px::Array{Float64, 1}, py::Array{Float64, 1})
+##     Q = Array(Float64, length(py), length(px))
+##     for (j,x) in enumerate(px), (i,y) in enumerate(py)
+##         Q[i,j] = x-y
+##     end 
+##     Q
+## end 
+## bazz(px::Array{Float64, 1}, py::Array{Float64, 1}) = [x - y for y in py, x in px]
 
-    for (j,x) in enumerate(px), (i,y) in enumerate(py)
-        Q[i,j] = x-y
-    end 
-    Q
-end 
+## R = foo(linspace(1,10,10), linspace(1,5,5))
+## S = bazz(linspace(1,10,10), linspace(1,5,5))
 
-bazz(px::Array{Float64, 1}, py::Array{Float64, 1}) = [x - y for y in py, x in px]
+## @test_approx_eq R S
 
+@test_approx_eq δE(1,5,1, 0.,0.,2.) 0.5378296443127227
 
-R = foo(linspace(1,10,10), linspace(1,5,5))
-S = bazz(linspace(1,10,10), linspace(1,5,5))
+v1 = A(1,2,5,1, 0.,0.);
+v2 = Complex{Float64}[-0.0-0.518207im, -0.518207+0.0im];
 
-@test_approx_eq R S
+@test_approx_eq_eps v1 v2 1e-6
 
 #plotting
 using PyPlot
