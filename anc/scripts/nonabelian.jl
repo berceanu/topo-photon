@@ -2,6 +2,10 @@ import HH
 import BP
 
 
+# calculates zero-point energy, with and without nonabelian correction
+ηzpenew(q::Int, κ::Float64) = (α=1/q; 4π*α/κ * endiffnonab(q, κ))
+ηzpeold(q::Int, κ::Float64) = (α=1/q; 4π*α/κ * endiff(q, κ))
+
 
 # calculates energy difference between numerical (exact) and theoretical energies, with the nonab corr.
 endiffnonab(q::Int, κ::Float64) = er(q,κ) - (et(q,κ) + δE(q,κ))
@@ -136,9 +140,11 @@ v2 = Complex{Float64}[-0.0-0.518207im, -0.518207+0.0im];
 #plotting
 
 qs = 5:20;
-y1 = [endiff(q, 0.01)::Float64 for q in qs];
-y2 = [endiffnonab(q, 0.01)::Float64 for q in qs];
+y1 = [ηzpeold(q, 0.01)::Float64 for q in qs];
+y2 = [ηzpenew(q, 0.01)::Float64 for q in qs];
 
+y3 = HH.ηzpe(qs,0.01)
+@test_approx_eq_eps y1 y3 1e-6
 
 using PyPlot
 
@@ -165,8 +171,8 @@ fig, ax = plt.subplots(figsize=(8, 3))
 ax[:plot](qs, y1, "black", marker="o") # label=L"$E_{ex} - E_{th}$"
 ax[:plot](qs, y2, "black", marker="o", ls="dashed") # label=L"$E_{ex} - E_{th} - δE$", ls="dashed")
 
-ax[:set_ylim](-0.004, 0.016)
-ax[:yaxis][:set_ticks]([0,1.5,3])
+#ax[:set_ylim](-0.004, 0.016)
+#ax[:yaxis][:set_ticks]([0,1.5,3])
 ax[:set_xlim](qs[1], qs[end])
 
 ax[:set_xlabel](L"$q$")

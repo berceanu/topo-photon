@@ -63,21 +63,21 @@ end
 
 
 # ground state energy of the HH hamiltonian
-hhgrstate!(ve::Vector{Float64}, q::Int) = hhgrstate!(ve, 1, q)
+# hhgrstate!(ve::Vector{Float64}, q::Int) = hhgrstate!(ve, 1, q)
 
-function hhgrstate!(ve::Vector{Float64}, p::Int, q::Int)
-    ky = linspace(-π, π, length(ve))
+## function hhgrstate!(ve::Vector{Float64}, p::Int, q::Int)
+##     ky = linspace(-π, π, length(ve))
 
-    H = zeros(Complex{Float64}, (q,q))
-    for (i,k) in enumerate(ky)
-        momsphhmat!(H, 0.,k, p)
-        ve[i] = eigmin(H)
-    end
-    nothing
-end
+##     H = zeros(Complex{Float64}, (q,q))
+##     for (i,k) in enumerate(ky)
+##         momsphhmat!(H, 0.,k, p)
+##         ve[i] = eigmin(H)
+##     end
+##     nothing
+## end
 
 hhgrstate!(ve::Matrix{Float64}, q::Int) = hhgrstate!(ve, 1, q)
-function hhgrstate!(ve::Matrix{Float64}, p::Int, q::Int)
+function hhgrstate!(ve::Matrix{Float64}, p::Int, q::Int) ##
     ky = linspace(-π, π, size(ve,1))
     kx₀= linspace(-π/q, π/q, size(ve,2))
     
@@ -98,7 +98,7 @@ end
 function ηzpe(M::SparseMatrixCSC{Complex{Float64},Int}, p::Int, q::Int, κ::Float64)
     N::Int = sqrt(size(M,1))
     α::Float64 = p/q
-    gs = Array(Float64, 25)
+    gs = Array(Float64, 25,25)
     hhgrstate!(gs, p, q)
     e1 = mean(gs)
     et = e1 + 1/2*κ/(2π*α)
