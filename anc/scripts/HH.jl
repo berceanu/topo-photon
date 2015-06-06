@@ -43,7 +43,7 @@ function hhladder(p::Int, q::Int)
     ky = linspace(-π, π, 100)
     E = Array(Float64, (length(ky),q))
     H = zeros(Complex{Float64}, (q,q))
-    for (i,k) in enumerate(ky)
+    for (i,k) in enumerate(ky) #TODO: loop over kx as well
         momsphhmat!(H, 0.,k, p)
         E[i,:] = eigvals(H)
     end
@@ -54,7 +54,7 @@ function hhladder!(E::Matrix{Float64}, p::Int)
     ky = linspace(-π, π, size(E,1))
     q = size(E,2)
     H = zeros(Complex{Float64}, (q,q))
-    for (i,k) in enumerate(ky)
+    for (i,k) in enumerate(ky) #TODO: loop over kx as well
         momsphhmat!(H, 0.,k, p)
         E[i,:] = eigvals(H)
     end
@@ -168,7 +168,7 @@ bwidth(qs::Vector{Int}) = [bwidth(q) for q in qs]
 bwidth(q::Int) = bwidth(1, q)
 
 function bwidth(p::Int, q::Int)
-    gstate = Array(Float64, 25)
+    gstate = Array(Float64, 25, 25)
     hhgrstate!(gstate, p, q)
 
     a,b = extrema(gstate)
