@@ -182,6 +182,8 @@ end
 
 buildham_exact!(S::SparseMatrixCSC{Complex{Float64},Int}, N::Int,α::Float64,κ::Float64) = buildham_exact!(S, N,α,κ, 0, 0)
 
+#TODO: make m₀ and n₀ real valued in the moving trap implementation
+
 function buildham_exact!(S::SparseMatrixCSC{Complex{Float64},Int}, N::Int,α::Float64,κ::Float64, m₀::Int, n₀::Int)
     @hambody(1/2*κ*((n-n₀)^2+(m-m₀)^2), -1, -1, -exp(-im*2π*α*m), -exp(im*2π*α*m))
 end

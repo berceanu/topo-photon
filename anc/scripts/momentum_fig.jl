@@ -98,6 +98,8 @@ matplotlib["rcParams"][:update](["axes.labelsize" => 22,
                                  "figure.autolayout" => true])
 
 #plot w.f. in  mom space
+
+# TODO: change scale to make white spot visible also in 3rd pannel
 f, axes = plt.subplots(2,length(βlan), figsize=(10, 5))
 
 for i = 1:length(βlan) #loop over columns

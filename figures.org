@@ -1,0 +1,80 @@
+Fig.1. The 4 pumping schemes.
+selection.pdf
+selection.svg
+selection_fig.jl ∎
+
+
+Fig.2. Momentum space wfs.
+momentum.pdf
+momentum_fig.jl ∎
+
+
+Fig.3. Real space. Delta pump.
+real.pdf
+real_fig.jl ∎
+
+
+Fig.4. Experimental spectrum and analytical comparison.
+exp_spect.pdf
+experimental_fig.jl ∎
+
+
+Fig.5. Experimental wfs.
+experimental.pdf
+experimental_fig.jl ∎
+
+
+Fig.6. HH band-width and -gap.
+bands.pdf
+approximations.ipynb
+
+
+
+Fig.7. Zero-point-energy error.
+zpe.pdf
+approximations.ipynb
+
+
+
+Fig.8. Very very weak traps.
+weak_trap.pdf
+approximations.ipynb
+
+
+New Fig.1. Torus edge collision.
+sym_ring.pdf
+torus_edge.ipynb
+sym_ring_spect.png shows the selected states
+
+
+New Fig.2. Radius vs \beta in real and momentum space.
+ring_scaling.ipynb
+ring_scaling_q_mom.pdf
+ring_scaling_q.pdf
+
+
+
+
+* programming
+** BP.jl
+** HH.jl   
+** exploratory.ipynb
+** ring_scaling.ipynb
+** torus_edge.ipynb
+** approximations.ipynb
+** experimental_fig.jl
+** momentum_fig.jl
+* code execution
+** exploratory.ipynb
+** ring_scaling.ipynb
+** torus_edge.ipynb
+** approximations.ipynb
+** experimental_fig.jl
+** momentum_fig.jl
+* design
+** TODO split selection.svg into 4 parts
+** TODO split momentum.pdf in 2 by row
+** TODO split exp_spect.pdf in 2 by row
+
+
+

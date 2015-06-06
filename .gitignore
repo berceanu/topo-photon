@@ -24,6 +24,9 @@ auto
 .juliahistory
 typescript
 
+## Archives
+*.tar.gz
+
 ## IJulia
 .ipynb_checkpoints
 *.mem

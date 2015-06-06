@@ -1,6 +1,8 @@
 using PyPlot
 import BP
 
+#TODO: redo with γ = 0.05
+#TODO: try larger γ (new figs)
 
 #system parameters
 sp=1
@@ -113,6 +115,8 @@ matplotlib["rcParams"][:update](["axes.labelsize" => 22,
                                  "figure.autolayout" => true])
 
 #plot spectrum
+#TODO: change label to $|\chi_7(0,p_y)|^2$
+
 mx = maximum(I)
 l=size(ψkmbz)[2]
 
@@ -148,6 +152,7 @@ plt.close(f)
 
 
 #plot w.f. in real and mom space
+#TODO: debug assymetry in right column
 f, axes = plt.subplots(2,3, figsize=(10, 7.3))
 #real space
 for (i,ψ) in enumerate((ψrex, ψr))
