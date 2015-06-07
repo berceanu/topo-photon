@@ -76,5 +76,27 @@ ring_scaling_q.pdf
 ** TODO split momentum.pdf in 2 by row
 ** TODO split exp_spect.pdf in 2 by row
 
+* Motivation slide
+** recent experimental realizations of the HH model in different contexts
+*** ultracold gases
+**** also synthetic dimension, BEC, Chern number measurement
+-- Original realisation of Harper-Hofstadter in ultracold gases:
+Aidelsburger et al., Phys. Rev. Lett. 111, 185301 (2013)
+Miyake et al., Phys. Rev. Lett. 111, 185302 (2013)
 
+-- Realisation of Harper-Hofstadter model in classical circuits:
+Jia et al., arXiv:1309.0878 (2013)
 
+-- Realisation of Spin Hall in pendula (two copies of HH model):
+Susstrunk & Huber, arXiv:1503.06808
+
+-- Realisation of Harper-Hofstadter model in solid-state superlattices:
+Dean et al., Nature 497, 598 (2013)
+Yu et al., Nature Physics 10, 525 (2014)
+
+-- in silicon photonics (Hafezi)
+
+** add combined image of all these realizations, extracted from their pdfs
+
+* Experimental realization slide
+** Hafezi's system

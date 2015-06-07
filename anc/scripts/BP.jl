@@ -25,7 +25,7 @@ WaveFunction(S::SparseMatrixCSC{Complex{Float64},Int64},
 
 function WaveFunction(S::SparseMatrixCSC{Complex{Float64},Int64},
                       ω::Float64,P::Vector{Complex{Float64}},gauge::Symbol,
-                      α::Float64,γ::Float64,κ::Float64, m₀::Int, n₀::Int)
+                      α::Float64,γ::Float64,κ::Float64, m₀::Float64, n₀::Float64)
 
     N::Int = sqrt(length(P))
 
@@ -47,7 +47,7 @@ ExactStates(nev::Int, gauge::Symbol) = ExactStates(nev, gauge, 45)
 ExactStates(nev::Int, gauge::Symbol, N::Int) = ExactStates(nev, gauge, N, 1/11, 0.02, 0, 0)
 ExactStates(nev::Int, gauge::Symbol, N::Int, α::Float64, κ::Float64) = ExactStates(nev, gauge, N, α, κ, 0, 0)
 
-function ExactStates(nev::Int, gauge::Symbol, N::Int, α::Float64, κ::Float64, m₀::Int, n₀::Int)
+function ExactStates(nev::Int, gauge::Symbol, N::Int, α::Float64, κ::Float64, m₀::Float64, n₀::Float64)
     M = spzeros(Complex{Float64}, N^2,N^2)
     eval(:($(symbol(string("buildhamexact", gauge, "!")))))(M, N,α,κ,m₀,n₀) 
 
@@ -172,24 +172,23 @@ end
 
 
 
-function buildham_landau!(S::SparseMatrixCSC{Complex{Float64},Int}, N::Int,α::Float64,κ::Float64,γ::Float64,ω::Float64, m₀::Int, n₀::Int)
+function buildham_landau!(S::SparseMatrixCSC{Complex{Float64},Int}, N::Int,α::Float64,κ::Float64,γ::Float64,ω::Float64, m₀::Float64, n₀::Float64)
     @hambody(ω + im*γ - 1/2*κ*((n-n₀)^2+(m-m₀)^2), 1, 1, exp(-im*2π*α*m), exp(im*2π*α*m))
 end
 
-function buildham_symmetric!(S::SparseMatrixCSC{Complex{Float64},Int}, N::Int,α::Float64,κ::Float64,γ::Float64,ω::Float64, m₀::Int, n₀::Int)
+function buildham_symmetric!(S::SparseMatrixCSC{Complex{Float64},Int}, N::Int,α::Float64,κ::Float64,γ::Float64,ω::Float64, m₀::Float64, n₀::Float64)
     @hambody(ω + im*γ - 1/2*κ*((n-n₀)^2+(m-m₀)^2), exp(-im*π*α*n), exp(im*π*α*n), exp(-im*π*α*m), exp(im*π*α*m))
 end
 
 buildham_exact!(S::SparseMatrixCSC{Complex{Float64},Int}, N::Int,α::Float64,κ::Float64) = buildham_exact!(S, N,α,κ, 0, 0)
 
-#TODO: make m₀ and n₀ real valued in the moving trap implementation
 
-function buildham_exact!(S::SparseMatrixCSC{Complex{Float64},Int}, N::Int,α::Float64,κ::Float64, m₀::Int, n₀::Int)
+function buildham_exact!(S::SparseMatrixCSC{Complex{Float64},Int}, N::Int,α::Float64,κ::Float64, m₀::Float64, n₀::Float64)
     @hambody(1/2*κ*((n-n₀)^2+(m-m₀)^2), -1, -1, -exp(-im*2π*α*m), -exp(im*2π*α*m))
 end
 
 buildhamexactlandau! = buildham_exact!
-function buildhamexactsymmetric!(S::SparseMatrixCSC{Complex{Float64},Int}, N::Int,α::Float64,κ::Float64, m₀::Int, n₀::Int)
+function buildhamexactsymmetric!(S::SparseMatrixCSC{Complex{Float64},Int}, N::Int,α::Float64,κ::Float64, m₀::Float64, n₀::Float64)
     @hambody(1/2*κ*((n-n₀)^2+(m-m₀)^2), -exp(-im*π*α*n), -exp(im*π*α*n), -exp(-im*π*α*m), -exp(im*π*α*m))
 end
 
