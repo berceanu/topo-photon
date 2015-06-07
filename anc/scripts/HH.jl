@@ -37,26 +37,32 @@ end
 
 # Computes the q energy levels E(p_y)
 hhladder(q::Int) = hhladder(1,q)
-hhladder!(E::Matrix{Float64}) = hhladder!(E, 1)
+hhladder!(E::Array{Float64,3}) = hhladder!(E, 1)
 
 function hhladder(p::Int, q::Int)
     ky = linspace(-π, π, 100)
-    E = Array(Float64, (length(ky),q))
+    kx₀= linspace(-π/q, π/q, 100)
+
+    E = Array(Float64, (length(ky),length(kx₀),q))
     H = zeros(Complex{Float64}, (q,q))
-    for (i,k) in enumerate(ky) #TODO: loop over kx as well
-        momsphhmat!(H, 0.,k, p)
-        E[i,:] = eigvals(H)
+    for col=1:length(kx₀), row=1:length(ky)
+        momsphhmat!(H, kx₀[col], ky[row], p)
+        E[row,col,:] = eigvals(H)
     end
     return E
 end
 
-function hhladder!(E::Matrix{Float64}, p::Int)
+function hhladder!(E::Array{Float64, 3}, p::Int)
     ky = linspace(-π, π, size(E,1))
-    q = size(E,2)
+    q = size(E,3)
+    kx₀= linspace(-π/q, π/q, size(E,2))
+
+
     H = zeros(Complex{Float64}, (q,q))
-    for (i,k) in enumerate(ky) #TODO: loop over kx as well
-        momsphhmat!(H, 0.,k, p)
-        E[i,:] = eigvals(H)
+
+    for col=1:length(kx₀), row=1:length(ky)
+        momsphhmat!(H, kx₀[col], ky[row], p)
+        E[row,col,:] = eigvals(H)
     end
     nothing
 end
@@ -180,11 +186,11 @@ bgap(qs::Vector{Int}) = [bgap(q) for q in qs]
 bgap(q::Int) = bgap(1, q)
 
 function bgap(p::Int, q::Int)
-    ladder = Array(Float64, (25,q))
+    ladder = Array(Float64, (25,25,q))
     hhladder!(ladder, p)
     
-    e1 = mean(ladder[:,1])
-    e2 = mean(ladder[:,2])
+    e1 = mean(ladder[:,:,1])
+    e2 = mean(ladder[:,:,2])
 
     return e2-e1
 end

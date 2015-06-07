@@ -56,14 +56,17 @@ ring_scaling_q.pdf
 
 
 * programming
-** BP.jl
-** HH.jl   
+** BP.jl ∎
+** HH.jl ∎
+
+** experimental_fig.jl
+** momentum_fig.jl
+
+
 ** exploratory.ipynb
 ** ring_scaling.ipynb
 ** torus_edge.ipynb
 ** approximations.ipynb
-** experimental_fig.jl
-** momentum_fig.jl
 * code execution
 ** exploratory.ipynb
 ** ring_scaling.ipynb
@@ -100,3 +103,6 @@ Yu et al., Nature Physics 10, 525 (2014)
 
 * Experimental realization slide
 ** Hafezi's system
+
+hhladder
+E(ky,kx0,q)
