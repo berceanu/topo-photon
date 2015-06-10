@@ -99,7 +99,6 @@ matplotlib["rcParams"][:update](["axes.labelsize" => 22,
 
 #plot w.f. in  mom space
 
-# TODO: change scale to make white spot visible also in 3rd pannel
 f, axes = plt.subplots(2,length(βlan), figsize=(10, 5))
 
 for i = 1:length(βlan) #loop over columns
@@ -119,8 +118,15 @@ for i = 1:length(βlan) #loop over columns
 
     #bottom row
     ax = axes[2,i]
-    im = ax[:imshow](ψS[:,:,i], origin="upper", ColorMap("gist_heat_r"), interpolation="none",
-                     extent=[minimum(kx), maximum(kx), minimum(ky), maximum(ky)])
+    if i == 3 #third pannel
+        im = ax[:imshow](ψS[:,:,i], origin="upper", ColorMap("gist_heat_r"), interpolation="none",
+                         extent=[minimum(kx), maximum(kx), minimum(ky), maximum(ky)],
+                         vmin=0, vmax=270000)
+        
+    else
+        im = ax[:imshow](ψS[:,:,i], origin="upper", ColorMap("gist_heat_r"), interpolation="none",
+                         extent=[minimum(kx), maximum(kx), minimum(ky), maximum(ky)])
+    end
     ax[:set_xlabel](L"$p_x$")
     ax[:set_xticks]([-π,0,π])
     ax[:set_yticks]([-π,0,π])
@@ -134,7 +140,7 @@ for i = 1:length(βlan) #loop over columns
 end 
 
 
-f[:savefig]("../../figures/momentum.pdf", transparent=true, pad_inches=0.0, bbox_inches="tight")
+f[:savefig]("../../figures/momentum.svg", transparent=true, pad_inches=0.0, bbox_inches="tight")
 plt.close(f)
 
 println("Landau g. extrema (top row):")

@@ -140,10 +140,10 @@ v2 = Complex{Float64}[-0.0-0.518207im, -0.518207+0.0im];
 #plotting
 
 qs = 5:20;
-y1 = [ηzpeold(q, 0.01)::Float64 for q in qs];
-y2 = [ηzpenew(q, 0.01)::Float64 for q in qs];
+y1 = [ηzpeold(q, 0.02)::Float64 for q in qs];
+y2 = [ηzpenew(q, 0.02)::Float64 for q in qs];
 
-y3 = HH.ηzpe(qs,0.01)
+y3 = HH.ηzpe(qs,0.02)
 @test_approx_eq_eps y1 y3 1e-6
 
 using PyPlot
@@ -167,18 +167,18 @@ matplotlib["rcParams"][:update](["axes.labelsize" => 22,
 
 
 fig, ax = plt.subplots(figsize=(8, 3))
+#TODO: use \text{} for plot subscripts. works only if nothing follows \text 
 
-ax[:plot](qs, y1, "black", marker="o") # label=L"$E_{ex} - E_{th}$"
-ax[:plot](qs, y2, "black", marker="o", ls="dashed") # label=L"$E_{ex} - E_{th} - δE$", ls="dashed")
+ax[:plot](qs, y1, "black", marker="o", ls="dashed", label=L"$E_{ex} - E_{th}$")
+ax[:plot](qs, y2, "black", marker="o", label=L"$E_{ex} - (E_{th} + \delta E)$")
 
-#ax[:set_ylim](-0.004, 0.016)
-#ax[:yaxis][:set_ticks]([0,1.5,3])
+ax[:set_ylim](-1.1, 1.2)
 ax[:set_xlim](qs[1], qs[end])
 
 ax[:set_xlabel](L"$q$")
+ax[:set_ylabel](L"$\eta_{zpe}$")
 
-#ax[:legend](loc="upper left")
+ax[:legend](loc="lower right")
 
-#fig[:savefig]("../figures/nonabcorr.pdf", transparent=true, pad_inches=0.0, bbox_inches="tight")
-#plt.close(fig)
-
+fig[:savefig]("../../figures/nonabcorr.svg", transparent=true, pad_inches=0.0, bbox_inches="tight")
+plt.close(fig)

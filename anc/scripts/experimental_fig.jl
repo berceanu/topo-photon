@@ -1,13 +1,10 @@
 using PyPlot
 import BP
 
-#TODO: redo with γ = 0.05
-#TODO: try larger γ (new figs)
-
 #system parameters
 sp=1
 sq=7
-sγ=0.0505
+sγ=0.05
 sκ=0.2
 sN=11
 n=5
@@ -115,8 +112,6 @@ matplotlib["rcParams"][:update](["axes.labelsize" => 22,
                                  "figure.autolayout" => true])
 
 #plot spectrum
-#TODO: change label to $|\chi_7(0,p_y)|^2$
-
 mx = maximum(I)
 l=size(ψkmbz)[2]
 
@@ -141,13 +136,13 @@ for (i,ax) in enumerate(axes)
         ax[:set_xlim](-π, π)
         ax[:set_xticks]([-π,-π/2,0,π/2,π])
         ax[:set_xticklabels]([L"$-\pi$",L"$-\pi/2$",L"$0$",L"$\pi/2$",L"$\pi$"])        
-        ax[:set_ylabel](L"$|\chi_{\beta}(p_x^0=0, p_y)|^2$")
+        ax[:set_ylabel](L"$|\chi_7(0,p_y)|^2$")
         ax[:set_xlabel](L"$p_y$")
         ax[:yaxis][:set_ticks]([0.,0.2,0.4])
     end
 end 
 
-f[:savefig]("../../figures/exp_spect.pdf", transparent=true, pad_inches=0.0, bbox_inches="tight")
+f[:savefig]("../../figures/exp_spect.svg", transparent=true, pad_inches=0.0, bbox_inches="tight")
 plt.close(f)
 
 
@@ -226,5 +221,5 @@ for (i,ψ) in enumerate((ψkmbzex, ψkmbz))
 end
 
 
-f[:savefig]("../../figures/experimental.pdf", transparent=true, pad_inches=0.0, bbox_inches="tight")
+f[:savefig]("../../figures/experimental.png", transparent=true, pad_inches=0.0, bbox_inches="tight")
 plt.close(f)

@@ -14,12 +14,12 @@ WaveFunction(S::SparseMatrixCSC{Complex{Float64},Int64},
 
 WaveFunction(S::SparseMatrixCSC{Complex{Float64},Int64},
              ω::Float64,P::Vector{Complex{Float64}},gauge::Symbol) =
-    WaveFunction(S,ω,P,gauge,1/11,0.001,0.02,0,0)
+    WaveFunction(S,ω,P,gauge,1/11,0.001,0.02,0.,0.)
 
 WaveFunction(S::SparseMatrixCSC{Complex{Float64},Int64},
              ω::Float64,P::Vector{Complex{Float64}},gauge::Symbol,
              α::Float64,γ::Float64,κ::Float64) =
-                 WaveFunction(S,ω,P,gauge,α,γ,κ, 0, 0)
+                 WaveFunction(S,ω,P,gauge,α,γ,κ, 0., 0.)
 
 
 
@@ -44,8 +44,8 @@ type ExactStates
 end
 
 ExactStates(nev::Int, gauge::Symbol) = ExactStates(nev, gauge, 45)
-ExactStates(nev::Int, gauge::Symbol, N::Int) = ExactStates(nev, gauge, N, 1/11, 0.02, 0, 0)
-ExactStates(nev::Int, gauge::Symbol, N::Int, α::Float64, κ::Float64) = ExactStates(nev, gauge, N, α, κ, 0, 0)
+ExactStates(nev::Int, gauge::Symbol, N::Int) = ExactStates(nev, gauge, N, 1/11, 0.02, 0., 0.)
+ExactStates(nev::Int, gauge::Symbol, N::Int, α::Float64, κ::Float64) = ExactStates(nev, gauge, N, α, κ, 0., 0.)
 
 function ExactStates(nev::Int, gauge::Symbol, N::Int, α::Float64, κ::Float64, m₀::Float64, n₀::Float64)
     M = spzeros(Complex{Float64}, N^2,N^2)
@@ -180,7 +180,7 @@ function buildham_symmetric!(S::SparseMatrixCSC{Complex{Float64},Int}, N::Int,α
     @hambody(ω + im*γ - 1/2*κ*((n-n₀)^2+(m-m₀)^2), exp(-im*π*α*n), exp(im*π*α*n), exp(-im*π*α*m), exp(im*π*α*m))
 end
 
-buildham_exact!(S::SparseMatrixCSC{Complex{Float64},Int}, N::Int,α::Float64,κ::Float64) = buildham_exact!(S, N,α,κ, 0, 0)
+buildham_exact!(S::SparseMatrixCSC{Complex{Float64},Int}, N::Int,α::Float64,κ::Float64) = buildham_exact!(S, N,α,κ, 0., 0.)
 
 
 function buildham_exact!(S::SparseMatrixCSC{Complex{Float64},Int}, N::Int,α::Float64,κ::Float64, m₀::Float64, n₀::Float64)

@@ -102,7 +102,7 @@ for (i,ax) in enumerate(axes)
 end 
 
 
-f[:savefig]("../../figures/real.pdf", transparent=true, pad_inches=0.0, bbox_inches="tight")
+f[:savefig]("../../figures/real.png", transparent=true, pad_inches=0.0, bbox_inches="tight")
 plt.close(f)
 
 ## for i = 1:4
