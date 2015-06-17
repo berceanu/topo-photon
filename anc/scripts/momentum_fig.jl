@@ -44,7 +44,7 @@ Plan = BP.homopmp(sN)
 Psym = BP.gausspmp(sN; A=1., σ=tbσ, n0=n, m0=m)
 
 
-βlan = [0,1,3,5]
+βlan = [0,2,4,6]
 βsym = [0,1,9,20]
 #we filter state η
 ηlan = βlan + 1
@@ -140,8 +140,10 @@ for i = 1:length(βlan) #loop over columns
 end 
 
 
-f[:savefig]("../../figures/momentum.svg", transparent=true, pad_inches=0.0, bbox_inches="tight")
+f[:savefig]("../../figures/momentum.pdf", transparent=true, pad_inches=0.0, bbox_inches="tight")
 plt.close(f)
+
+
 
 println("Landau g. extrema (top row):")
 for i = 1:length(βlan) #loop over columns

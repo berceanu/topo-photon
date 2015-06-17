@@ -182,3 +182,8 @@ ax[:legend](loc="lower right")
 
 fig[:savefig]("../../figures/nonabcorr.svg", transparent=true, pad_inches=0.0, bbox_inches="tight")
 plt.close(fig)
+
+#TODO: plot also energy correction using just first term of the sum
+#TODO: check δE(kₓ,k_y) flat for small q
+#TODO: plot 2 panels with ηₗev as well, or try to see if it can all be plotted in one panel
+#TODO: try plotting just the energies, not the eta's

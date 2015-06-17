@@ -145,3 +145,11 @@ sympy-plots-for-*.tex/
 # WinEdt
 *.bak
 *.sav
+
+# Small useless files
+anc/demo.ipynb
+anc/scripts/experimental_fig_large_gamma.jl
+anc/scripts/mbz.jl
+anc/white_spot.ipynb
+figures.org
+

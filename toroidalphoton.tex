@@ -96,12 +96,12 @@ Universit\`{a} di Trento, I-38123 Povo, Italy}
 %TODO: add Hannah's HH references 
 %TODO: add non-Abelian references
 %TODO: refer to Grazia's paper
-In fact, a general result~\cite{RMP} is that the different eigenmodes
+In fact, a general result~\cite{carusotto2013fluids} is that the different eigenmodes
 of a driven-dissipative system naturally appear as peaks in the
 transmission/absorption spectra under a coherent incident field. When
 the pump frequency is set on resonance with a given mode spectrally
 isolated from its neighbours, the intensity profiles in both real- and
-momentum-space faithfully reproduce the mode wavefunction~\cite{RMP}.
+momentum-space faithfully reproduce the mode wavefunction~\cite{carusotto2013fluids}.
 %TODO: reference to Tomoki mom sp HH model
 %TODO: find some good references from Grazia's paper on spectroscopic methods
 
@@ -317,14 +317,15 @@ gauge-dependent effects, the particular choice of gauge will also
 affect the spectrum. To exemplify, we compare 4 different pumping
 schemes in both the Landau and symmetric gauge.
 %
+%TODO: add extra panel for centered gaussian, in linear scale with a zoom
 \begin{figure}[htb]\centering
   \includegraphics[width=\linewidth]{selection}
   \caption{Intensity spectra for different pumping conditions: (a)
     pumping the single site (5,5), (b) pumping with a Gaussian
     profile, (c) homogeneous pumping and (d) pumping with a random
     phase. Black lines correspond to using the Landau gauge while
-    green (dashed) ones to the symmetric gauge. The dotted vertical
-    lines (with labels indicating the value of $\beta$)
+    green (dashed) ones to the symmetric gauge. The dotted vertical 
+   lines (with labels indicating the value of $\beta$)
     mark the states which were selected for later analysis.}
 %TODO: explain where exacly i plot sym g. and where L.g.
   \label{fig:pumping_schemes}
@@ -340,6 +341,7 @@ selection rules.
 \paragraph{A δ pump in real space is homogeneous in momentum space.}
 % TODO: add analytical expression for optimal β which gives the
 % best overlap; square root dependence of the radius on β
+%TODO: add explanation of sqrt(β) scaling in both real and mom space, using formula for landau level energies and saying it's all kinetic energy
 
 The simplest case is that of pumping a single site, with a pump of the
 form $f_{m,n} = \delta_{m,m_0} \delta_{n,n_0}$. The pump is of course
@@ -496,7 +498,7 @@ Fig.~\ref{fig:exp_spectrum} and shows good agreement with the
 analytics.
 
 
-
+%TODO: main text: momentum space cyclotron orbit
 \begin{figure}[htb]
   \centering
   \includegraphics[width=0.9\linewidth]{experimental}
@@ -610,10 +612,14 @@ $E_{\text{ex}}$ with respect to $E_{\text{th}}$.
 \paragraph{Eigenstates for weak traps form in the minima of the band dispersion.}
 We see that this is clearly not the case, as in fact
 $\eta_{\text{zpe}}$ only becomes negative for extremely small values
-of $\kappa \ll J$, as shown in Fig.~\ref{fig:error_small_kappa}.  That
+of $\kappa \ll J$, as shown in Fig.~(error small kappa).  That
+%TODO: fix missing figure reference
 is because the eigenstates of Eq.~\eqref{eq:model} for such weak
 traps start forming in the minima of $E_1(\vt(p))$, which are below
 the average value $\left<E_1(\vt{p})\right>_{\vt{p}}$.
+
+%TODO: include fringe_trap.pdf
+%TODO: include sym_ring.pdf
 
 \paragraph{This contribution is due to intra-band terms.}
 To understand the positive contribution to $\eta_{\text{zpe}}$, one
@@ -647,7 +653,7 @@ approximation.
 
 
 \begin{figure}[htb]\centering
-  \includegraphics[width=0.5\linewidth]{zpe}
+  \includegraphics[width=0.5\linewidth]{level_error}
   \caption{``Zero-point energy" error, quantifying the deviation of
     $\epsilon_{1,0}$ from its predicted value given by Eq.~\eqref{eq:ladders}.}
   \label{fig:zpe}
@@ -659,13 +665,6 @@ approximation.
 
 
 
-\begin{figure}[htb]\centering
-  \includegraphics[width=0.9\linewidth]{weak_trap}
-  \caption{In the limit of very weak traps $\kappa \ll J$, the
-    ``zero-point energy" error becomes negative.}
-  \label{fig:error_small_kappa}
-%TODO: only leave q=5 curve and use log scale for κ
-\end{figure}
 
 
 \end{document}

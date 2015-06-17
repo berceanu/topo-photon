@@ -350,12 +350,33 @@ function mbz(data, q, N)
     
     for i in 1:l
         idx = i
-        while idx <= q*N+1
+        while idx <= q*N
                V[:,i] += data[:,idx]
             idx += l
         end
     end
 
+    V/(4π^2)
+end
+
+# maps any momentum to the first brillouin zone
+function fbz(mom::Float64)
+    m = mod(mom, 2π)
+    m <= π ? m : m - 2π
+end 
+
+# new method
+function mbz(data::Array{Float64,2}, r::Int, q::Int, kxmbz::FloatRange{Float64}, k::FloatRange{Float64})
+    # data is |ψ(FBZ)|², input
+    V = zeros(Float64, (length(k), r)) # |ψ(MBZ)|², output
+
+    for (i,pₓ) in enumerate(kxmbz) # loop over momenta in MBZ
+        for j = 0:q-1 # sum over various components
+            ptld = pₓ - j * 2π/q
+            idx = indmin(abs(k .- fbz(ptld))) # index of \tilde{p_x}
+            V[:,i] += data[:, idx]
+        end
+    end
     V/(4π^2)
 end
 
