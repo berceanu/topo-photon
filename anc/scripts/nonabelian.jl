@@ -159,7 +159,7 @@ qs = 5:20
 y1 = [ηzpeold(q, 0.02)::Float64 for q in qs]
 y2 = [ηzpenew(q, 0.02)::Float64 for q in qs]
 # plot also energy correction using just first term of the sum
-y4 = [ηzpeterm(q, 0.02):Float64 for q in qs]
+y4 = [ηzpeterm(q, 0.02)::Float64 for q in qs]
 
 y3 = HH.ηzpe(qs,0.02)
 @test_approx_eq_eps y1 y3 1e-6
@@ -242,20 +242,20 @@ ax[:plot](qs, y2, "black", marker="o", label="new")                # $E_{ex} - (
 ax[:plot](qs, y4, "black", marker="o", ls="dotted", label="term")
 
 
-ax[:set_ylim](-1.1, 1.2)nn
+ax[:set_ylim](-1.1, 1.2)
 ax[:set_xlim](qs[1], qs[end])
 
 ax[:set_xlabel](L"$q$")
-ax[:set_ylabel](L"$\eta_{zpe}$")
+ax[:set_ylabel](L"$\eta_{\text{zpe}}$")
 
 ax[:legend](loc="lower right")
 
-fig[:savefig]("../../figures/nonabcorr.svg", transparent=true, pad_inches=0.0, bbox_inches="tight")
+fig[:savefig]("../../figures/nonabcorr.pdf", transparent=true, pad_inches=0.0, bbox_inches="tight")
 plt.close(fig)
 
 
-#TODO: plot 2 panels with ηₗev as well, or try to see if it can all be plotted in one panel
+#TODO: plot 2 panels with η_{lev} as well
 
-#TODO: use \text{} for plot subscripts. works only if nothing follows \text 
+
 
 
