@@ -164,6 +164,8 @@ y4 = [ηzpeterm(q, 0.02)::Float64 for q in qs]
 y3 = HH.ηzpe(qs,0.02)
 @test_approx_eq_eps y1 y3 1e-6
 
+ηL= HH.ηlev(qs,0.02)
+
 using PyPlot
 
 # matplotlib parameters
@@ -234,28 +236,30 @@ fig[:savefig]("../../figures/correction_mbz.pdf", transparent=true, pad_inches=0
 plt.close(fig)
 
 
-fig, ax = plt.subplots(figsize=(8, 3))
+fig, axes = plt.subplots(2, figsize=(8, 5))
+for (i, ax) in enumerate(axes)
+    if i == 1 # first panel, with zero-point-energy error
+        ax[:plot](qs, y1, "black", marker="o", ls="dashed", label = "old") # $E_{ex} - E_{th}$
+        ax[:plot](qs, y2, "black", marker="o", label="new")          # $E_{ex} - (E_{th} + \delta E)$
+        ax[:plot](qs, y4, "black", marker="o", ls="dotted", label="term")
 
+        ax[:legend](loc="lower right")
 
-ax[:plot](qs, y1, "black", marker="o", ls="dashed", label = "old") # $E_{ex} - E_{th}$
-ax[:plot](qs, y2, "black", marker="o", label="new")                # $E_{ex} - (E_{th} + \delta E)$
-ax[:plot](qs, y4, "black", marker="o", ls="dotted", label="term")
+        ax[:set_xticklabels]([])
 
+        ax[:set_ylim](-1.1, 1.2)
+        ax[:set_ylabel](L"$\eta_{\text{zpe}}$")
+    else # second panel, with level spacing error
+        ax[:plot](qs, ηL * 10^2, "black", marker="o") # $\kappa=0.02$
 
-ax[:set_ylim](-1.1, 1.2)
-ax[:set_xlim](qs[1], qs[end])
+        ax[:set_ylim](-10, 0)
+        ax[:set_ylabel](L"$\eta_{lev}(0) \times 10^2$")
+        ax[:yaxis][:set_ticks]([-10, -5, 0])
 
-ax[:set_xlabel](L"$q$")
-ax[:set_ylabel](L"$\eta_{\text{zpe}}$")
-
-ax[:legend](loc="lower right")
+        ax[:set_xlabel](L"$q$")
+    end
+    ax[:set_xlim](qs[1], qs[end])
+end 
 
 fig[:savefig]("../../figures/nonabcorr.pdf", transparent=true, pad_inches=0.0, bbox_inches="tight")
 plt.close(fig)
-
-
-#TODO: plot 2 panels with η_{lev} as well
-
-
-
-
