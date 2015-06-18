@@ -7,15 +7,19 @@ import BP
 # calculates zero-point energy, with and without nonabelian correction
 ηzpenew(q::Int, κ::Float64) = (α=1/q; 4π*α/κ * endiffnonab(q, κ))
 ηzpeold(q::Int, κ::Float64) = (α=1/q; 4π*α/κ * endiff(q, κ))
+ηzpeterm(q::Int, κ::Float64) = (α=1/q; 4π*α/κ * endiffterm(q, κ))
+
 
 
 # calculates energy difference between numerical (exact) and theoretical energies, with the nonab corr.
 endiffnonab(q::Int, κ::Float64) = er(q,κ) - (et(q,κ) + δE(q,κ))
 
-
 # calculates energy difference between numerical (exact) and theoretical energies (without nonab corr)
 endiff(q::Int, κ::Float64) =  er(q,κ) - et(q,κ)
 
+# calculates energy difference between numerical (exact) and theoretical energies,
+# with first term of the nonabelian correction
+endiffterm(q::Int, κ::Float64) = er(q,κ) - (et(q,κ) + δEterm(q, κ))
 
 
 et(q::Int,κ::Float64) =  et(q,1,κ)
@@ -57,18 +61,18 @@ end
 # calculates the average (over specified points) non-abelian energy correction to n(th) band
 δE(n::Int,q::Int,p::Int, px::Array{Float64, 1},py::Array{Float64, 1},κ::Float64) = mean([δE(n,q,p, x,y,κ) for y in py, x in px])
 
-mean([δEterm(q, x,y, κ) for y in linspace(-π, π, 20), x in linspace(-π/q, π/q, 20)])
 
-# -> Float64
-# calculates non-abelian energy correction to 1(st) band at
-# position (kₓ⁰, ky) in the MBZ using just first term, not whole sum
-δEterm(q::Int, k₀x::Float64,ky::Float64,κ::Float64) = κ/2 * norm(A(1,2,q,1, k₀x,ky))^2
+# calculates non-abelian energy correction to 1(st) band considering only the first term of the sum
+δEterm(q::Int, κ::Float64) = mean([δEterm(q, x,y, κ) for y in linspace(-π, π, 20), x in linspace(-π/q, π/q, 20)])
 
 
 # -> Float64
 # calculates non-abelian energy correction to n(th) band at position (kₓ⁰,ky) in the MBZ
 δE(n::Int,q::Int,p::Int, k₀x::Float64,ky::Float64,κ::Float64) =  κ/2*sum([n′ != n ? norm(A(n,n′,q,p, k₀x,ky))^2 : 0.0 for n′ in 1:q])
 
+# calculates non-abelian energy correction to 1(st) band at position (kₓ⁰,ky) in the MBZ,
+# considering only the first term of the sum
+δEterm(q::Int, k₀x::Float64,ky::Float64,κ::Float64) = κ/2 * norm(A(1,2,q,1, k₀x,ky))^2
 
 # -> [Complex{Float64}, Complex{Float64}]
 # calculates Berry connection A (vector quantity) at position (kₓ⁰,ky) in the MBZ for bands n and n′
