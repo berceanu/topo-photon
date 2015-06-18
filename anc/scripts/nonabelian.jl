@@ -155,9 +155,11 @@ v2 = Complex{Float64}[-0.0-0.518207im, -0.518207+0.0im];
 
 #plotting
 
-qs = 5:20;
-y1 = [ηzpeold(q, 0.02)::Float64 for q in qs];
-y2 = [ηzpenew(q, 0.02)::Float64 for q in qs];
+qs = 5:20
+y1 = [ηzpeold(q, 0.02)::Float64 for q in qs]
+y2 = [ηzpenew(q, 0.02)::Float64 for q in qs]
+# plot also energy correction using just first term of the sum
+y4 = [ηzpeterm(q, 0.02):Float64 for q in qs]
 
 y3 = HH.ηzpe(qs,0.02)
 @test_approx_eq_eps y1 y3 1e-6
@@ -232,27 +234,27 @@ fig[:savefig]("../../figures/correction_mbz.pdf", transparent=true, pad_inches=0
 plt.close(fig)
 
 
-## fig, ax = plt.subplots(figsize=(8, 3))
+fig, ax = plt.subplots(figsize=(8, 3))
 
 
-## ax[:plot](qs, y1, "black", marker="o", ls="dashed", label=L"$E_{ex} - E_{th}$")
-## ax[:plot](qs, y2, "black", marker="o", label=L"$E_{ex} - (E_{th} + \delta E)$")
-
-## ax[:set_ylim](-1.1, 1.2)
-## ax[:set_xlim](qs[1], qs[end])
-
-## ax[:set_xlabel](L"$q$")
-## ax[:set_ylabel](L"$\eta_{zpe}$")
-
-## ax[:legend](loc="lower right")
-
-## fig[:savefig]("../../figures/nonabcorr.svg", transparent=true, pad_inches=0.0, bbox_inches="tight")
-## plt.close(fig)
+ax[:plot](qs, y1, "black", marker="o", ls="dashed", label = "old") # $E_{ex} - E_{th}$
+ax[:plot](qs, y2, "black", marker="o", label="new")                # $E_{ex} - (E_{th} + \delta E)$
+ax[:plot](qs, y4, "black", marker="o", ls="dotted", label="term")
 
 
-#TODO: plot also energy correction using just first term of the sum
+ax[:set_ylim](-1.1, 1.2)nn
+ax[:set_xlim](qs[1], qs[end])
+
+ax[:set_xlabel](L"$q$")
+ax[:set_ylabel](L"$\eta_{zpe}$")
+
+ax[:legend](loc="lower right")
+
+fig[:savefig]("../../figures/nonabcorr.svg", transparent=true, pad_inches=0.0, bbox_inches="tight")
+plt.close(fig)
+
+
 #TODO: plot 2 panels with ηₗev as well, or try to see if it can all be plotted in one panel
-
 
 #TODO: use \text{} for plot subscripts. works only if nothing follows \text 
 
