@@ -1,30 +1,33 @@
 using PyPlot
 import BP
 
+# system parameters
 const N = 45
-const α = 1/11
+const q = 11
 const κ = 0.02
 const γ = 0.001
 const ν = linspace(-3.45,-2.47,981);
 ##
 
-M = spzeros(Complex{Float64}, N^2,N^2)
-BP.buildham_exact!(M, N,α,κ)
-spectrum = real(eigs(M, nev=29, which=:SR, ritzvec=false)[1])
+
+# exact spectrum, first 29 eigenvalues
+exstates = BP.ExactStates(29, :landau, N, 1/q, κ)
 
 
 #for plotting filter markers
 βlan = [0,1,3,5]
 βsym = [0,1,9,20]
 βreal = [0,6,15,26]
+
 #we filter state η
 ηlan = βlan + 1
 ηsym = βsym + 1
 ηreal = βreal + 1
+
 #at energy
-sω0lan = [spectrum[state]::Float64 for state in ηlan]
-sω0sym = [spectrum[state]::Float64 for state in ηsym]
-sω0real= [spectrum[state]::Float64 for state in ηreal]
+sω0lan = [exstates.νs[state]::Float64 for state in ηlan]
+sω0sym = [exstates.νs[state]::Float64 for state in ηsym]
+sω0real= [exstates.νs[state]::Float64 for state in ηreal]
 
 
 δpmp(n₀::Int,m₀::Int) = BP.δpmp(N; n0=n₀, m0=m₀)
@@ -33,7 +36,7 @@ homopmp() = BP.homopmp(N)
 randpmp(s::Int) = BP.randpmp(N; seed=s) #1234
 
            
-prm = (α,γ,κ);
+prm = (1/q,γ,κ);
 
 spδl = BP.Spectrum(ν,δpmp(5,5), :landau, prm...)
 spgaussl = BP.Spectrum(ν,gausspmp(5,5), :landau, prm...)
@@ -43,14 +46,17 @@ sphoml = BP.Spectrum(ν,homopmp(), :landau, prm...)
 spgausss = BP.Spectrum(ν,gausspmp(5,5), :symmetric, prm...)
 sphoms = BP.Spectrum(ν,homopmp(), :symmetric, prm...)
 
-sprandl = vec(readdlm("sprandl.txt", Float64));
+## averaging over 100 random phase distributions ##
+# reading result from file | it takes a while to compute ;)
+sprandl = vec(readdlm("sprandl.txt", Float64))
 
+# computing result
 ## intvec = zeros(Float64, length(ν));
 ## A = spzeros(Complex{Float64}, N^2,N^2);
 ## for j=1:100
 ##     P=randpmp(j)
 ##     for (i,ω) in enumerate(ν)
-##         BP.buildham_landau!(A, N,α,κ,γ, ω)
+##         BP.buildham_landau!(A, N,1/q,κ,γ, ω)
 ##         intvec[i] += sum(abs2(A\P))
 ##     end 
 ## end 
@@ -58,9 +64,8 @@ sprandl = vec(readdlm("sprandl.txt", Float64));
 
 #extrema(sprandl)
 
+# writing computed result to file
 ## writedlm("sprandl.txt", sprandl)
-
-
 
 
 ##
@@ -69,6 +74,7 @@ for sp in (spδl,spgaussl,sphoml)
 end
 
 println()
+
 for sp in (spgausss, sphoms)
     println(extrema(sp.intensity))
 end
@@ -122,7 +128,7 @@ axes[3][:yaxis][:set_ticklabels]([L"$0$", L"$10^6$"])
 
 
 axes[4][:plot](ν,sprandl,"k") 
-for ω in spectrum
+for ω in exstates.νs
     axes[4][:axvline](x = ω, color="orange", ls="dotted")
 end 
 axes[4][:set_xlabel](L"$\omega_0 [J]$")
@@ -138,3 +144,6 @@ end
 
 f[:savefig]("../../figures/selection.pdf", transparent=true, pad_inches=0.0, bbox_inches="tight")
 plt.close(f)
+
+#TODO: add extra panel for centered gaussian, in linear scale with a zoom
+
