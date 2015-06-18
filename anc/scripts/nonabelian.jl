@@ -2,6 +2,8 @@ import HH
 import BP
 
 
+## functions ##
+
 # calculates zero-point energy, with and without nonabelian correction
 ηzpenew(q::Int, κ::Float64) = (α=1/q; 4π*α/κ * endiffnonab(q, κ))
 ηzpeold(q::Int, κ::Float64) = (α=1/q; 4π*α/κ * endiff(q, κ))
@@ -9,6 +11,7 @@ import BP
 
 # calculates energy difference between numerical (exact) and theoretical energies, with the nonab corr.
 endiffnonab(q::Int, κ::Float64) = er(q,κ) - (et(q,κ) + δE(q,κ))
+
 
 # calculates energy difference between numerical (exact) and theoretical energies (without nonab corr)
 endiff(q::Int, κ::Float64) =  er(q,κ) - et(q,κ)
@@ -45,13 +48,22 @@ function er(q::Int,p::Int,N::Int,κ::Float64)
 end
 
 
+
 # calculates average over MBZ of the non-abelian correction to the 1(st) band for p=1 for certain trap
-δE(q::Int,κ::Float64) = δE(1,q,1, linspace(-π/q, π/q, 20),linspace (-π, π, 20), κ)
+δE(q::Int,κ::Float64) = δE(1,q,1, linspace(-π/q, π/q, 20), linspace(-π, π, 20), κ)
 
 
 # -> Float64
 # calculates the average (over specified points) non-abelian energy correction to n(th) band
 δE(n::Int,q::Int,p::Int, px::Array{Float64, 1},py::Array{Float64, 1},κ::Float64) = mean([δE(n,q,p, x,y,κ) for y in py, x in px])
+
+mean([δEterm(q, x,y, κ) for y in linspace(-π, π, 20), x in linspace(-π/q, π/q, 20)])
+
+# -> Float64
+# calculates non-abelian energy correction to 1(st) band at
+# position (kₓ⁰, ky) in the MBZ using just first term, not whole sum
+δEterm(q::Int, k₀x::Float64,ky::Float64,κ::Float64) = κ/2 * norm(A(1,2,q,1, k₀x,ky))^2
+
 
 # -> Float64
 # calculates non-abelian energy correction to n(th) band at position (kₓ⁰,ky) in the MBZ
@@ -165,25 +177,79 @@ matplotlib["rcParams"][:update](["axes.labelsize" => 22,
                                  "text.usetex" => true,
                                  "figure.autolayout" => true])
 
+## checking δE(kₓ,k_y) flat for q = 5 ##
+# system parameters
+q = 5
+r = 11 # points in MBZ
 
-fig, ax = plt.subplots(figsize=(8, 3))
-#TODO: use \text{} for plot subscripts. works only if nothing follows \text 
+# N should be an odd multiple of q
+N = r*q # zero-padded system size
+l = div(N-1,2)
+x = -l:l
+δk = 2π/N #resolution in mom space
+k = x * δk
 
-ax[:plot](qs, y1, "black", marker="o", ls="dashed", label=L"$E_{ex} - E_{th}$")
-ax[:plot](qs, y2, "black", marker="o", label=L"$E_{ex} - (E_{th} + \delta E)$")
+using Base.Test
+@test x[l+1] == 0
+@test k[l+1] == 0.0
+@test isodd(N)
+@test isodd(r)
 
-ax[:set_ylim](-1.1, 1.2)
-ax[:set_xlim](qs[1], qs[end])
+#generate all p values inside MBZ
+xmbz = -div(r-1,2):div(r-1,2)
+kxmbz = xmbz * δk
 
-ax[:set_xlabel](L"$q$")
-ax[:set_ylabel](L"$\eta_{zpe}$")
+##
+data = [δE(1,5,1, x,y,0.02)::Float64 for y in k, x in kxmbz]
 
-ax[:legend](loc="lower right")
+a, b = extrema(data)
 
-fig[:savefig]("../../figures/nonabcorr.svg", transparent=true, pad_inches=0.0, bbox_inches="tight")
+fig, ax = plt.subplots(figsize=(5, 5))
+img = ax[:imshow](data, origin="upper", ColorMap("gist_heat_r"), interpolation="none",
+                 extent=[-π/q, π/q, -π, π],
+                 aspect=1/q)
+
+ax[:set_ylabel](L"$p_y$",labelpad=-1)
+ax[:set_xlabel](L"$p_x^0$", labelpad=-1)
+
+ax[:xaxis][:set_ticks]([-π/q,0,π/q])
+ax[:xaxis][:set_ticklabels]([L"$-\pi/5$", L"$0$", L"$\pi/5$"])
+ax[:yaxis][:set_ticks]([-π,0,π])
+ax[:yaxis][:set_ticklabels]([L"$-\pi$", L"$0$", L"$\pi$"])
+
+cbaxes = fig[:add_axes]([0.25, 0.04, 0.65, 0.015])
+cbar = fig[:colorbar](img, cax=cbaxes, orientation="horizontal")
+cbar[:set_ticks]([a,b])
+cbar[:set_ticklabels]([L"$5.378 \times 10^{-3}$", L"$11.680 \times 10^{-3}$"])
+cbar[:set_label](L"$\delta E(5,0.02)$", rotation=0, labelpad=-20, y=0.5)
+cbar[:solids][:set_edgecolor]("face")
+
+fig[:savefig]("../../figures/correction_mbz.pdf", transparent=true, pad_inches=0.0, bbox_inches="tight")
 plt.close(fig)
 
+
+## fig, ax = plt.subplots(figsize=(8, 3))
+
+
+## ax[:plot](qs, y1, "black", marker="o", ls="dashed", label=L"$E_{ex} - E_{th}$")
+## ax[:plot](qs, y2, "black", marker="o", label=L"$E_{ex} - (E_{th} + \delta E)$")
+
+## ax[:set_ylim](-1.1, 1.2)
+## ax[:set_xlim](qs[1], qs[end])
+
+## ax[:set_xlabel](L"$q$")
+## ax[:set_ylabel](L"$\eta_{zpe}$")
+
+## ax[:legend](loc="lower right")
+
+## fig[:savefig]("../../figures/nonabcorr.svg", transparent=true, pad_inches=0.0, bbox_inches="tight")
+## plt.close(fig)
+
+
 #TODO: plot also energy correction using just first term of the sum
-#TODO: check δE(kₓ,k_y) flat for small q
 #TODO: plot 2 panels with ηₗev as well, or try to see if it can all be plotted in one panel
-#TODO: try plotting just the energies, not the eta's
+
+
+#TODO: use \text{} for plot subscripts. works only if nothing follows \text 
+
+
