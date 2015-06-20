@@ -112,18 +112,21 @@ hf = (exstates.νs[2] - exstates.νs[1])/2
 
 fig, axes = plt.subplots(4, figsize=(10, 7.3))
 axes[1][:plot](spδl.νs,spδl.intensity,"k") 
-for ω in sω0real
-    axes[1][:axvline](x = ω, color="k", ls="dotted")
+for (i,ω) in enumerate(sω0real)
+    axes[1][:axvline](x = ω, color="orange", ls="dotted")
+    axes[1][:text](ω + hf/4, 8e2, string(βreal[i]))
 end
 axes[1][:set_ylim](0, 1e3)
 axes[1][:yaxis][:set_ticks]([0, 1e3])
 axes[1][:yaxis][:set_ticklabels]([L"$0$", L"$10^3$"])
 axes[1][:text](ν[1] + hf, 5e2, "(a)")
 
+
 axes[2][:plot](spgaussl.νs,spgaussl.intensity,"k") 
 axes[2][:plot](spgausss.νs,spgausss.intensity, color="green", ls="dashed", linewidth=1.5)
-for ω in sω0sym
-    axes[2][:axvline](x = ω, color="green", ls="dotted")
+for (i,ω) in enumerate(sω0sym)
+    axes[2][:axvline](x = ω, color="orange", ls="dotted")
+    axes[2][:text](ω + hf/4, 8e2, string(βsym[i]))
 end 
 axes[2][:set_ylim](0, 1e3)
 axes[2][:yaxis][:set_ticks]([0, 1e3])
@@ -140,6 +143,8 @@ axins = axloc.inset_axes(axes[3],
                         loc=9) # located at upper middle part
 # plot same thing as in parent box
 axins[:plot](sphoms.νs,sphoms.intensity, color="green", ls="dashed", linewidth=1.5)
+axins[:plot](sphoml.νs,sphoml.intensity, color="black") 
+
 # but set much narrower limits
 axins[:set_xlim]([ω₁, ω₂])
 axins[:xaxis][:set_ticks]([ω₁, ω₂])
@@ -151,8 +156,9 @@ axins[:yaxis][:set_ticks]([1000, 10000])
 axins[:yaxis][:set_ticklabels]([L"$10^3$", L"$10^4$"], fontsize=8)
 
 # draw vertical lines at position of every exact eigenstate
-for ω in exstates.νs
+for (i,ω) in enumerate(exstates.νs[4:6])
     axins[:axvline](x = ω, color="orange", ls="dotted")
+    axins[:text](ω + hf/8, 8e3, string(i+2), fontsize=8)
 end 
 
 # transparency setting, not needed when exporting to pdf
@@ -166,8 +172,9 @@ end
 # connecting lines between the bbox and the inset axes area
 axloc.mark_inset(axes[3], axins, loc1=2, loc2=4, ec="0.", fc="none")
 
-for ω in sω0lan
-    axes[3][:axvline](x = ω, color="k", ls="dotted")
+for (i,ω) in enumerate(sω0lan)
+    axes[3][:axvline](x = ω, color="orange", ls="dotted")
+    axes[3][:text](ω + hf/4, 8e5, string(βlan[i]))
 end 
 axes[3][:set_ylim](0, 1e6)
 axes[3][:yaxis][:set_ticks]([0, 1e6])
@@ -187,7 +194,6 @@ axes[4][:text](ν[1] + hf, 5e5, "(d)")
 
 for (i, ax) in enumerate(axes)
     ax[:set_xlim](ν[1], ν[end])
-
     i != 4 && ax[:set_xticklabels]([])
 end 
 
@@ -207,7 +213,5 @@ plt.close(fig)
 ## fig[:savefig]("../../figures/gaussian.pdf", transparent=true, pad_inches=0.0, bbox_inches="tight")
 ## plt.close(fig)
 
-
-
 # TODO: add common y label to all subplots
-# TODO: add β labels to vertical lines in all subplots
+
