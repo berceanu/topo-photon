@@ -197,8 +197,13 @@ for (i, ax) in enumerate(axes)
     i != 4 && ax[:set_xticklabels]([])
 end 
 
+# set common y label to all subplots
+fig[:text](0.0, 0.5, L"$\sum_{m,n} |a_{m,n}|^2$ [a.u.]", ha="center", va="center", rotation="vertical")
+
 fig[:savefig]("../../figures/selection.pdf", pad_inches=0.0, bbox_inches="tight")
 plt.close(fig)
+
+
 
 
 # plotting panel for centered gaussian
@@ -213,5 +218,5 @@ plt.close(fig)
 ## fig[:savefig]("../../figures/gaussian.pdf", transparent=true, pad_inches=0.0, bbox_inches="tight")
 ## plt.close(fig)
 
-# TODO: add common y label to all subplots
+
 
