@@ -48,6 +48,7 @@ spδl = BP.Spectrum(ν,δpmp(5,5), :landau, prm...)
 spgaussl = BP.Spectrum(ν,gausspmp(5,5), :landau, prm...)
 sphoml = BP.Spectrum(ν,homopmp(), :landau, prm...)
 
+## deprecated ##
 # centered gaussian
 # spgauss0 = BP.Spectrum(ν, BP.gausspmp(N; A=1., σ=20., n0=0, m0=0), :symmetric, prm...)
 
@@ -205,7 +206,7 @@ plt.close(fig)
 
 
 
-
+## deprecated ##
 # plotting panel for centered gaussian
 ## fig, ax = plt.subplots(figsize=(8, 3))
 ##     ax[:plot](spgauss0.νs, spgauss0.intensity, color="green", linewidth=1.5)
@@ -218,5 +219,5 @@ plt.close(fig)
 ## fig[:savefig]("../../figures/gaussian.pdf", transparent=true, pad_inches=0.0, bbox_inches="tight")
 ## plt.close(fig)
 
-
-
+# TODO: merge with contents of real_fig.jl
+# TODO: merge with contents of momentum_fig.jl
