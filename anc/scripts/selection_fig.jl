@@ -107,6 +107,9 @@ matplotlib["rcParams"][:update](["axes.labelsize" => 22,
                                  "figure.autolayout" => true])
 
 
+# half the level spacing
+hf = (exstates.νs[2] - exstates.νs[1])/2
+
 fig, axes = plt.subplots(4, figsize=(10, 7.3))
 axes[1][:plot](spδl.νs,spδl.intensity,"k") 
 for ω in sω0real
@@ -115,6 +118,7 @@ end
 axes[1][:set_ylim](0, 1e3)
 axes[1][:yaxis][:set_ticks]([0, 1e3])
 axes[1][:yaxis][:set_ticklabels]([L"$0$", L"$10^3$"])
+axes[1][:text](ν[1] + hf, 5e2, "(a)")
 
 axes[2][:plot](spgaussl.νs,spgaussl.intensity,"k") 
 axes[2][:plot](spgausss.νs,spgausss.intensity, color="green", ls="dashed", linewidth=1.5)
@@ -124,6 +128,7 @@ end
 axes[2][:set_ylim](0, 1e3)
 axes[2][:yaxis][:set_ticks]([0, 1e3])
 axes[2][:yaxis][:set_ticklabels]([L"$0$", L"$10^3$"])
+axes[2][:text](ν[1] + hf, 5e2, "(b)")
 
 
 axes[3][:plot](sphoml.νs,sphoml.intensity,"k") 
@@ -138,7 +143,6 @@ axins[:plot](sphoms.νs,sphoms.intensity, color="green", ls="dashed", linewidth=
 # but set much narrower limits
 axins[:set_xlim]([ω₁, ω₂])
 axins[:xaxis][:set_ticks]([ω₁, ω₂])
-
 axins[:xaxis][:set_ticklabels]([string(round(ω₁,2)), string(round(ω₂,2))], fontsize=8)
 
 
@@ -146,13 +150,10 @@ axins[:set_ylim]([1000, 10000])
 axins[:yaxis][:set_ticks]([1000, 10000])
 axins[:yaxis][:set_ticklabels]([L"$10^3$", L"$10^4$"], fontsize=8)
 
-
-
 # draw vertical lines at position of every exact eigenstate
 for ω in exstates.νs
     axins[:axvline](x = ω, color="orange", ls="dotted")
 end 
-
 
 # transparency setting, not needed when exporting to pdf
 #axins[:patch][:set_alpha](1.0)
@@ -160,8 +161,6 @@ end
 # hide inset tick labels
 #plt.xticks(visible=false)
 #plt.yticks(visible=false)
-
-
 
 # draw a bbox of the region of the inset axes in the parent axes and
 # connecting lines between the bbox and the inset axes area
@@ -173,6 +172,7 @@ end
 axes[3][:set_ylim](0, 1e6)
 axes[3][:yaxis][:set_ticks]([0, 1e6])
 axes[3][:yaxis][:set_ticklabels]([L"$0$", L"$10^6$"])
+axes[3][:text](ν[1] + hf, 5e5, "(c)")
 
 
 axes[4][:plot](ν,sprandl,"k") 
@@ -183,6 +183,7 @@ axes[4][:set_xlabel](L"$\omega_0 [J]$")
 axes[4][:set_ylim](0, 1e6)
 axes[4][:yaxis][:set_ticks]([0, 1e6])
 axes[4][:yaxis][:set_ticklabels]([L"$0$", L"$10^6$"])
+axes[4][:text](ν[1] + hf, 5e5, "(d)")
 
 for (i, ax) in enumerate(axes)
     ax[:set_xlim](ν[1], ν[end])
@@ -207,6 +208,6 @@ plt.close(fig)
 ## plt.close(fig)
 
 
-# TODO: add (a), (b), (c), (d) labels to subplots
+
 # TODO: add common y label to all subplots
 # TODO: add β labels to vertical lines in all subplots
