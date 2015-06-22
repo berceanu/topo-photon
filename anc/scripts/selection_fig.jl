@@ -29,9 +29,6 @@ const xm = [-div(N-1,2):div(N-1,2)]
 const edge = 10
 const st = findin(xm, -edge)[1]
 const en = findin(xm,  edge)[1]
-
-# half the level spacing
-const hf = (exstates.νs[2] - exstates.νs[1])/2
 ##
 
 # self-consistency checks
@@ -43,6 +40,9 @@ const hf = (exstates.νs[2] - exstates.νs[1])/2
 
 # exact spectrum, first 29 eigenvalues
 exstates = BP.ExactStates(29, :landau, N, 1/q, κ)
+
+# half the level spacing
+const hf = (exstates.νs[2] - exstates.νs[1])/2
 
 
 #for plotting filter markers
