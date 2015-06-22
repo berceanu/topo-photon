@@ -29,6 +29,9 @@ const xm = [-div(N-1,2):div(N-1,2)]
 const edge = 10
 const st = findin(xm, -edge)[1]
 const en = findin(xm,  edge)[1]
+
+# half the level spacing
+const hf = (exstates.νs[2] - exstates.νs[1])/2
 ##
 
 # self-consistency checks
@@ -152,8 +155,6 @@ matplotlib["rcParams"][:update](["axes.labelsize" => 22,
                                  "figure.autolayout" => true])
 
 
-# half the level spacing
-hf = (exstates.νs[2] - exstates.νs[1])/2
 
 fig, axes = plt.subplots(4, figsize=(10, 7.3))
 axes[1][:plot](spδl.νs,spδl.intensity,"k") 
@@ -209,10 +210,6 @@ end
 # transparency setting, not needed when exporting to pdf
 #axins[:patch][:set_alpha](1.0)
 
-# hide inset tick labels
-#plt.xticks(visible=false)
-#plt.yticks(visible=false)
-
 # draw a bbox of the region of the inset axes in the parent axes and
 # connecting lines between the bbox and the inset axes area
 axloc.mark_inset(axes[3], axins, loc1=2, loc2=4, ec="0.", fc="none")
@@ -247,21 +244,6 @@ fig[:text](0.0, 0.5, L"$\sum_{m,n} |a_{m,n}|^2$ [a.u.]", ha="center", va="center
 
 fig[:savefig]("../../figures/selection.pdf", pad_inches=0.0, bbox_inches="tight")
 plt.close(fig)
-
-
-
-## deprecated ##
-# plotting panel for centered gaussian
-## fig, ax = plt.subplots(figsize=(8, 3))
-##     ax[:plot](spgauss0.νs, spgauss0.intensity, color="green", linewidth=1.5)
-
-##     ax[:set_xlim](spgauss0.νs[1], spgauss0.νs[end])
-
-##     ax[:set_xlabel](L"$\omega_0 [J]$")
-##     ax[:set_yticklabels]([])
-
-## fig[:savefig]("../../figures/gaussian.pdf", transparent=true, pad_inches=0.0, bbox_inches="tight")
-## plt.close(fig)
 
 
 # plot w.fs. in real space
