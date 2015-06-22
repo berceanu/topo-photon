@@ -1,4 +1,6 @@
+using Base.Test
 using PyPlot
+
 using PyCall
 @pyimport mpl_toolkits.axes_grid1.inset_locator as axloc
 
@@ -10,7 +12,30 @@ const q = 11
 const κ = 0.02
 const γ = 0.001
 const ν = linspace(-3.45,-2.47,981)
+
+const r = 11 # points in MBZ
+
+# Nk should be an odd multiple of q
+const Nk = r*q # zero-padded system size = no of k points
+const l = div(Nk-1,2)
+const x = -l:l
+const δk = 2π/Nk # resolution in mom space
+const k = x * δk
+
+# full plot range, both in x and y
+const xm = [-div(N-1,2):div(N-1,2)]
+
+# zoom in
+const edge = 10
+const st = findin(xm, -edge)[1]
+const en = findin(xm,  edge)[1]
 ##
+
+# self-consistency checks
+@test x[l+1] == 0   # x contains 0
+@test k[l+1] == 0.0 # k contains 0
+@test isodd(Nk)
+@test isodd(r)
 
 
 # exact spectrum, first 29 eigenvalues
@@ -53,8 +78,27 @@ sphoml = BP.Spectrum(ν,homopmp(), :landau, prm...)
 # spgauss0 = BP.Spectrum(ν, BP.gausspmp(N; A=1., σ=20., n0=0, m0=0), :symmetric, prm...)
 
 
+# calculating all real space wfs
+ψ = Array(Float64, (N, N, length(βreal)))
+for (i,ω) in enumerate(sω0real)
+    ψ[:,:,i] = abs2(BP.getstate(spδl, ω))
+end
+
+
 spgausss = BP.Spectrum(ν,gausspmp(5,5), :symmetric, prm...)
 sphoms = BP.Spectrum(ν,homopmp(), :symmetric, prm...)
+
+# calculating all mom space wfs
+ψL = Array(Float64, (Nk, Nk, length(βlan)))
+ψS = Array(Float64, (Nk, Nk, length(βsym)))
+
+for (i,ω) in enumerate(sω0lan)
+    ψL[:,:,i] = abs2(BP.myfft2(BP.getstate(sphoml, ω), k, k))
+end
+
+for (i,ω) in enumerate(sω0sym)
+    ψS[:,:,i] = abs2(BP.myfft2(BP.getstate(spgausss, ω), k, k))
+end
 
 ## averaging over 100 random phase distributions ##
 # reading result from file | it takes a while to compute ;)
@@ -219,5 +263,79 @@ plt.close(fig)
 ## fig[:savefig]("../../figures/gaussian.pdf", transparent=true, pad_inches=0.0, bbox_inches="tight")
 ## plt.close(fig)
 
-# TODO: merge with contents of real_fig.jl
-# TODO: merge with contents of momentum_fig.jl
+
+# plot w.fs. in real space
+fig, axes = plt.subplots(1,length(βreal), figsize=(10, 5))
+
+for (i,ax) in enumerate(axes)
+    ax[:imshow](ψ[st:en,st:en,i], origin="upper", ColorMap("gist_heat_r"), interpolation="none",
+                     extent=[-edge, edge, -edge, edge])
+    ax[:set_xlabel](L"$m$")
+    if i == 1 # leftmost panel
+        ax[:set_ylabel](L"$n$")
+    else
+        ax[:set_yticklabels]([])
+    end
+end
+
+
+fig[:savefig]("../../figures/real.pdf", transparent=true, pad_inches=0.0, bbox_inches="tight")
+plt.close(fig)
+
+
+# plot w.fs. in  mom space
+
+fig, axes = plt.subplots(2,length(βlan), figsize=(10, 5))
+
+for i = 1:length(βlan) # loop over columns
+    # top row
+    ax = axes[1,i]
+    ax[:imshow](ψL[:,:,i], origin="upper", ColorMap("gist_heat_r"), interpolation="none",
+                     extent=[-π, π, -π, π])
+    ax[:set_xticklabels]([])
+    ax[:set_xticks]([-π,0,π])
+    ax[:set_yticks]([-π,0,π])
+    if i == 1 # leftmost panel
+        ax[:set_ylabel](L"$p_y$")
+        ax[:set_yticklabels]([L"$-\pi$",L"$0$",L"$\pi$"])
+    else
+        ax[:set_yticklabels]([])
+    end
+
+    # bottom row
+    ax = axes[2,i]
+    if i == 3 # third pannel
+        ax[:imshow](ψS[:,:,i], origin="upper", ColorMap("gist_heat_r"), interpolation="none",
+                         extent=[-π, π, -π, π],
+                         vmin=0, vmax=270000)
+    else
+        ax[:imshow](ψS[:,:,i], origin="upper", ColorMap("gist_heat_r"), interpolation="none",
+                         extent=[-π, π, -π, π])
+    end
+    ax[:set_xlabel](L"$p_x$")
+    ax[:set_xticks]([-π,0,π])
+    ax[:set_yticks]([-π,0,π])
+    ax[:set_xticklabels]([L"$-\pi$",L"$0$",L"$\pi$"])
+    if i == 1 # leftmost panel
+        ax[:set_ylabel](L"$p_y$")
+        ax[:set_yticklabels]([L"$-\pi$",L"$0$",L"$\pi$"])
+    else
+        ax[:set_yticklabels]([])
+    end
+end 
+
+
+fig[:savefig]("../../figures/momentum.pdf", transparent=true, pad_inches=0.0, bbox_inches="tight")
+plt.close(fig)
+
+
+
+println("Landau g. extrema (top row):")
+for i = 1:length(βlan) #loop over columns
+    println(extrema(ψL[:,:,i]))
+end
+
+println("Symmetric g. extrema (bottom row):")
+for i = 1:length(βlan) #loop over columns
+    println(extrema(ψS[:,:,i]))
+end
