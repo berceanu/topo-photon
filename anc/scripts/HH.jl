@@ -133,37 +133,58 @@ function ηzpe(qs::Vector{Int}, κs::Vector{Float64})
     return η
 end 
 
+# ηL= HH.ηlev(qs,0.02)
+
+
 # level error
 ηlev(q::Int, κ::Float64) = ηlev(1, q, κ)
 ηlev(p::Int, q::Int, κ::Float64) = (N=15; A = spzeros(Complex{Float64}, N^2,N^2); ηlev(A, p, q, κ))
 
 
-function ηlev(M::SparseMatrixCSC{Complex{Float64},Int}, p::Int, q::Int, κ::Float64)
+function ηlev(M::SparseMatrixCSC{Complex{Float64},Int}, p::Int, q::Int, κ::Float64) #####
     N::Int = sqrt(size(M,1))
     α::Float64 = p/q
 
     BP.buildham_exact!(M, N,α,κ)
 
-    # get first 2 levels of spectrum of HH+trap
-    bilevel = real(eigs(M, nev=2, which=:SR, ritzvec=false)[1])
+    # get first 4 levels of spectrum of HH+trap
+    bilevel = real(eigs(M, nev=4, which=:SR, ritzvec=false)[1])
 
     #calculate level spacing
-    return 2π*α/κ*diff(bilevel)[1] - 1 
+    return 2π*α/κ*diff(bilevel[1:2])[1] - 1
+end
+
+
+ηlev34(qs::UnitRange{Int}, κ::Float64) = (N=15; A = spzeros(Complex{Float64}, N^2,N^2); [ηlev34(A, 1, q, κ) for q in qs])
+    
+function ηlev34(M::SparseMatrixCSC{Complex{Float64},Int}, p::Int, q::Int, κ::Float64) #####
+    N::Int = sqrt(size(M,1))
+    α::Float64 = p/q
+
+    BP.buildham_exact!(M, N,α,κ)
+
+    # get first 4 levels of spectrum of HH+trap
+    bilevel = real(eigs(M, nev=4, which=:SR, ritzvec=false)[1])
+
+    #calculate level spacing
+    return 2π*α/κ*diff(bilevel[2:3])[1] - 1
 end
 
 
 ηlev(q::Int, κs::Vector{Float64}) = vec(ηlev([q], κs))
 
-ηlev(qs::UnitRange{Int}, κ::Float64) = ηlev([qs], κ)
-ηlev(qs::Vector{Int}, κ::Float64) = vec(ηlev(qs, [κ]))
+ηlev(qs::UnitRange{Int}, κ::Float64) = ηlev([qs], κ) #
+
+ηlev(qs::Vector{Int}, κ::Float64) = vec(ηlev(qs, [κ])) ##
 
 ηlev(qs::UnitRange{Int}, κs::Vector{Float64}) = ηlev([qs], κs)
-function ηlev(qs::Vector{Int}, κs::Vector{Float64})
+
+function ηlev(qs::Vector{Int}, κs::Vector{Float64}) ###
     N=15
     A = spzeros(Complex{Float64}, N^2,N^2)
     η = Array(Float64, length(qs), length(κs))
     for col=1:length(κs), row=1:length(qs)
-        η[row,col] = ηlev(A, 1, qs[row], κs[col])
+        η[row,col] = ηlev(A, 1, qs[row], κs[col]) ####
     end
     return η
 end 

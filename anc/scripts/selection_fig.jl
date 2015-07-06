@@ -48,7 +48,7 @@ const hf = (exstates.νs[2] - exstates.νs[1])/2
 #for plotting filter markers
 βlan = [0,2,4,6]
 βsym = [0,1,9,20]
-βreal = [0,6,15,26]
+βreal = [3,6,15,26]
 
 #we filter state η
 ηlan = βlan + 1
@@ -160,28 +160,48 @@ fig, axes = plt.subplots(4, figsize=(10, 7.3))
 axes[1][:plot](spδl.νs,spδl.intensity,"k") 
 for (i,ω) in enumerate(sω0real)
     axes[1][:axvline](x = ω, color="orange", ls="dotted")
-    axes[1][:text](ω + hf/4, 8e2, string(βreal[i]))
+#    axes[1][:text](ω + hf/4, 8e2, string(βreal[i]))
 end
-axes[1][:set_ylim](0, 1e3)
-axes[1][:yaxis][:set_ticks]([0, 1e3])
-axes[1][:yaxis][:set_ticklabels]([L"$0$", L"$10^3$"])
-axes[1][:text](ν[1] + hf, 5e2, "(a)")
+#axes[1][:set_ylim](0, 1e3)
+#axes[1][:yaxis][:set_ticks]([0, 1e3])
+#axes[1][:yaxis][:set_ticklabels]([L"$0$", L"$10^3$"])
+#axes[1][:text](ν[1] + hf, 5e2, "(a)")
 
-
+##########
 axes[2][:plot](spgaussl.νs,spgaussl.intensity,"k") 
-axes[2][:plot](spgausss.νs,spgausss.intensity, color="green", ls="dashed", linewidth=1.5)
+
 for (i,ω) in enumerate(sω0sym)
     axes[2][:axvline](x = ω, color="orange", ls="dotted")
-    axes[2][:text](ω + hf/4, 8e2, string(βsym[i]))
+#    axes[2][:text](ω + hf/4, 8e2, string(βsym[i]))
 end 
-axes[2][:set_ylim](0, 1e3)
-axes[2][:yaxis][:set_ticks]([0, 1e3])
-axes[2][:yaxis][:set_ticklabels]([L"$0$", L"$10^3$"])
-axes[2][:text](ν[1] + hf, 5e2, "(b)")
+#axes[2][:set_ylim](0, 1e3)
+#axes[2][:yaxis][:set_ticks]([0, 1e3])
+#axes[2][:yaxis][:set_ticklabels]([L"$0$", L"$10^3$"])
+#axes[2][:text](ν[1] + hf, 5e2, "(b)")
+
+# create secondary y axis
+ax2sym = axes[2][:twinx]()
+ax2sym[:plot](spgausss.νs,spgausss.intensity, color="green", ls="dashed", linewidth=1.5)
+# Make the y-axis tick labels match the line color.
+for tl in ax2sym[:get_yticklabels]()
+    tl[:set_color]("green")
+end 
 
 
+##########
 axes[3][:plot](sphoml.νs,sphoml.intensity,"k") 
-axes[3][:plot](sphoms.νs,sphoms.intensity, color="green", ls="dashed", linewidth=1.5)
+
+
+# create secondary y axis
+ax3sym = axes[3][:twinx]()
+ax3sym[:plot](sphoms.νs,sphoms.intensity, color="green", ls="dashed", linewidth=1.5)
+
+# Make the y-axis tick labels match the line color.
+for tl in ax3sym[:get_yticklabels]()
+    tl[:set_color]("green")
+end 
+
+
 # insert with zoom of peak β=4
 axins = axloc.inset_axes(axes[3],
                         width="30%", # width = 30% of parent_bbox
@@ -189,7 +209,7 @@ axins = axloc.inset_axes(axes[3],
                         loc=9) # located at upper middle part
 # plot same thing as in parent box
 axins[:plot](sphoms.νs,sphoms.intensity, color="green", ls="dashed", linewidth=1.5)
-axins[:plot](sphoml.νs,sphoml.intensity, color="black") 
+#axins[:plot](sphoml.νs,sphoml.intensity, color="black") 
 
 # but set much narrower limits
 axins[:set_xlim]([ω₁, ω₂])
@@ -197,14 +217,14 @@ axins[:xaxis][:set_ticks]([ω₁, ω₂])
 axins[:xaxis][:set_ticklabels]([string(round(ω₁,2)), string(round(ω₂,2))], fontsize=8)
 
 
-axins[:set_ylim]([1000, 10000])
-axins[:yaxis][:set_ticks]([1000, 10000])
+axins[:set_ylim]([1e3, 1e4])
+axins[:yaxis][:set_ticks]([1e3, 1e4])
 axins[:yaxis][:set_ticklabels]([L"$10^3$", L"$10^4$"], fontsize=8)
 
 # draw vertical lines at position of every exact eigenstate
 for (i,ω) in enumerate(exstates.νs[4:6])
     axins[:axvline](x = ω, color="orange", ls="dotted")
-    axins[:text](ω + hf/8, 8e3, string(i+2), fontsize=8)
+#    axins[:text](ω + hf/8, 8e3, string(i+2), fontsize=8)
 end 
 
 # transparency setting, not needed when exporting to pdf
@@ -216,23 +236,24 @@ axloc.mark_inset(axes[3], axins, loc1=2, loc2=4, ec="0.", fc="none")
 
 for (i,ω) in enumerate(sω0lan)
     axes[3][:axvline](x = ω, color="orange", ls="dotted")
-    axes[3][:text](ω + hf/4, 8e5, string(βlan[i]))
+#    axes[3][:text](ω + hf/4, 8e5, string(βlan[i]))
 end 
-axes[3][:set_ylim](0, 1e6)
-axes[3][:yaxis][:set_ticks]([0, 1e6])
-axes[3][:yaxis][:set_ticklabels]([L"$0$", L"$10^6$"])
-axes[3][:text](ν[1] + hf, 5e5, "(c)")
+#axes[3][:set_ylim](0, 1e3)
+#axes[3][:yaxis][:set_ticks]([0, 1e3])
+#axes[3][:yaxis][:set_ticklabels]([L"$0$", L"$10^6$"])
+#axes[3][:text](ν[1] + hf, 5e2, "(c)")
+
 
 
 axes[4][:plot](ν,sprandl,"k") 
 for ω in exstates.νs
     axes[4][:axvline](x = ω, color="orange", ls="dotted")
 end 
-axes[4][:set_xlabel](L"$\omega_0 [J]$")
-axes[4][:set_ylim](0, 1e6)
-axes[4][:yaxis][:set_ticks]([0, 1e6])
-axes[4][:yaxis][:set_ticklabels]([L"$0$", L"$10^6$"])
-axes[4][:text](ν[1] + hf, 5e5, "(d)")
+axes[4][:set_xlabel](L"$\omega_0/J$")
+#axes[4][:set_ylim](0, 1e3)
+#axes[4][:yaxis][:set_ticks]([0, 1e3])
+#axes[4][:yaxis][:set_ticklabels]([L"$0$", L"$10^6$"])
+#axes[4][:text](ν[1] + hf, 5e2, "(d)")
 
 for (i, ax) in enumerate(axes)
     ax[:set_xlim](ν[1], ν[end])
@@ -240,7 +261,7 @@ for (i, ax) in enumerate(axes)
 end 
 
 # set common y label to all subplots
-fig[:text](0.0, 0.5, L"$\sum_{m,n} |a_{m,n}|^2$ [a.u.]", ha="center", va="center", rotation="vertical")
+#fig[:text](0.0, 0.5, L"$\sum_{m,n} |a_{m,n}|^2$ [a.u.]", ha="center", va="center", rotation="vertical")
 
 fig[:savefig]("../../figures/selection.pdf", pad_inches=0.0, bbox_inches="tight")
 plt.close(fig)
