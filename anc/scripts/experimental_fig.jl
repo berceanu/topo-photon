@@ -120,7 +120,7 @@ for (i,ax) in enumerate(axes)
         ax[:set_ylim](0, mx)
         ax[:yaxis][:set_ticks]([0.,1.7,3.5])
 
-        ax[:set_xlabel](L"$\omega_0 [J]$")
+        ax[:set_xlabel](L"$\omega_0/J$")
         ax[:set_ylabel](L"$\sum_{m,n} |a_{m,n}|^2$ [a.u.]")     
     else
         ax[:plot](k, abs2(χ), "blue", ls="dotted", linewidth=1.5)
@@ -259,3 +259,8 @@ plt.close(fig)
 ## ax[:set_ylabel](L"$p_y$")
 ## ax[:set_yticks]([-π,0,π])
 ## ax[:set_yticklabels]([L"$-\pi$",L"$0$",L"$\pi$"])
+
+
+#TODO: plot seccond ladder vertical lines with different color
+#TODO: plot vertical lines for y slices
+#TODO: combine panels in unique figure

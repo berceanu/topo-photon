@@ -298,7 +298,7 @@ comes about, we note that for odd $q$ and $\alpha = 1/q$, the Chern
 number of each band, except the middle one, is -1. Since the Chern
 number is the integral over the MBZ of the Berry curvature,
 $\mathcal{C}_n = (1/2\pi) \Omega_n A_{\text{MBZ}}$, with
-$A_{\text{MBZ}} = (2\pi)^2/q$.
+$A_{\text{MBZ}} = (2\pi)^2/q$ being the area of the MBZ.
 %
 Finally, one recognizes $\kappa |\Omega_n|$ as the cyclotron frequency
 $\omega_c$.
@@ -362,13 +362,11 @@ E_{\text{th}})$.
 Including also the non-Abelian contribution, we define
 $\eta_{\text{zpe}}^{\text{nab}} = \frac{4\pi\alpha}{\kappa}
 (E_{\text{ex}} - E_{\text{th}} - \left<\delta
-  E_1(\vt{p})\right>_{\vt{p}})$.
-We plot both quantities in the top panel of Fig.~\ref{fig:zpe}. In the
-same panel we plot $\eta_{\text{zpe}}^{\text{nab}}$ twice, first
-considering the whole sum in Eq.~\eqref{eq:shift} and then restricting
-it to just the first term, which represents the shift due to the
-second band only. The difference between the 2 curves is negligible,
-indicating that this term is the dominant one.  We see that the
+  E_0(\vt{p})\right>_{\vt{p}})$.
+We plot both quantities in the top panel of Fig.~\ref{fig:zpe}. If we
+restrict the sum in Eq.~\eqref{eq:shift} to just the first term, which
+represents the shift due to the second band only, we get an identical
+curve, indicating that this term is the dominant one.  We see that the
 non-Abelian contribution is indeed crucial to the ``zero-point
 energy", acting as a uniform positive shift on the whole ladder of
 states and bringing it closer to the exact value. We emphasize that
@@ -393,13 +391,14 @@ effect in the system dynamics.
 \end{figure}
 
 In the bottom panel of Fig.~\ref{fig:zpe} we look at the error of the
-level-spacing between the first 2 ladder states,
-$\eta_{\text{lev}} = \frac{2\pi \alpha}{\kappa} [E_{\text{ex}}(\beta =
-1) - E_{\text{ex}}(\beta = 0)] -1$.
-The level-spacing error is not affected by the non-Abelian shift and
-instead originates from band-mixing effects due to the breakdown of
-the single-band approximation. However, even if we used an effective
-model we see that $\eta_{\text{lev}} \ll 1$.
+level-spacing between separate ladder states,
+$\eta_{\text{lev}} = \frac{2\pi \alpha}{\kappa} [E_{\text{ex}}(\beta)
+- E_{\text{ex}}(\beta - 1)] -1$,
+for the case of $\beta = 1$ and 2.  The level-spacing error is not
+affected by the non-Abelian shift and instead originates from
+band-mixing effects due to the breakdown of the single-band
+approximation. However, even if we used an effective model we see that
+$\eta_{\text{lev}} \ll 1$.
 
 It is a well-known result of perturbation theory that band-mixing
 induced by an external potential acts as a negative shift on the lower
@@ -666,7 +665,7 @@ $\frac{\kappa}{2\pi\alpha}$, so in order to increase the spacing we
 must consider a stronger trap. We chose $\kappa = 0.2 J$ and
 $\alpha = 1/7$. The first band of $\mathcal{H}_0$ is still relatively
 flat compared to the hopping $J$ for this value of $\alpha$ and the
-bandwidth $E_2 - E_1$ is larger than before, preventing the band
+bandwidth $E_1 - E_0$ is larger than before, preventing the band
 mixing due to the stronger trap potential.
 
 We work in the Landau gauge and pump a single site, situated on the
@@ -676,20 +675,24 @@ one of Ref.\cite{hafezi2013imaging}.
 
 \begin{figure}[htb]
   \centering
-  \includegraphics[width=0.9\linewidth]{exp_spect} % anc/scripts/experimental_fig.jl
+  \includegraphics[width=0.9\linewidth]{exp_fig} % anc/scripts/experimental_fig.jl
   \caption{\emph{Top}: Intensity spectrum for $N=11$ and
-    $\gamma = 0.05$. We filter at the energy of the eigenstate
+    $\gamma = 0.05 J$. We filter at the energy of the eigenstate
     $\beta=7$ (long dashed line). The orange vertical dashed lines
     show the eigenstates of $\mathcal{H}$ from Eq.~\eqref{eq:model}.
+  \emph{Middle, first row}: Emission of the $\beta=7$ state in real
+    (left column), momentum-space (middle column) and MBZ (right
+    column) with no pumping or decay.
+    \emph{Middle, second row}: Emission from the state at $\omega_0 = -1.63 J$.
+    The $\delta$-like pump at (0,5) is visible as a dark square.
     \emph{Bottom}: Slice along the $p_x^0 = 0$ line in the MBZ
     (continuous, black) compared to the analytical prediction of
     Eq.~\eqref{eq:chi}, $|\chi_7(0,p_y)|^2$ (dotted, blue). The orange
     dashed curve shows the same slice for the non-dissipative case.}
-
-  \label{fig:exp_spectrum}
+  \label{fig:exp}
 \end{figure}
 
-The spectrum is shown in Fig.~\ref{fig:exp_spectrum}. Apart from the
+The spectrum is shown in Fig.~\ref{fig:exp}. Apart from the
 expected broadening due to larger losses, we note that for frequencies
 larger than $-1.5 J$ we start to see states from the second ladder
 $\epsilon_{1,\beta}$ (see Eq.~\eqref{eq:ladders}). Their proximity to
@@ -699,13 +702,13 @@ peaks in the dissipative spectrum.
 We filter at the energy indicated by the black dashed line and plot
 the resulting emission in real and momentum space (full BZ), as well
 as in the MBZ. For comparison, we also plot the wavefunction of the
-Hamiltonian $\mathcal{H}$ in Eq.~\eqref{eq:model} as the top row of
-Fig.~\ref{fig:exp_states}. The difference between the two is of
+Hamiltonian $\mathcal{H}$ in Eq.~\eqref{eq:model} as the second row of
+Fig.~\ref{fig:exp}. The difference between the two is of
 course, the lack of pumping and dissipation of the latter. We see
 that, even in the presence of finite size effects due to such a small
 system, one can still distinguish the nodal structure of the emission
 in momentum space, characteristic of a toroidal Landau level.  One can
-also notice that the bottom left panel of Fig.~\ref{fig:exp_states}
+also notice that the left panel in the third row of Fig.~\ref{fig:exp}
 shows a decaying cyclotron orbit in momentum space, with $\gamma$
 playing the role of inverse lifetime. In the same way that real-space
 Landau levels give rise to real-space cyclotron orbits, the
@@ -714,23 +717,10 @@ of a cyclotron orbit in momentum space.
 
 Furthermore, as the expression of the wavefunction in MBZ for the
 Landau gauge is given by Eq.~\eqref{eq:chi}, we can compare by taking
-a slice along the $p_x^0 = 0$ line in the third column of
-Fig.~\ref{fig:exp_states}. The qualitative structure in 2D is similar,
-as confirmed by the cuts along the vertical dotted lines, shown in the
-botttom panel of Fig.~\ref{fig:exp_spectrum}.
+a slice along the $p_x^0 = 0$ line. The qualitative structure in 2D is
+similar, as confirmed by the cuts along the vertical dotted lines,
+shown in the botttom panel of Fig.~\ref{fig:exp}.
 
-
-\begin{figure}[htb]
-  \centering
-  \includegraphics[width=0.9\linewidth]{experimental} % anc/scripts/experimental_fig.jl
-  \caption{\emph{Top row}: Emission of the $\beta=7$ state in real
-    (left column), momentum-space (middle column) and MBZ (right
-    column) with no pumping or decay.
-    \emph{Bottom row}: Emission from the state at $\omega_0 = -1.63 J$.
-    The $\delta$-like pump at (0,5) is visible as a dark square.}
-
-  \label{fig:exp_states}
-\end{figure}
 
 One a final note, we briefly describe how one can measure the
 non-Abelian contribution $\delta E_0$ and hence the non-Abelian Berry
