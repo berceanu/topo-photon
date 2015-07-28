@@ -164,9 +164,14 @@ y4 = [ηzpeterm(q, 0.02)::Float64 for q in qs]
 y3 = HH.ηzpe(qs,0.02)
 @test_approx_eq_eps y1 y3 1e-6
 
-ηL= HH.ηlev(qs,0.02)
+# matrix holding level spacing errors as columns
+ηL = Array(Float64, length(qs),4)
 
-ηL34 = HH.ηlev34(qs,0.02)
+# populating matrix
+for i = 1:4
+    ηL[:,i] = HH.ηlev(qs,0.02, i-1,i)
+end 
+
 
 using PyPlot
 
@@ -237,29 +242,33 @@ cbar[:solids][:set_edgecolor]("face")
 fig[:savefig]("../../figures/correction_mbz.pdf", transparent=true, pad_inches=0.0, bbox_inches="tight")
 plt.close(fig)
 
+# various line types
+lines = ["-","--","-.",":"]
 
 fig, axes = plt.subplots(2, figsize=(8, 5))
 for (i, ax) in enumerate(axes)
     if i == 1 # first panel, with zero-point-energy error
-        ax[:plot](qs, y1, "black", marker="o", ls="dashed", label = "old") # $E_{ex} - E_{th}$
-        ax[:plot](qs, y2, "black", marker="o", label="new")          # $E_{ex} - (E_{th} + \delta E)$
-#        ax[:plot](qs, y4, "black", marker="o", ls="dotted", label="term")
+        # marker = "o"
+        ax[:plot](qs, y1, "black", ls="dashed", label = "old") # $E_{ex} - E_{th}$
+        ax[:plot](qs, y2, "black", label="new")          # $E_{ex} - (E_{th} + \delta E)$
+#        ax[:plot](qs, y4, "black", ls="dotted", label="term")
 
 #        ax[:legend](loc="lower right")
 
         ax[:set_xticklabels]([])
 
-        ax[:set_ylim](-3.5, 1.2)
-        ax[:yaxis][:set_ticks]([-3.5, -2.3, -1.2, 0., 1.2])
-        ax[:set_yticklabels]([L"$-3.5$", L"$-2.3$", L"$-1.2$", L"$0$", L"$1.2$"])
+#        ax[:set_ylim](-3.6, 1.2)
+        ax[:yaxis][:set_ticks]([-3.6, -2.4, -1.2, 0., 1.2])
+        ax[:set_yticklabels]([L"$-3.6$", L"$-2.4$", L"$-1.2$", L"$0$", L"$1.2$"])
         ax[:set_ylabel](L"$\eta_{\text{zpe}}$")
     else # second panel, with level spacing error
-        ax[:plot](qs, ηL, "black", marker="o") # $\kappa=0.02$
-        ax[:plot](qs, ηL34, "black", marker="o", ls="dashed") # $\kappa=0.02$
+        for i = 1:4
+            ax[:plot](qs, ηL[:,i], "black", ls=lines[i]) # $\kappa=0.02$
+        end 
 
-        ax[:set_ylim](-0.8, 0.1)
+#        ax[:set_ylim](-0.8, 0.1)
         ax[:set_ylabel](L"$\eta_{\text{lev}}$")
-#        ax[:yaxis][:set_ticks]([-0.2, 0.1])
+        ax[:yaxis][:set_ticks]([-1, 0, 1, 2, 3])
 #        ax[:set_yticklabels]([L"$-0.2$", L"$0.1$"])
 
         ax[:set_xlabel](L"$q$")

@@ -3,6 +3,8 @@ using PyPlot
 
 using PyCall
 @pyimport mpl_toolkits.axes_grid1.inset_locator as axloc
+@pyimport matplotlib.gridspec as gspec
+
 
 import BP
 
@@ -156,54 +158,64 @@ matplotlib["rcParams"][:update](["axes.labelsize" => 22,
 
 
 
-fig, axes = plt.subplots(4, figsize=(10, 7.3))
+fig = plt.figure()
+
+gs1 = gspec.GridSpec(1, 1)
+gs1[:update](top=1.0, bottom=0.84)
+ax1 = plt.subplot(get(gs1, 0, 0))
+
+gs2 = gspec.GridSpec(2, 1)
+gs2[:update](top=0.77, bottom=0.44, hspace=0.0)
+ax2 = plt.subplot(get(gs2, 0, 0))
+ax3 = plt.subplot(get(gs2, 1, 0))
+
+gs3 = gspec.GridSpec(2, 1)
+gs3[:update](top=0.38, bottom=0.0, hspace=0.4)
+ax4 = plt.subplot(get(gs3, 0, 0))
+ax5 = plt.subplot(get(gs3, 1, 0))
+
+fig[:savefig]("../../figures/gridspec.pdf")
+plt.close(fig)
+
+
+    
+fig, axes = plt.subplots(5, figsize=(8, 10))
 axes[1][:plot](spδl.νs,spδl.intensity,"k") 
 for (i,ω) in enumerate(sω0real)
     axes[1][:axvline](x = ω, color="orange", ls="dotted")
 #    axes[1][:text](ω + hf/4, 8e2, string(βreal[i]))
 end
-#axes[1][:set_ylim](0, 1e3)
-#axes[1][:yaxis][:set_ticks]([0, 1e3])
-#axes[1][:yaxis][:set_ticklabels]([L"$0$", L"$10^3$"])
+axes[1][:set_ylim](0, 1e4)
+axes[1][:yaxis][:set_ticks]([0, 1e4])
+axes[1][:yaxis][:set_ticklabels]([L"$0$", L"$10^4$"])
 #axes[1][:text](ν[1] + hf, 5e2, "(a)")
 
 ##########
 axes[2][:plot](spgaussl.νs,spgaussl.intensity,"k") 
 
-for (i,ω) in enumerate(sω0sym)
-    axes[2][:axvline](x = ω, color="orange", ls="dotted")
-#    axes[2][:text](ω + hf/4, 8e2, string(βsym[i]))
-end 
-#axes[2][:set_ylim](0, 1e3)
-#axes[2][:yaxis][:set_ticks]([0, 1e3])
-#axes[2][:yaxis][:set_ticklabels]([L"$0$", L"$10^3$"])
+axes[2][:set_ylim](0, 3.5e3)
+axes[2][:yaxis][:set_ticks]([0, 3.5e3])
+axes[2][:yaxis][:set_ticklabels]([L"$0$", L"$3.5 \cdot 10^3$"])
 #axes[2][:text](ν[1] + hf, 5e2, "(b)")
 
-# create secondary y axis
-ax2sym = axes[2][:twinx]()
-ax2sym[:plot](spgausss.νs,spgausss.intensity, color="green", ls="dashed", linewidth=1.5)
-# Make the y-axis tick labels match the line color.
-for tl in ax2sym[:get_yticklabels]()
-    tl[:set_color]("green")
+##########
+axes[3][:plot](spgausss.νs,spgausss.intensity, color="green", ls="dashed", linewidth=1.5)
+for (i,ω) in enumerate(sω0sym)
+    axes[3][:axvline](x = ω, color="orange", ls="dotted")
+#    axes[3][:text](ω + hf/4, 8e2, string(βsym[i]))
 end 
+
+axes[3][:set_ylim](0, 2e4)
+axes[3][:yaxis][:set_ticks]([0, 1e4])
+axes[3][:yaxis][:set_ticklabels]([L"$0$", L"$10^4$"])
 
 
 ##########
-axes[3][:plot](sphoml.νs,sphoml.intensity,"k") 
-
-
-# create secondary y axis
-ax3sym = axes[3][:twinx]()
-ax3sym[:plot](sphoms.νs,sphoms.intensity, color="green", ls="dashed", linewidth=1.5)
-
-# Make the y-axis tick labels match the line color.
-for tl in ax3sym[:get_yticklabels]()
-    tl[:set_color]("green")
-end 
-
+axes[4][:plot](sphoml.νs,sphoml.intensity,"k") 
+axes[4][:plot](sphoms.νs,sphoms.intensity, color="green", ls="dashed", linewidth=1.5)
 
 # insert with zoom of peak β=4
-axins = axloc.inset_axes(axes[3],
+axins = axloc.inset_axes(axes[4],
                         width="30%", # width = 30% of parent_bbox
                         height="50%",
                         loc=9) # located at upper middle part
@@ -222,7 +234,7 @@ axins[:yaxis][:set_ticks]([1e3, 1e4])
 axins[:yaxis][:set_ticklabels]([L"$10^3$", L"$10^4$"], fontsize=8)
 
 # draw vertical lines at position of every exact eigenstate
-for (i,ω) in enumerate(exstates.νs[4:6])
+for (i,ω) in enumerate(exstates.νs[5])
     axins[:axvline](x = ω, color="orange", ls="dotted")
 #    axins[:text](ω + hf/8, 8e3, string(i+2), fontsize=8)
 end 
@@ -232,32 +244,31 @@ end
 
 # draw a bbox of the region of the inset axes in the parent axes and
 # connecting lines between the bbox and the inset axes area
-axloc.mark_inset(axes[3], axins, loc1=2, loc2=4, ec="0.", fc="none")
+axloc.mark_inset(axes[4], axins, loc1=2, loc2=4, ec="0.", fc="none")
 
 for (i,ω) in enumerate(sω0lan)
-    axes[3][:axvline](x = ω, color="orange", ls="dotted")
-#    axes[3][:text](ω + hf/4, 8e5, string(βlan[i]))
-end 
-#axes[3][:set_ylim](0, 1e3)
-#axes[3][:yaxis][:set_ticks]([0, 1e3])
-#axes[3][:yaxis][:set_ticklabels]([L"$0$", L"$10^6$"])
-#axes[3][:text](ν[1] + hf, 5e2, "(c)")
-
-
-
-axes[4][:plot](ν,sprandl,"k") 
-for ω in exstates.νs
     axes[4][:axvline](x = ω, color="orange", ls="dotted")
+#    axes[4][:text](ω + hf/4, 8e5, string(βlan[i]))
 end 
-axes[4][:set_xlabel](L"$\omega_0/J$")
-#axes[4][:set_ylim](0, 1e3)
-#axes[4][:yaxis][:set_ticks]([0, 1e3])
-#axes[4][:yaxis][:set_ticklabels]([L"$0$", L"$10^6$"])
-#axes[4][:text](ν[1] + hf, 5e2, "(d)")
+axes[4][:set_ylim](0, 2.5e7)
+axes[4][:yaxis][:set_ticks]([0, 2.5e7])
+axes[4][:yaxis][:set_ticklabels]([L"$0$", L"$2.5 \cdot 10^7$"])
+#axes[4][:text](ν[1] + hf, 5e2, "(c)")
+
+##########
+
+
+axes[5][:plot](ν,sprandl,"k") 
+
+axes[5][:set_xlabel](L"$\omega_0/J$")
+axes[5][:set_ylim](0, 1.2e6)
+axes[5][:yaxis][:set_ticks]([0, 1.2e6])
+axes[5][:yaxis][:set_ticklabels]([L"$0$", L"$1.2 \cdot 10^6$"])
+#axes[5][:text](ν[1] + hf, 5e2, "(d)")
 
 for (i, ax) in enumerate(axes)
     ax[:set_xlim](ν[1], ν[end])
-    i != 4 && ax[:set_xticklabels]([])
+    i != 5 && ax[:set_xticklabels]([])
 end 
 
 # set common y label to all subplots

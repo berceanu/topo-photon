@@ -154,23 +154,28 @@ function ηlev(M::SparseMatrixCSC{Complex{Float64},Int}, p::Int, q::Int, κ::Flo
     return 2π*α/κ*diff(bilevel[1:2])[1] - 1
 end
 
+function ηlev(qs::UnitRange{Int}, κ::Float64, lowβ::Int, highβ::Int)
+    N=15 # system size is NxN
+    # initialize (sparse) Hamiltonian matrix
+    M = spzeros(Complex{Float64}, N^2,N^2)
 
-ηlev34(qs::UnitRange{Int}, κ::Float64) = (N=15; A = spzeros(Complex{Float64}, N^2,N^2); [ηlev34(A, 1, q, κ) for q in qs])
+    diffs = Array(Float64, length(qs))
+    for (i,q) in enumerate(qs)
+        # construct disipationless HH+trap Hamiltonian in Landau gauge
+        # q dependent, need to loop over all q!
+        BP.buildham_exact!(M, N,1/q,κ)
+
+        # get first 5 levels of spectrum of M
+        levels = real(eigs(M, nev=5, which=:SR, ritzvec=false)[1]) #Array{Float64,1}
+
+        #calculate level spacing
+        diffs[i] = 2π/(q*κ) * (levels[highβ+1] - levels[lowβ+1]) - 1.0
+    end 
+
+    return diffs
+end 
+
     
-function ηlev34(M::SparseMatrixCSC{Complex{Float64},Int}, p::Int, q::Int, κ::Float64) #####
-    N::Int = sqrt(size(M,1))
-    α::Float64 = p/q
-
-    BP.buildham_exact!(M, N,α,κ)
-
-    # get first 4 levels of spectrum of HH+trap
-    bilevel = real(eigs(M, nev=4, which=:SR, ritzvec=false)[1])
-
-    #calculate level spacing
-    return 2π*α/κ*diff(bilevel[2:3])[1] - 1
-end
-
-
 ηlev(q::Int, κs::Vector{Float64}) = vec(ηlev([q], κs))
 
 ηlev(qs::UnitRange{Int}, κ::Float64) = ηlev([qs], κ) #
