@@ -157,65 +157,65 @@ matplotlib["rcParams"][:update](["axes.labelsize" => 22,
                                  "figure.autolayout" => true])
 
 
+ics=3.0
+el = 0.86/(3/ics + 5)
+b1 = 0.97-el
+t2 = b1 - el/ics
+b2 = t2 - 2el
+t3 = b2 - el/ics
+
 
 fig = plt.figure()
 
 gs1 = gspec.GridSpec(1, 1)
-gs1[:update](top=1.0, bottom=0.84)
-ax1 = plt.subplot(get(gs1, 0, 0))
+gs1[:update](top=0.97, bottom=b1, right=0.98, left=0.16)
+ax1 = plt.subplot(get(gs1, (0, 0)))
+ax1[:plot](spδl.νs,spδl.intensity,"k") 
+
+for (i,ω) in enumerate(sω0real)
+    ax1[:axvline](x = ω, color="orange", ls="dotted")
+    ax1[:text](ω + hf/4, 8e3, string(βreal[i]))
+end
+ax1[:set_ylim](0, 1e4)
+ax1[:yaxis][:set_ticks]([0, 1e4])
+ax1[:yaxis][:set_ticklabels]([L"$0$", L"$10^4$"])
+ax1[:text](ν[1] + hf, 5e3, "(a)")
+
+##########
 
 gs2 = gspec.GridSpec(2, 1)
-gs2[:update](top=0.77, bottom=0.44, hspace=0.0)
-ax2 = plt.subplot(get(gs2, 0, 0))
-ax3 = plt.subplot(get(gs2, 1, 0))
+gs2[:update](top=t2, bottom=b2, hspace=0.0, right=0.98, left=0.16)
+ax2 = plt.subplot(get(gs2, (0, 0)))
+ax3 = plt.subplot(get(gs2, (1, 0)))
 
-gs3 = gspec.GridSpec(2, 1)
-gs3[:update](top=0.38, bottom=0.0, hspace=0.4)
-ax4 = plt.subplot(get(gs3, 0, 0))
-ax5 = plt.subplot(get(gs3, 1, 0))
+ax2[:plot](spgaussl.νs,spgaussl.intensity,"k") 
 
-fig[:savefig]("../../figures/gridspec.pdf")
-plt.close(fig)
+ax2[:set_ylim](0, 3.5e3)
+ax2[:yaxis][:set_ticks]([0, 3.5e3])
+ax2[:yaxis][:set_ticklabels]([L"$0$", L"$3.5 \cdot 10^3$"])
+ax2[:text](ν[1] + hf, 1.75e3, "(b)")
 
-
-    
-fig, axes = plt.subplots(5, figsize=(8, 10))
-axes[1][:plot](spδl.νs,spδl.intensity,"k") 
-for (i,ω) in enumerate(sω0real)
-    axes[1][:axvline](x = ω, color="orange", ls="dotted")
-#    axes[1][:text](ω + hf/4, 8e2, string(βreal[i]))
-end
-axes[1][:set_ylim](0, 1e4)
-axes[1][:yaxis][:set_ticks]([0, 1e4])
-axes[1][:yaxis][:set_ticklabels]([L"$0$", L"$10^4$"])
-#axes[1][:text](ν[1] + hf, 5e2, "(a)")
-
-##########
-axes[2][:plot](spgaussl.νs,spgaussl.intensity,"k") 
-
-axes[2][:set_ylim](0, 3.5e3)
-axes[2][:yaxis][:set_ticks]([0, 3.5e3])
-axes[2][:yaxis][:set_ticklabels]([L"$0$", L"$3.5 \cdot 10^3$"])
-#axes[2][:text](ν[1] + hf, 5e2, "(b)")
-
-##########
-axes[3][:plot](spgausss.νs,spgausss.intensity, color="green", ls="dashed", linewidth=1.5)
+ax3[:plot](spgausss.νs,spgausss.intensity, color="green", ls="dashed", linewidth=1.5)
 for (i,ω) in enumerate(sω0sym)
-    axes[3][:axvline](x = ω, color="orange", ls="dotted")
-#    axes[3][:text](ω + hf/4, 8e2, string(βsym[i]))
+    ax3[:axvline](x = ω, color="orange", ls="dotted")
+    ax3[:text](ω + hf/4, 1.6e4, string(βsym[i]))
 end 
 
-axes[3][:set_ylim](0, 2e4)
-axes[3][:yaxis][:set_ticks]([0, 1e4])
-axes[3][:yaxis][:set_ticklabels]([L"$0$", L"$10^4$"])
-
+ax3[:set_ylim](0, 2e4)
+ax3[:yaxis][:set_ticks]([0, 1e4])
+ax3[:yaxis][:set_ticklabels]([L"$0$", L"$10^4$"])
 
 ##########
-axes[4][:plot](sphoml.νs,sphoml.intensity,"k") 
-axes[4][:plot](sphoms.νs,sphoms.intensity, color="green", ls="dashed", linewidth=1.5)
+
+gs3 = gspec.GridSpec(2, 1)
+gs3[:update](top=t3, bottom=0.11, hspace=0.4, right=0.98, left=0.16)
+ax4 = plt.subplot(get(gs3, (0, 0)))
+
+ax4[:plot](sphoml.νs,sphoml.intensity,"k") 
+ax4[:plot](sphoms.νs,sphoms.intensity, color="green", ls="dashed", linewidth=1.5)
 
 # insert with zoom of peak β=4
-axins = axloc.inset_axes(axes[4],
+axins = axloc.inset_axes(ax4,
                         width="30%", # width = 30% of parent_bbox
                         height="50%",
                         loc=9) # located at upper middle part
@@ -234,48 +234,52 @@ axins[:yaxis][:set_ticks]([1e3, 1e4])
 axins[:yaxis][:set_ticklabels]([L"$10^3$", L"$10^4$"], fontsize=8)
 
 # draw vertical lines at position of every exact eigenstate
-for (i,ω) in enumerate(exstates.νs[5])
-    axins[:axvline](x = ω, color="orange", ls="dotted")
-#    axins[:text](ω + hf/8, 8e3, string(i+2), fontsize=8)
-end 
+axins[:axvline](x = exstates.νs[5], color="orange", ls="dotted")
+axins[:text](exstates.νs[5] + hf/8, 8e3, string(4), fontsize=8)
 
 # transparency setting, not needed when exporting to pdf
 #axins[:patch][:set_alpha](1.0)
 
 # draw a bbox of the region of the inset axes in the parent axes and
 # connecting lines between the bbox and the inset axes area
-axloc.mark_inset(axes[4], axins, loc1=2, loc2=4, ec="0.", fc="none")
+axloc.mark_inset(ax4, axins, loc1=2, loc2=4, ec="0.", fc="none")
 
 for (i,ω) in enumerate(sω0lan)
-    axes[4][:axvline](x = ω, color="orange", ls="dotted")
-#    axes[4][:text](ω + hf/4, 8e5, string(βlan[i]))
+    ax4[:axvline](x = ω, color="orange", ls="dotted")
+    ax4[:text](ω + hf/4, 2e7, string(βlan[i]))
 end 
-axes[4][:set_ylim](0, 2.5e7)
-axes[4][:yaxis][:set_ticks]([0, 2.5e7])
-axes[4][:yaxis][:set_ticklabels]([L"$0$", L"$2.5 \cdot 10^7$"])
-#axes[4][:text](ν[1] + hf, 5e2, "(c)")
+ax4[:set_ylim](0, 2.5e7)
+ax4[:yaxis][:set_ticks]([0, 2.5e7])
+ax4[:yaxis][:set_ticklabels]([L"$0$", L"$2.5 \cdot 10^7$"])
+ax4[:text](ν[1] + hf, 1.25e7, "(c)")
 
 ##########
 
+ax5 = plt.subplot(get(gs3, (1, 0)))
 
-axes[5][:plot](ν,sprandl,"k") 
+ax5[:plot](ν,sprandl,"k") 
 
-axes[5][:set_xlabel](L"$\omega_0/J$")
-axes[5][:set_ylim](0, 1.2e6)
-axes[5][:yaxis][:set_ticks]([0, 1.2e6])
-axes[5][:yaxis][:set_ticklabels]([L"$0$", L"$1.2 \cdot 10^6$"])
-#axes[5][:text](ν[1] + hf, 5e2, "(d)")
+ax5[:set_xlabel](L"$\omega_0/J$")
+ax5[:set_ylim](0, 1.2e6)
+ax5[:yaxis][:set_ticks]([0, 1.2e6])
+ax5[:yaxis][:set_ticklabels]([L"$0$", L"$1.2 \cdot 10^6$"])
+ax5[:text](ν[1] + hf, 6e5, "(d)")
 
-for (i, ax) in enumerate(axes)
+##########
+
+for (i, ax) in enumerate([ax1,ax2,ax3,ax4,ax5])
     ax[:set_xlim](ν[1], ν[end])
     i != 5 && ax[:set_xticklabels]([])
 end 
 
 # set common y label to all subplots
-#fig[:text](0.0, 0.5, L"$\sum_{m,n} |a_{m,n}|^2$ [a.u.]", ha="center", va="center", rotation="vertical")
+fig[:text](0.022, 0.5, L"$\sum_{m,n} |a_{m,n}|^2$ [a.u.]", ha="center", va="center", rotation="vertical")
 
-fig[:savefig]("../../figures/selection.pdf", pad_inches=0.0, bbox_inches="tight")
+fig[:savefig]("../../figures/selection.pdf", bbox_inches="tight", pad_inches=0.0, transparent=true))
 plt.close(fig)
+
+
+
 
 
 # plot w.fs. in real space

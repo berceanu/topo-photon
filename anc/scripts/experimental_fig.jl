@@ -1,19 +1,26 @@
 import BP
+import HH
+
 using Base.Test
 using PyPlot
 
+using PyCall
+@pyimport matplotlib.gridspec as gspec
+
+
+
 # matplotlib parameters
-matplotlib["rcParams"][:update](["axes.labelsize" => 22,
+matplotlib["rcParams"][:update](["axes.labelsize" => 14,
                                  "axes.titlesize" => 20,
                                  "font.size" => 18,
                                  "legend.fontsize" => 14,
                                  "axes.linewidth" => 1.5,
                                  "font.family" => "serif",
                                  "font.serif" => "Computer Modern Roman",
-                                 "xtick.labelsize" => 20,
+                                 "xtick.labelsize" => 12,
                                  "xtick.major.size" => 5.5,
                                  "xtick.major.width" => 1.5,
-                                 "ytick.labelsize" => 20,
+                                 "ytick.labelsize" => 12,
                                  "ytick.major.size" => 5.5,
                                  "ytick.major.width" => 1.5,
                                  "text.usetex" => true,
@@ -56,6 +63,16 @@ kxmbz = xmbz * δk
 # exact spectrum, first 15 eigenvalues
 exexp = BP.ExactStates(15, :landau, sN, 1/q, sκ)
 
+# calculate HH energies E₀ and E₁
+ladder = Array(Float64, (25,25,q))
+HH.hhladder!(ladder, 1) # p = 1
+    
+e0 = mean(ladder[:,:,1])
+e1 = mean(ladder[:,:,2])
+
+println(e0)
+
+println(e1)
 
 #we filter state η
 η = 8
@@ -106,58 +123,88 @@ end
 
 # plotting
 
+ics = 4
+t1 = 0.97
+b3 = 0.08
+uai = 1.2
+
+alfa = 1.5
+el = (t1-b3)/(2 + 2alfa + 1/ics + 2/uai)
+elp = alfa*el
+
+
+
+b1 = t1 - el
+t2 = b1 - el/uai
+b2 = t2 - 2elp - el/ics
+t3 = b2 - el/uai
+
+
+fig = plt.figure()
+
 #plot spectrum
-mx = maximum(sp.intensity)
+gs1 = gspec.GridSpec(1, 1)
+gs1[:update](top=t1, bottom=b1, left=0.225, right=0.8)
 
-fig, axes = plt.subplots(2,1, figsize=(10, 6))
-for (i,ax) in enumerate(axes)
-    if i==1
-        ax[:plot](sp.νs, sp.intensity, "k")
-        ax[:vlines](exexp.νs, 0, mx/2, colors="orange", linestyles="dashed")
-        ax[:axvline](x = sω0, color="k", ls="dashed")
+ax1 = plt.subplot(get(gs1, (0, 0)))
 
-        ax[:set_xlim](sp.νs[1], sp.νs[end])
-        ax[:set_ylim](0, mx)
-        ax[:yaxis][:set_ticks]([0.,1.7,3.5])
+ax1[:plot](sp.νs, sp.intensity, "k", linewidth = 2.0)
 
-        ax[:set_xlabel](L"$\omega_0/J$")
-        ax[:set_ylabel](L"$\sum_{m,n} |a_{m,n}|^2$ [a.u.]")     
+k₀ = 9 # the first k₀ states are in the n=0 HH band
+for (ka, ν) in enumerate(exexp.νs)
+    if (ka > k₀) && (mod(ka-k₀, 2) == 1)
+        ax1[:axvline](x = ν, color="green", linestyle="-.", lw=2.0)
     else
-        ax[:plot](k, abs2(χ), "blue", ls="dotted", linewidth=1.5)
-        ax[:plot](k, ψkmbz[:,6], "k")
-        ax[:plot](k, ψkmbzex[:,6], color="orange", ls="--")
-        
-        ax[:set_xlim](-π, π)
-        ax[:set_xticks]([-π,-π/2,0,π/2,π])
-        ax[:set_xticklabels]([L"$-\pi$",L"$-\pi/2$",L"$0$",L"$\pi/2$",L"$\pi$"])        
-        ax[:set_ylabel](L"$|\chi_7(0,p_y)|^2$")
-        ax[:set_xlabel](L"$p_y$")
-        ax[:yaxis][:set_ticks]([0.,0.2,0.4])
-    end
+        ka != 8 && ax1[:axvline](x = ν, color="orange", linestyle="dashed", lw=2.0)
+        # we excluded the value where we filter
+    end 
 end 
 
-fig[:savefig]("../../figures/exp_spect.pdf", transparent=true, pad_inches=0.0, bbox_inches="tight")
-plt.close(fig)
+ax1[:axvline](x = sω0, color="k", ls=":", lw=2.0)
 
 
+ax1[:set_xlim](sp.νs[1], sp.νs[end])
+ax1[:yaxis][:set_ticks]([0.,1.7,3.5])
+
+ax1[:set_xlabel](L"$\omega_0/J$")
+ax1[:set_ylabel](L"$\sum_{m,n} |a_{m,n}|^2$ [a.u.]", fontsize=10)
+
+
+##########
 #plot w.f. in real and mom space
-fig, axes = plt.subplots(2,3, figsize=(10, 7.3))
+gs2 = gspec.GridSpec(2, 3)
+gs2[:update](top=t2, bottom=b2, left=0.225, right=0.8)
+
+ax2 = plt.subplot(get(gs2, (0, 0)))
+ax3 = plt.subplot(get(gs2, (0, 1)))
+ax4 = plt.subplot(get(gs2, (0, 2)))
+
+ax5 = plt.subplot(get(gs2, (1, 0)))
+ax6 = plt.subplot(get(gs2, (1, 1)))
+ax7 = plt.subplot(get(gs2, (1, 2)))
+
+axes = [ax2 ax3 ax4;
+        ax5 ax6 ax7]
+        
 #real space
 for (i,ψ) in enumerate((ψrex, ψr))
     ax = axes[i,1]
     img = ax[:imshow](ψ, origin="upper", ColorMap("gist_heat_r"), interpolation="none",
                      extent=[-5.5, 5.5, -5.5, 5.5], aspect=1,
                      vmin=0, vmax=0.1)
-    ax[:set_ylabel](L"$n$")
+    ax[:set_ylabel](L"$n$", labelpad=-5)
+    ax[:set_xticks]([-4,0,4])
+    ax[:set_yticks]([-4,0,4])
+    
     if i == 2
         ax[:set_xlabel](L"$m$")
         
-        cbaxes = fig[:add_axes]([0.1, 0.55, 0.22, 0.015])
-        cbar = fig[:colorbar](img, cax=cbaxes, orientation="horizontal")
-        cbar[:set_ticks]([0, 0.05, 0.1])
-        cbar[:set_ticklabels]([L"$0$", L"$0.05$", L"$0.1$"])
-        cbar[:set_label](L"$|a_{m,n}|^2$", rotation=0, labelpad=-8, y=0.5)
-        cbar[:solids][:set_edgecolor]("face")
+        ## cbaxes = fig[:add_axes]([0.1, 0.55, 0.22, 0.015])
+        ## cbar = fig[:colorbar](img, cax=cbaxes, orientation="horizontal")
+        ## cbar[:set_ticks]([0, 0.05, 0.1])
+        ## cbar[:set_ticklabels]([L"$0$", L"$0.05$", L"$0.1$"])
+        ## cbar[:set_label](L"$|a_{m,n}|^2$", rotation=0, labelpad=-8, y=0.5)
+        ## cbar[:solids][:set_edgecolor]("face")
 
     else
         ax[:set_xticklabels]([])
@@ -170,18 +217,18 @@ for (i,ψ) in enumerate((ψkex, ψk))
     img = ax[:imshow](ψ, origin="upper", ColorMap("gist_heat_r"), interpolation="none",
                      extent=[-π, π, -π, π], aspect=1,
                      vmin=0, vmax=14)
-    ax[:set_ylabel](L"$p_y$")
+    ax[:set_ylabel](L"$p_y$", labelpad=-8)
     ax[:set_xticks]([-π,0,π])
     
     if i == 2
         ax[:set_xlabel](L"$p_x$")
         ax[:set_xticklabels]([L"$-\pi$",L"$0$",L"$\pi$"])        
 
-        cbaxes = fig[:add_axes]([0.42, 0.55, 0.22, 0.015])
-        cbar = fig[:colorbar](img, cax=cbaxes, orientation="horizontal")
-        cbar[:set_ticks]([0, 7, 14])
-        cbar[:set_label](L"$|a_{p_x,p_y}|^2$", rotation=0, labelpad=-8, y=0.5)
-        cbar[:solids][:set_edgecolor]("face")
+        ## cbaxes = fig[:add_axes]([0.42, 0.55, 0.22, 0.015])
+        ## cbar = fig[:colorbar](img, cax=cbaxes, orientation="horizontal")
+        ## cbar[:set_ticks]([0, 7, 14])
+        ## cbar[:set_label](L"$|a_{p_x,p_y}|^2$", rotation=0, labelpad=-8, y=0.5)
+        ## cbar[:solids][:set_edgecolor]("face")
     else
         ax[:set_xticklabels]([])
     end
@@ -194,30 +241,58 @@ for (i,ψ) in enumerate((ψkmbzex, ψkmbz))
     ax = axes[i,3]
     img = ax[:imshow](ψ, origin="upper", ColorMap("gist_heat_r"), interpolation="none",
                      extent=[-π/q, π/q, -π, π], aspect=1/q,
-                     vmin=0, vmax=1)
-    ax[:set_ylabel](L"$p_y$")
+                      vmin=0, vmax=1)
+
+    # vertical line to indicate slice
+    ax[:axvline](x = 0.0, color = "k", linestyle = "-.", linewidth = 2.5)
+
+    ax[:set_ylabel](L"$p_y$", labelpad=-8)
     ax[:set_xticks]([-π/q,0,π/q])
     
     if i == 2
         ax[:set_xlabel](L"$p_x^0$") 
         ax[:set_xticklabels]([L"$-\pi/7$",L"$0$",L"$\pi/7$"])
 
-        cbaxes = fig[:add_axes]([0.74, 0.55, 0.22, 0.015])
-        cbar = fig[:colorbar](img, cax=cbaxes, orientation="horizontal")
-        cbar[:set_ticks]([0, 0.5, 1])
-        cbar[:set_ticklabels]([L"$0$", L"$0.5$", L"$1$"])
-        cbar[:set_label](L"$|a_{p_x^0,p_y}|^2$", rotation=0, labelpad=-8, y=0.5)
-        cbar[:solids][:set_edgecolor]("face")
+        ## cbaxes = fig[:add_axes]([0.74, 0.55, 0.22, 0.015])
+        ## cbar = fig[:colorbar](img, cax=cbaxes, orientation="horizontal")
+        ## cbar[:set_ticks]([0, 0.5, 1])
+        ## cbar[:set_ticklabels]([L"$0$", L"$0.5$", L"$1$"])
+        ## cbar[:set_label](L"$|a_{p_x^0,p_y}|^2$", rotation=0, labelpad=-8, y=0.5)
+        ## cbar[:solids][:set_edgecolor]("face")
     else
         ax[:set_xticklabels]([])
     end
     ax[:set_yticks]([-π,0,π])
-    ax[:set_yticklabels]([L"$-\pi$",L"$0$",L"$\pi$"])        
+    ax[:set_yticklabels]([L"$-\pi$",L"$0$",L"$\pi$"])
 end
 
+##########
+gs3 = gspec.GridSpec(1, 1)
+gs3[:update](top=t3, bottom=b3, left=0.225, right=0.8)
 
-fig[:savefig]("../../figures/experimental.pdf", transparent=true, pad_inches=0.0, bbox_inches="tight")
+ax8 = plt.subplot(get(gs3, (0, 0)))
+
+ax8[:plot](k, abs2(χ), "blue", ls="dotted", linewidth = 2.0)
+ax8[:plot](k, reverse(ψkmbz[:,6]), "k", linewidth = 2.0)
+ax8[:plot](k, reverse(ψkmbzex[:,6]), color="orange", ls="--", linewidth = 2.0)
+
+ax8[:set_xlim](-π, π)
+ax8[:set_xticks]([-π,-π/2,0,π/2,π])
+ax8[:set_xticklabels]([L"$-\pi$",L"$-\pi/2$",L"$0$",L"$\pi/2$",L"$\pi$"])        
+ax8[:set_ylabel](L"$|\chi_7(0,p_y)|^2$")
+ax8[:set_xlabel](L"$p_y$")
+ax8[:yaxis][:set_ticks]([0.,0.2,0.4])
+
+
+fig[:savefig]("../../figures/exp_fig.pdf", bbox_inches="tight", pad_inches=0.0, transparent=true)
 plt.close(fig)
+
+
+
+
+
+
+
 
 # for debugging
 
@@ -259,8 +334,3 @@ plt.close(fig)
 ## ax[:set_ylabel](L"$p_y$")
 ## ax[:set_yticks]([-π,0,π])
 ## ax[:set_yticklabels]([L"$-\pi$",L"$0$",L"$\pi$"])
-
-
-#TODO: plot seccond ladder vertical lines with different color
-#TODO: plot vertical lines for y slices
-#TODO: combine panels in unique figure

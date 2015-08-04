@@ -37,8 +37,6 @@ end
 
 # Computes the q energy levels E(p_y)
 hhladder(q::Int) = hhladder(1,q)
-hhladder!(E::Array{Float64,3}) = hhladder!(E, 1)
-
 function hhladder(p::Int, q::Int)
     ky = linspace(-π, π, 100)
     kx₀= linspace(-π/q, π/q, 100)
@@ -52,6 +50,7 @@ function hhladder(p::Int, q::Int)
     return E
 end
 
+hhladder!(E::Array{Float64,3}) = hhladder!(E, 1)
 function hhladder!(E::Array{Float64, 3}, p::Int)
     ky = linspace(-π, π, size(E,1))
     q = size(E,3)

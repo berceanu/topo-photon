@@ -27,6 +27,7 @@
 \DeclareMathOperator{\im}{Im}
 \DeclareMathOperator{\re}{Re}
 \newcommand{\vt}[1]{\mathbf{#1}}
+\newcommand{\ts}{\textsuperscript}
 
 \newcommand{\co}[2]{#2}
 \renewcommand{\paragraph}{\co}
@@ -57,7 +58,7 @@
 
 \begin{document}
 
-\title{Driven-dissipative toroidal Landau levels in cavity arrays}
+\title{Momentum space Landau levels in driven-dissipative cavity arrays}
 
 
 \author{A. C. Berceanu}
@@ -83,7 +84,7 @@ Universit\`{a} di Trento, I-38123 Povo, Italy}
   space toroidal Landau levels. The Landau energy spectrum we observe
   shows signatures of a non-Abelian Berry connection. With an eye to
   optical implementations in cavity arrays with an artificial magnetic
-  field for photons, we propose a spectroscopic protocol to
+  field for bosons, we propose a spectroscopic protocol to
   experimentally characterize the energy and the structure of the
   eigenstates. The feasibility of our proposal using state-of-the-art
   devices is finally assessed.
@@ -113,7 +114,7 @@ solid state superlattices~\cite{dean2013hofstadter,yu2014hierarchy}
 and silicon photonics~\cite{hafezi2013imaging} to classical systems
 such as coupled pendula~\cite{susstrunk2015pendula} and oscillating
 circuits~\cite{jia2013circuits}. Even though Hofstadter's original
-model dates back to the 70's, much of the afferent physics remained
+model dates back to the 70's, much of its pertaining physics remained
 largely unexplored until recently, due to the very large magnetic
 fluxes (of the order of the flux quantum per unit cell) that are
 required.
@@ -162,10 +163,11 @@ driven-dissipative system.~\cite{salerno2015graphene}
 \section{Model}
 \label{sec:model}
 
-We consider a tight-binding model of non-interacting photons hopping
-on a 2D square lattice, with nontrivial hopping phases created, for
-instance, by using a synthetic gauge field. We also include an
-additional harmonic trapping potential, so one can write the full Hamiltonian as
+We consider a tight-binding model of non-interacting bosonic particles
+hopping on a 2D square lattice, with nontrivial hopping phases
+created, for instance, by using a synthetic gauge field. We also
+include an additional harmonic trapping potential, so one can write
+the full Hamiltonian as
 
 \begin{equation}\label{eq:model}
 \mathcal{H}=\mathcal{H}_0+\frac{1}{2}\kappa
@@ -173,7 +175,7 @@ additional harmonic trapping potential, so one can write the full Hamiltonian as
 \end{equation}
 
 Here $\hat{a}_{m,n}^{\dagger}$ ($\hat{a}_{m,n}$) are the creation
-(annihilation) operators for a photon at site $(m,n)$ and $\kappa$ is
+(annihilation) operators for a particle at site $(m,n)$ and $\kappa$ is
 the strength of the trap centered at $(m_0, n_0)$. We set the lattice
 spacing constant to 1.
 
@@ -202,14 +204,16 @@ gauge preserves the $C_4$ rotational invariance of the lattice, so hopping
 terms along both $x$ and $y$ are now affected:
 $\phi = (-\pi\alpha n, \pi\alpha m)$.
 
-The presence of the constant synthetic gauge field (in real space)
-means $\mathcal{H}_0$ is no longer translationally invariant. However,
-new translation operators belonging to the magnetic translation
+
+\subsection{Eigenstates of Hamiltonian}\label{sec:eigenstates}
+We restrict ourselves to the Landau gauge. Results in other gauges can
+be obtained by gauge-transforming the wave function.  The presence of
+the constant synthetic gauge field (in real space) means
+$\mathcal{H}_0$ is no longer translationally invariant. However, new
+translation operators belonging to the magnetic translation
 group~\cite{zak1964group, zak1964representations} can be defined. This
 results in the so-called magnetic Brillouin zone (MBZ), which is $q$
 times smaller than the original BZ.
-
-\subsection{Eigenstates of Hamiltonian}\label{sec:eigenstates}
 
 The eigenfunctions of $\mathcal{H}_0$ are
 $\ket{\chi_{n,\vt{p}}} = \frac{1}{\sqrt{N}} e^{i\vt{p}\vt{r}}
@@ -238,10 +242,7 @@ see~\cite{price2014magnetic}), yields
 Here $E_n(\vt{p})$ is the dispersion relation of band $n$ of $\mathcal{H}_0$ and the non-Abelian Berry connection $\mathcal{A}_{n,n^{'}}(\vt{p}) = i\bra{u_{n,\vt{p}}}\nabla_{\vt{p}}\ket{u_{n^{'},\vt{p}}}$. 
 
 Provided the harmonic potential does not significantly mix the energy
-bands, one can make a single-band approximation (here we restrict
-ourselves to the lowest energy band) of the form
-$\psi_{n^{''}}(\vt{p}) = \delta_{0,n^{''}} \psi_0(\vt{p})$, resulting
-in 
+bands, one can make a single-band approximation resulting in
 
 \begin{equation}\label{eq:dual}
   \widetilde{\mathcal{H}} = E_n(\mathbf{p}) + \delta E_n(\vt{p}) + \frac{\kappa}{2} [i\nabla_{\mathbf{p}} + \mathcal{A}_n(\mathbf{p})]^2 
@@ -277,8 +278,8 @@ Within the flat-band approximation, the eigenstates of
 Eq.~\eqref{eq:dual} are those of a particle in constant magnetic
 field, constrained to move on the surface of a torus, which is the
 natural topology of the BZ. The toroidal topology does not influence
-the level spacing of the resulting Landau levels, so for fixed
-$\alpha$ we get $q$ semi-infinite ladders:
+the level spacing of the resulting Landau levels. For odd values of
+$q$ and fixed $\alpha$ we get $q$ semi-infinite ladders:
 %
 \begin{equation}\label{eq:ladders}
   \epsilon_{n,\beta} = E_n + \delta E_n + \left(\beta + \frac{1}{2}\right) \kappa |\Omega_n| 
@@ -378,28 +379,29 @@ interferential scheme, while our proposal is observable as a direct
 effect in the system dynamics.
 
 \begin{figure}[htb]\centering
-  \includegraphics[width=0.9\linewidth]{nonabcorr} % anc/scripts/nonabelian.jl
+  \includegraphics[width=0.9\linewidth]{nonabcorr} % anc/scripts/nonabelian_fig.jl
   \caption{\emph{Top}: ``Zero-point energy" error, with (cont. curve,
     $\eta_{\text{zpe}}^{\text{nab}}$) and without (dashed line,
     $\eta_{\text{zpe}}$) the non-Abelian shift. Including just the
     first term in the sum Eq.~\eqref{eq:shift} gives an identical
     curve to the one of $\eta_{\text{zpe}}^{\text{nab}}$. The chosen
     trap strength is $\kappa = 0.02 J$.  \emph{Bottom}: Level-spacing
-    error, for the same trap strength, considering the lowest 2 levels
-    only ($\beta = 0,1$, cont. curve) or $\beta = 1,2$ (dashed line).}
+    error, for the same trap strength, considering $\beta = 0,1$
+    (cont. curve), $\beta = 1,2$ (dashed curve), $\beta = 2,3$
+    (dashed-dotted curve) and $\beta = 3,4$ (dotted curve).}
   \label{fig:zpe}
 \end{figure}
-%TODO: update caption and main text to reflect new version of bottom panel
+
 
 In the bottom panel of Fig.~\ref{fig:zpe} we look at the error of the
 level-spacing between separate ladder states,
 $\eta_{\text{lev}} = \frac{2\pi \alpha}{\kappa} [E_{\text{ex}}(\beta)
 - E_{\text{ex}}(\beta - 1)] -1$,
-for the case of $\beta = 1$ and 2.  The level-spacing error is not
+for the case of $\beta = 1, 2, 3$ and 4.  The level-spacing error is not
 affected by the non-Abelian shift and instead originates from
 band-mixing effects due to the breakdown of the single-band
 approximation. However, even if we used an effective model we see that
-$\eta_{\text{lev}} \ll 1$.
+$\eta_{\text{lev}} \ll 1$, for $q \gtrsim 6$.
 
 It is a well-known result of perturbation theory that band-mixing
 induced by an external potential acts as a negative shift on the lower
@@ -445,11 +447,52 @@ J[e^{-i\phi_{m,n}^x}a_{m+1,n}+e^{i\phi_{m,n}^x}a_{m-1,n}+\\
 The expectation values $\abs{a_{m,n}}^2$ give us the number of photons
 at site $(m,n)$, whereas the intensity spectrum is given by their
 total sum $\sum_{m,n} |a_{m,n}|^2$ as a function of pump frequency
-$\omega_0$. Filtering the near(far)-field emission at a particular
+$\omega_0$.  Whenever the pump frequency $\omega_0$ is resonant with
+an eigenstate $\epsilon_{0,\beta}$ of the Hamiltonian
+Eq.~\eqref{eq:model}, we should get a peak in the spectrum.  This is
+due to a general result~\cite{carusotto2013fluids}, which states that
+the different eigenmodes of a driven-dissipative system appear as
+peaks in the transmission and/or absorption spectra under a coherent
+pump.  When the pump frequency is set on resonance with a given mode,
+the intensity profiles in both real- and momentum-space reproduce that
+mode's wavefunction.
+
+The peaks are of course broadened by the decay rate $\gamma$, and
+their height depends on the overlap between the spatial amplitude
+profile of the pump and the underlying eigenstate of $\mathcal{H}$ at
+that energy. Furthermore, as we are dealing with gauge-dependent
+effects, the particular choice of gauge will also affect the spectrum.
+
+
+As stated, measuring the near(far)-field emission at a particular
 frequency $\omega$ gives us a reconstruction of the
 real(momentum)-space wavefunction of $\widetilde{\mathcal{H}}$ at the
-corresponding energy. Finally, one has to fold the far-field emission
-from the full BZ to the MBZ.
+corresponding energy. The momentum space wavefunction is obtained by
+taking the Fourier transform of the lattice operators $\hat{a}$:
+\begin{equation}\label{eq:fftop}
+  \hat{a}_{m,n} = \sum_{p_x, p_y} \exp\left[i (p_x m + p_y n)\right] \hat{a}_{p_x,p_y}.
+\end{equation}
+
+We must emphasize that, while the absolute value of the real-space
+wavefunction is identical in both gauges, its phase is not, and
+neither is its momentum space representation (see
+Fig.~\ref{fig:hom_mom_sp}). It is only the symmetric gauge which has a
+well defined $90^{\circ}$ rotational symmetry. This is important when
+examining the selection rules.
+
+The Hamiltonian obtained by substituting Eq.~\eqref{eq:fftop} into
+Eq.~\eqref{eq:hh_hamiltonian} is not diagonal in the full BZ, but can
+be diagonalized by defining $\vt{p}^0 = \vt{p} + j\vt{G}$, with $j$
+integer (note that this relation in general depends on the particular
+choice of magnetic unit cell). Here $\vt{G} = 2\pi\alpha \hat{p}_x$ is
+a magnetic reciprocal lattice vector and $\vt{p}^0$ the magnetic
+crystal momentum. This mapping defines the MBZ, and the eigenfunctions
+can then be folded from the full BZ to the MBZ using
+\begin{equation}
+  \abs{\psi_n(\vt{p}^0)}^2 = \sum_j \abs{\psi(\vt{p} = \vt{p}^0 - j\vt{G})}^2
+\end{equation}
+where $\psi_n(\vt{p}^0)$ are the wavefunction coefficients in the MBZ.
+
 
 \section{Results and discussion}
 \label{sec:results}
@@ -471,59 +514,33 @@ for the case of $n = 0$.
 
 \paragraph{The overlap between the pump state and the eigenstate determines the intensity.}
 We first look at the intensity spectrum as a function of pump
-frequency Fig.~\ref{fig:pumping_schemes}.  Whenever the pump frequency
-$\omega_0$ is resonant with an eigenstate $\epsilon_{0,\beta}$ of the
-Hamiltonian Eq.~\eqref{eq:model}, we should get a peak in the
-spectrum.
-
-In fact, a general result~\cite{carusotto2013fluids} is that the
-different eigenmodes of a driven-dissipative system appear as peaks in
-the transmission and/or absorption spectra under a coherent pump.
-When the pump frequency is set on resonance with a given mode, the
-intensity profiles in both real- and momentum-space reproduce that
-mode's wavefunction.
-
-
-The peaks are of course broadened by the decay rate $\gamma$, and
-their height depends on the overlap between the spatial amplitude
-profile of the pump and the underlying eigenstate of $\mathcal{H}$ at that
-energy. Furthermore, as we are dealing with
-gauge-dependent effects, the particular choice of gauge will also
-affect the spectrum. To exemplify, we compare 4 different pumping
+frequency Fig.~\ref{fig:pumping_schemes}.  We compare 4 different pumping
 schemes in both the Landau and symmetric gauge.
-%
 
 \begin{figure}[htb]\centering
   \includegraphics[width=\linewidth]{selection} % anc/scripts/selection_fig.jl
   \caption{Intensity spectra for different pumping conditions: (a)
     pumping the single site (5,5), (b) pumping with a Gaussian
     profile, (c) homogeneous pumping and (d) pumping with a random
-    phase. Black curves correspond to using the Landau gauge while
+    phase. Black (cont.) curves correspond to using the Landau gauge while
     green (dashed) ones to the symmetric gauge. The dotted vertical
     lines (with labels indicating the value of $\beta$) mark the
     states which were selected for later analysis. The spectra in
     panels (a) and (d) are identical for both gauges.}
   \label{fig:pumping_schemes}
 \end{figure}
-% TODO: update caption and main text to reflect latest version
 
-We must emphasize that, while the absolute value of the real-space
-wavefunction is identical in both gauges, its phase is not, and
-neither is its momentum space representation (see
-Fig.~\ref{fig:hom_mom_sp}). It is only the symmetric gauge which has a
-well defined $90^{\circ}$ rotational symmetry. This is important when
-examining the selection rules.
+
 
 \paragraph{A δ pump in real space is homogeneous in momentum space.}
 The simplest case is that of pumping a single site, with a pump of the
-form $f_{m,n} = \delta_{m,m_0} \delta_{n,n_0}$. The pump is of course
-homogeneous in momentum space, so one must think of real space when
-explaining the shape Fig.~\ref{fig:pumping_schemes}, panel (a).
-Indeed, the wavefunctions of $\mathcal{H}$ in real space are rings of finite
-width which increase in radius as the energy increases (see
+form $f_{m,n} = \delta_{m,m_0} \delta_{n,n_0}$. It is most useful to
+look at real space when explaining the shape
+Fig.~\ref{fig:pumping_schemes}, panel (a).  Indeed, the wavefunctions
+of $\mathcal{H}$ in real space are rings of finite width which
+increase in radius as the energy increases (see
 Fig.~\ref{fig:delta_real_sp}). One can in fact deduce that the radius
-of the real space rings scales as $r^2 \approx \frac{1}{\pi} q
-\beta$.
+of the real space rings scales as $r^2 \approx \frac{1}{\pi} q \beta$.
 To see this, one can think of the Landau level energy
 $(\beta + 1/2)\omega_c$ as the momentum-space kinetic energy
 $\frac{\kappa}{2}r^2$, with
@@ -563,11 +580,11 @@ are pumping a single site, the result in the Landau gauge will be identical.
 
 \begin{figure}[htb]
   \centering
-  \includegraphics[width=0.9\linewidth]{sym_ring} % anc/torus_edge.ipynb
-  \caption{Wavefunction in the BZ, using the symmetric
-    gauge. \emph{Top}: The states corresponding to
-    $\beta = 9, 20, 30$.
-    \emph{Bottom}:  The states corresponding to
+  \includegraphics[width=0.9\linewidth]{sym_ring} % anc/scripts/torus_edge_fig.jl
+  \caption{Momentum space reconstruction of the eigenstates in the
+    full BZ, using the symmetric gauge and pumping with a random
+    phase. \emph{Top}: The states corresponding to
+    $\beta = 9, 20, 30$.  \emph{Bottom}: The states corresponding to
     $\beta = 38, 59, 99$.}
   \label{fig:torus_edge}
 
@@ -576,11 +593,15 @@ are pumping a single site, the result in the Landau gauge will be identical.
 
 \begin{figure}[htb]
   \centering
-  \includegraphics[width=0.9\linewidth]{fringe_trap} % anc/torus_edge.ipynb
-  \caption{Wavefunction in the BZ, using the Landau gauge. We have
-    considered the state $\beta = 4$ for different trap
-    positions (from left to right): $m_0 = 0$ (trap in the
-    center), 2, 5.5 and 11.}
+  \includegraphics[width=\linewidth]{fringe_trap} % anc/scripts/torus_edge_fig.jl
+  \caption{Momentum space reconstruction of the eigenstates in the
+    full BZ, using the Landau (top row) and symmetric gauge (middle
+    and bottom row). We have considered the state $\beta = 4$ for
+    different trap positions $(m_0, n_0)$. For the top and middle
+    rows, we have (from left to right): (0,0) (trap in the center),
+    (2,0), (5.5,0) and (11,0), whereas for the bottom row we chose the
+    positions (0,2), (0,5.5), (0,11) and (11,11). The chosen pump had
+    a random phase on each site.}
   \label{fig:moving_trap}
 \end{figure}
 
@@ -595,13 +616,14 @@ become visible in both the low (smaller $\beta$) and high-energy
 (larger $\beta$) sections of the spectrum, with a dip in the
 intermediate region caused by gauge-dependent interference
 effects. The intensity of the states however is more difficult to
-explain, due to the overlap with pump in momentum space. For example,
-as the symmetric gauge states have a ring-like structure also in
-momentum space (see bottom panel of Fig.~\ref{fig:hom_mom_sp}), the
-high energy portion of the spectrum is washed out compared to its
-Landau gauge counterpart. The white spot close to the edges of the
-rings in Fig.~\ref{fig:hom_mom_sp} is due to the destructive
-interference with the pump.
+explain, due to the overlap with the pump state in momentum space. For
+example, as the symmetric gauge states have a ring-like structure also
+in momentum space (see bottom panel of Fig.~\ref{fig:hom_mom_sp}),
+with the ring radius increasing with $\beta$. The high energy portion
+of the spectrum is therefore washed out compared to its Landau gauge
+counterpart. The white spot close to the edges of the rings in
+Fig.~\ref{fig:hom_mom_sp} is due to the destructive interference with
+the pump.
 
 In the symmetric gauge, real-space wavefunctions have a phase which
 winds around the ring as $e^{i\beta \phi}$. The shortest lengthscale
@@ -612,14 +634,18 @@ Fig.~\ref{fig:hom_mom_sp}, bottom panel. For large values of $\beta$
 the rings start touching the BZ torus boundaries. We show such an
 example in Fig.~\ref{fig:torus_edge}, where one can see the pattern
 created by the self-interference of the wavefunction at the torus
-edge.
+edge. The extra ring-like structures appearing for $\beta \geq 30$ are
+due to the close proximity of states pertaining to other ladders, with
+$n >0$.
 
 Another interesting effect is that of the trap position on the
 wavefunction in the BZ. As shown in~\cite{ozawa2014momhh}, moving the
 harmonic trap changes the boundary conditions on the BZ torus. An
 exemplification of that is Fig.~\ref{fig:moving_trap}, showing that
-moving the trap in the positive $x$ direction shifts the observed
-momentum-space pattern vertically, with a periodicity of $q$.
+moving the trap in a certain direction shifts the observed
+momentum-space pattern in the perpendicular direction, with a
+periodicity of $q$ in the Landau gauge and $2q$ in the symmetric
+gauge.
 
 
 \paragraph{Homogeneous spectrum can be understood using a parity argument in momentum space.}
@@ -629,12 +655,13 @@ Fig.~\ref{fig:pumping_schemes}. Now $f_{m,n} = f$, and the situation
 looks very different in the 2 gauges.  In the Landau gauge we see only
 half of the states. The reason for this particular selection rule
 becomes apparent as one plots the eigenstates in the full BZ, as shown
-in the top row of Fig.~\ref{fig:hom_mom_sp}. The states with an odd
-value of $\beta$ have an odd number of nodes, with one node in the
+in the top row of Fig.~\ref{fig:hom_mom_sp}. The states with an even
+value of $\beta$ have an even number of nodes, with a lobe in the
 center. This also has an analytical justification given by the
 properties of the Hermite polynomials in Eq.~\eqref{eq:chi}. Therefore
-these states do not overlap with a homogeneous pump, which is a
-$\delta$ function in momentum space, centered in the middle of the BZ.
+these states are the only ones that overlap with a homogeneous pump
+(which is a $\delta$ function in momentum space, centered in the
+middle of the BZ).
 %
 
 The symmetric gauge, on the other hand, shows one out of every 4
@@ -642,7 +669,8 @@ states, as can be seen in the inset of Fig.~\ref{fig:pumping_schemes}
 (c). This is due to the fact that, on a square lattice, the angular
 momentum is conserved modulo 4, respecting the 4-fold rotational
 symmetry. The peak intensity gets smaller for larger $\beta$ because
-of the diminishing overlap with the increasing momentum-space ring.
+of the diminishing overlap of the localized central pump with the
+increasing momentum-space ring.
 
 \paragraph{One must use a random phase in order to see all the states.}
 In order to see the complete ladder of states, we chose a pump which
@@ -677,51 +705,54 @@ one of Ref.\cite{hafezi2013imaging}.
 
 \begin{figure}[htb]
   \centering
-  \includegraphics[width=0.9\linewidth]{exp_fig} % anc/scripts/experimental_fig.jl
-  \caption{\emph{Top}: Intensity spectrum for $N=11$ and
-    $\gamma = 0.05 J$. We filter at the energy of the eigenstate
-    $\beta=7$ (long dashed line). The orange vertical dashed lines
+  \includegraphics[width=\linewidth]{exp_fig} % anc/scripts/experimental_fig.jl
+  \caption{\emph{1\ts{st} row}: Intensity spectrum for $N=11$ and
+    $\gamma = 0.05 J$. We fix the pump at the energy of the eigenstate
+    $\beta=7$ (dotted line). The orange vertical (dashed) lines
     show the eigenstates of $\mathcal{H}$ from Eq.~\eqref{eq:model}.
-  \emph{Middle, first row}: Emission of the $\beta=7$ state in real
+  \emph{2\ts{nd} row}: Emission of the $\beta=7$ state in real
     (left column), momentum-space (middle column) and MBZ (right
     column) with no pumping or decay.
-    \emph{Middle, second row}: Emission from the state at $\omega_0 = -1.63 J$.
+    \emph{3\ts{rd} row}: Emission from the state at $\omega_0 = -1.63 J$.
     The $\delta$-like pump at (0,5) is visible as a dark square.
-    \emph{Bottom}: Slice along the $p_x^0 = 0$ line in the MBZ
+    \emph{4\ts{th} row}: Slice along the $p_x^0 = 0$ line in the MBZ
     (continuous, black) compared to the analytical prediction of
     Eq.~\eqref{eq:chi}, $|\chi_7(0,p_y)|^2$ (dotted, blue). The orange
     dashed curve shows the same slice for the non-dissipative case.}
   \label{fig:exp}
 \end{figure}
 
-The spectrum is shown in Fig.~\ref{fig:exp}. Apart from the
-expected broadening due to larger losses, we note that for frequencies
-larger than $-1.5 J$ we start to see states from the second ladder
-$\epsilon_{1,\beta}$ (see Eq.~\eqref{eq:ladders}). Their proximity to
-the first ladder states means they cannot be resolved as separate
-peaks in the dissipative spectrum.
 
-We filter at the energy indicated by the black dashed line and plot
-the resulting emission in real and momentum space (full BZ), as well
-as in the MBZ. For comparison, we also plot the wavefunction of the
-Hamiltonian $\mathcal{H}$ in Eq.~\eqref{eq:model} as the second row of
-Fig.~\ref{fig:exp}. The difference between the two is of
-course, the lack of pumping and dissipation of the latter. We see
-that, even in the presence of finite size effects due to such a small
-system, one can still distinguish the nodal structure of the emission
-in momentum space, characteristic of a toroidal Landau level.  One can
-also notice that the left panel in the third row of Fig.~\ref{fig:exp}
-shows a decaying cyclotron orbit in momentum space, with $\gamma$
-playing the role of inverse lifetime. In the same way that real-space
-Landau levels give rise to real-space cyclotron orbits, the
-momentum-space Landau levels can provide the first direct observation
-of a cyclotron orbit in momentum space.
+The spectrum is shown in Fig.~\ref{fig:exp}. Apart from the expected
+broadening due to larger losses, we note that for frequencies larger
+than $-1.5 J$ we start to see states from the second ladder
+$\epsilon_{1,\beta}$ (see Eq.~\eqref{eq:ladders}), depicted as green
+vertical dash-dotted lines. Their proximity to the first ladder states
+means they cannot be resolved as separate peaks in the dissipative
+spectrum.
+
+We set the pump frequency at the energy indicated by the black dotted
+line and plot the resulting emission in real and momentum space (full
+BZ), as well as in the MBZ. For comparison, we also plot the
+wavefunction of the Hamiltonian $\mathcal{H}$ in Eq.~\eqref{eq:model}
+as the second row of Fig.~\ref{fig:exp}. The difference between the
+two is of course, the lack of pumping and dissipation of the
+latter. We see that one can still distinguish the nodal structure of
+the emission in momentum space, characteristic of a toroidal Landau
+level. We have checked that reducing $\kappa$ makes the fit even
+better, pointing towards band-mixing effects.  One can also notice
+that the left panel in the third row of Fig.~\ref{fig:exp} shows a
+decaying cyclotron orbit in momentum space, with $\gamma$ playing the
+role of inverse lifetime. In the same way that real-space Landau
+levels give rise to real-space cyclotron orbits, the momentum-space
+Landau levels can provide the first direct observation of a cyclotron
+orbit in momentum space.
 
 Furthermore, as the expression of the wavefunction in MBZ for the
 Landau gauge is given by Eq.~\eqref{eq:chi}, we can compare by taking
-a slice along the $p_x^0 = 0$ line. The qualitative structure in 2D is
-similar, as confirmed by the cuts along the vertical dotted lines,
-shown in the botttom panel of Fig.~\ref{fig:exp}.
+a slice along the dash-dotted vertical lines ($p_x^0 = 0$) in the
+right column of rows 2 and 3. The qualitative structure in 2D is
+similar, as shown in the botttom panel of Fig.~\ref{fig:exp}.
 
 
 One a final note, we briefly describe how one can measure the

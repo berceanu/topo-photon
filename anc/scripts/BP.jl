@@ -108,6 +108,21 @@ function Spectrum(ν::Vector{Float64},P::Vector{Complex{Float64}},gauge::Symbol,
 end
 
 
+function Spectrum(ν::Vector{Float64},P::Vector{Complex{Float64}},gauge::Symbol,
+                  α::Float64,γ::Float64,κ::Float64, m₀::Float64, n₀::Float64)
+    statevec = Array(WaveFunction, length(ν))
+    intvec = Array(Float64, length(ν))
+    N::Int = sqrt(length(P))
+    A = spzeros(Complex{Float64}, N^2,N^2)
+    for (i,ω) in enumerate(ν)
+        statevec[i] = WaveFunction(A, ω, P, gauge, α,γ,κ, m₀,n₀)
+        intvec[i] = statevec[i].int
+    end 
+
+    return Spectrum(N, gauge, P, ν, intvec, statevec)
+end
+
+
 function getstate(s::Spectrum, ω::Float64)
     i::Int = indmin(abs(s.νs .- ω))
     return reshape(s.states[i].ψ, (s.N, s.N))
