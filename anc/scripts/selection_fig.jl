@@ -173,7 +173,7 @@ ax1 = plt.subplot(get(gs1, (0, 0)))
 ax1[:plot](spδl.νs,spδl.intensity,"k") 
 
 for (i,ω) in enumerate(sω0real)
-    ax1[:axvline](x = ω, color="orange", ls="dotted")
+    ax1[:axvline](x = ω, color="orange", ls="dotted", lw=2.0)
     ax1[:text](ω + hf/4, 8e3, string(βreal[i]))
 end
 ax1[:set_ylim](0, 1e4)
@@ -197,7 +197,7 @@ ax2[:text](ν[1] + hf, 1.75e3, "(b)")
 
 ax3[:plot](spgausss.νs,spgausss.intensity, color="green", ls="dashed", linewidth=1.5)
 for (i,ω) in enumerate(sω0sym)
-    ax3[:axvline](x = ω, color="orange", ls="dotted")
+    ax3[:axvline](x = ω, color="orange", ls="dotted", lw=2.0)
     ax3[:text](ω + hf/4, 1.6e4, string(βsym[i]))
 end 
 
@@ -234,7 +234,7 @@ axins[:yaxis][:set_ticks]([1e3, 1e4])
 axins[:yaxis][:set_ticklabels]([L"$10^3$", L"$10^4$"], fontsize=8)
 
 # draw vertical lines at position of every exact eigenstate
-axins[:axvline](x = exstates.νs[5], color="orange", ls="dotted")
+axins[:axvline](x = exstates.νs[5], color="orange", ls="dotted", lw=2.0)
 axins[:text](exstates.νs[5] + hf/8, 8e3, string(4), fontsize=8)
 
 # transparency setting, not needed when exporting to pdf
@@ -245,7 +245,7 @@ axins[:text](exstates.νs[5] + hf/8, 8e3, string(4), fontsize=8)
 axloc.mark_inset(ax4, axins, loc1=2, loc2=4, ec="0.", fc="none")
 
 for (i,ω) in enumerate(sω0lan)
-    ax4[:axvline](x = ω, color="orange", ls="dotted")
+    ax4[:axvline](x = ω, color="orange", ls="dotted", lw=2.0)
     ax4[:text](ω + hf/4, 2e7, string(βlan[i]))
 end 
 ax4[:set_ylim](0, 2.5e7)
@@ -275,7 +275,7 @@ end
 # set common y label to all subplots
 fig[:text](0.022, 0.5, L"$\sum_{m,n} |a_{m,n}|^2$ [a.u.]", ha="center", va="center", rotation="vertical")
 
-fig[:savefig]("../../figures/selection.pdf", bbox_inches="tight", pad_inches=0.0, transparent=true))
+fig[:savefig]("../../figures/selection.pdf", bbox_inches="tight", pad_inches=0.0, transparent=true)
 plt.close(fig)
 
 
