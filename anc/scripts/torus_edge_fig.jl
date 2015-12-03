@@ -65,7 +65,7 @@ matplotlib["rcParams"][:update](["axes.labelsize" => 22,
                                  "figure.autolayout" => true])
 
 
-fig, axes = plt.subplots(2,3, figsize=(10, 7.3))
+fig, axes = plt[:subplots](2,3, figsize=(10, 7.3))
 for i = 1:3 #loop over columns
     # top row
     ax = axes[1,i]
@@ -103,7 +103,7 @@ for i = 1:3 #loop over columns
 end 
 
 fig[:savefig]("../../figures/sym_ring.pdf", transparent=true, pad_inches=0.0, bbox_inches="tight")
-plt.close(fig)
+plt[:close](fig)
 
 
 # moving the trap
@@ -130,14 +130,14 @@ for col = 1:4, row = 1:3
 end 
 
 
-fig = plt.figure()
+fig = plt[:figure]()
 
 gs = gspec.GridSpec(3, 4)
 gs[:update](top=0.99, bottom=0.08, left=0.07, right=0.99, hspace=0.05)
 
 axes = Array(PyObject, (3,4)) ##
 for col = 0:3, row = 0:2
-    axes[row + 1, col + 1] = plt.subplot(get(gs, (row, col)))
+    axes[row + 1, col + 1] = plt[:subplot](get(gs, (row, col)))
 end 
 
 for col = 1:4, row = 1:3
@@ -175,4 +175,4 @@ axes[3, 1][:set_ylabel](L"$p_y$", labelpad=-9)
 
 
 fig[:savefig]("../../figures/fringe_trap.pdf", transparent=true, pad_inches=0.0, bbox_inches="tight")
-plt.close(fig)
+plt[:close](fig)

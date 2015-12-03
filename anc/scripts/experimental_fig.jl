@@ -140,13 +140,13 @@ b2 = t2 - 2elp - el/ics
 t3 = b2 - el/uai
 
 
-fig = plt.figure()
+fig = plt[:figure]()
 
 #plot spectrum
 gs1 = gspec.GridSpec(1, 1)
 gs1[:update](top=t1, bottom=b1, left=0.225, right=0.8)
 
-ax1 = plt.subplot(get(gs1, (0, 0)))
+ax1 = plt[:subplot](get(gs1, (0, 0)))
 
 ax1[:plot](sp.νs, sp.intensity, "k", linewidth = 2.0)
 
@@ -167,7 +167,7 @@ ax1[:set_xlim](sp.νs[1], sp.νs[end])
 ax1[:yaxis][:set_ticks]([0.,1.7,3.5])
 
 ax1[:set_xlabel](L"$\omega_0/J$")
-ax1[:set_ylabel](L"$\sum_{m,n} |a_{m,n}|^2$ [a.u.]", fontsize=10)
+ax1[:set_ylabel](L"$\sum_{m,n} |a_{m,n}|^2$ (arb. units)", fontsize=10)
 
 
 ##########
@@ -175,13 +175,13 @@ ax1[:set_ylabel](L"$\sum_{m,n} |a_{m,n}|^2$ [a.u.]", fontsize=10)
 gs2 = gspec.GridSpec(2, 3)
 gs2[:update](top=t2, bottom=b2, left=0.225, right=0.8)
 
-ax2 = plt.subplot(get(gs2, (0, 0)))
-ax3 = plt.subplot(get(gs2, (0, 1)))
-ax4 = plt.subplot(get(gs2, (0, 2)))
+ax2 = plt[:subplot](get(gs2, (0, 0)))
+ax3 = plt[:subplot](get(gs2, (0, 1)))
+ax4 = plt[:subplot](get(gs2, (0, 2)))
 
-ax5 = plt.subplot(get(gs2, (1, 0)))
-ax6 = plt.subplot(get(gs2, (1, 1)))
-ax7 = plt.subplot(get(gs2, (1, 2)))
+ax5 = plt[:subplot](get(gs2, (1, 0)))
+ax6 = plt[:subplot](get(gs2, (1, 1)))
+ax7 = plt[:subplot](get(gs2, (1, 2)))
 
 axes = [ax2 ax3 ax4;
         ax5 ax6 ax7]
@@ -270,7 +270,7 @@ end
 gs3 = gspec.GridSpec(1, 1)
 gs3[:update](top=t3, bottom=b3, left=0.225, right=0.8)
 
-ax8 = plt.subplot(get(gs3, (0, 0)))
+ax8 = plt[:subplot](get(gs3, (0, 0)))
 
 ax8[:plot](k, abs2(χ), "blue", ls="dotted", linewidth = 2.0)
 ax8[:plot](k, reverse(ψkmbz[:,6]), "k", linewidth = 2.0)
@@ -285,52 +285,4 @@ ax8[:yaxis][:set_ticks]([0.,0.2,0.4])
 
 
 fig[:savefig]("../../figures/exp_fig.pdf", bbox_inches="tight", pad_inches=0.0, transparent=true)
-plt.close(fig)
-
-
-
-
-
-
-
-
-# for debugging
-
-## fig, ax = plt.subplots(figsize=(5, 5))
-## ax[:imshow](ψrex, origin="upper", ColorMap("gist_heat_r"), interpolation="none",
-##                  extent=[-5.5, 5.5, -5.5, 5.5],
-##                  vmin=0, vmax=0.1)
-
-## ax[:set_ylabel](L"$n$", labelpad=-10)
-## ax[:set_xlabel](L"$m$", labelpad=-6)
-    
-
-## fig, ax = plt.subplots(figsize=(5, 5))
-## ax[:imshow](ψkex,
-##             origin="upper", ColorMap("gist_heat_r"), interpolation="none",
-##             extent=[minimum(k), maximum(k), minimum(k), maximum(k)],
-##             vmin=0, vmax=14)
-
-## ax[:set_xticks]([-π,0,π])
-## ax[:set_yticks]([-π,0,π])
-## ax[:set_xticklabels]([L"$-\pi$",L"$0$",L"$\pi$"])
-## ax[:set_yticklabels]([L"$-\pi$",L"$0$",L"$\pi$"])
-## ax[:set_xlabel](L"$p_x$", labelpad=-4)
-## ax[:set_ylabel](L"$p_y$", labelpad=-10)
-
-##
-
-
-## fig, ax = plt.subplots(figsize=(5, 5))
-
-## ax[:imshow](ψkmbzex, origin="upper", ColorMap("gist_heat_r"), interpolation="none",
-##             extent=[minimum(kxmbz), maximum(kxmbz), minimum(k), maximum(k)], aspect=1/7,
-##             vmin=0, vmax=1)
-            
-## ax[:set_xlabel](L"$p_x^0$") 
-## ax[:set_xticks]([-π/7,0,π/7])
-## ax[:set_xticklabels]([L"$-\pi/7$",L"$0$",L"$\pi/7$"])
-
-## ax[:set_ylabel](L"$p_y$")
-## ax[:set_yticks]([-π,0,π])
-## ax[:set_yticklabels]([L"$-\pi$",L"$0$",L"$\pi$"])
+plt[:close](fig)

@@ -78,11 +78,6 @@ spδl = BP.Spectrum(ν,δpmp(5,5), :landau, prm...)
 spgaussl = BP.Spectrum(ν,gausspmp(5,5), :landau, prm...)
 sphoml = BP.Spectrum(ν,homopmp(), :landau, prm...)
 
-## deprecated ##
-# centered gaussian
-# spgauss0 = BP.Spectrum(ν, BP.gausspmp(N; A=1., σ=20., n0=0, m0=0), :symmetric, prm...)
-
-
 # calculating all real space wfs
 ψ = Array(Float64, (N, N, length(βreal)))
 for (i,ω) in enumerate(sω0real)
@@ -165,11 +160,11 @@ b2 = t2 - 2el
 t3 = b2 - el/ics
 
 
-fig = plt.figure()
+fig = plt[:figure]()
 
 gs1 = gspec.GridSpec(1, 1)
 gs1[:update](top=0.97, bottom=b1, right=0.98, left=0.16)
-ax1 = plt.subplot(get(gs1, (0, 0)))
+ax1 = plt[:subplot](get(gs1, (0, 0)))
 ax1[:plot](spδl.νs,spδl.intensity,"k") 
 
 for (i,ω) in enumerate(sω0real)
@@ -185,14 +180,14 @@ ax1[:text](ν[1] + hf, 5e3, "(a)")
 
 gs2 = gspec.GridSpec(2, 1)
 gs2[:update](top=t2, bottom=b2, hspace=0.0, right=0.98, left=0.16)
-ax2 = plt.subplot(get(gs2, (0, 0)))
-ax3 = plt.subplot(get(gs2, (1, 0)))
+ax2 = plt[:subplot](get(gs2, (0, 0)))
+ax3 = plt[:subplot](get(gs2, (1, 0)))
 
 ax2[:plot](spgaussl.νs,spgaussl.intensity,"k") 
 
 ax2[:set_ylim](0, 3.5e3)
 ax2[:yaxis][:set_ticks]([0, 3.5e3])
-ax2[:yaxis][:set_ticklabels]([L"$0$", L"$3.5 \cdot 10^3$"])
+ax2[:yaxis][:set_ticklabels]([L"$0$", L"$3.5\!\! \times\!\! 10^3$"])
 ax2[:text](ν[1] + hf, 1.75e3, "(b)")
 
 ax3[:plot](spgausss.νs,spgausss.intensity, color="green", ls="dashed", linewidth=1.5)
@@ -209,7 +204,7 @@ ax3[:yaxis][:set_ticklabels]([L"$0$", L"$10^4$"])
 
 gs3 = gspec.GridSpec(2, 1)
 gs3[:update](top=t3, bottom=0.11, hspace=0.4, right=0.98, left=0.16)
-ax4 = plt.subplot(get(gs3, (0, 0)))
+ax4 = plt[:subplot](get(gs3, (0, 0)))
 
 ax4[:plot](sphoml.νs,sphoml.intensity,"k") 
 ax4[:plot](sphoms.νs,sphoms.intensity, color="green", ls="dashed", linewidth=1.5)
@@ -250,19 +245,19 @@ for (i,ω) in enumerate(sω0lan)
 end 
 ax4[:set_ylim](0, 2.5e7)
 ax4[:yaxis][:set_ticks]([0, 2.5e7])
-ax4[:yaxis][:set_ticklabels]([L"$0$", L"$2.5 \cdot 10^7$"])
+ax4[:yaxis][:set_ticklabels]([L"$0$", L"$2.5\!\! \times\!\! 10^7$"])
 ax4[:text](ν[1] + hf, 1.25e7, "(c)")
 
 ##########
 
-ax5 = plt.subplot(get(gs3, (1, 0)))
+ax5 = plt[:subplot](get(gs3, (1, 0)))
 
 ax5[:plot](ν,sprandl,"k") 
 
 ax5[:set_xlabel](L"$\omega_0/J$")
 ax5[:set_ylim](0, 1.2e6)
 ax5[:yaxis][:set_ticks]([0, 1.2e6])
-ax5[:yaxis][:set_ticklabels]([L"$0$", L"$1.2 \cdot 10^6$"])
+ax5[:yaxis][:set_ticklabels]([L"$0$", L"$1.2\!\! \times\!\! 10^6$"])
 ax5[:text](ν[1] + hf, 6e5, "(d)")
 
 ##########
@@ -273,17 +268,17 @@ for (i, ax) in enumerate([ax1,ax2,ax3,ax4,ax5])
 end 
 
 # set common y label to all subplots
-fig[:text](0.022, 0.5, L"$\sum_{m,n} |a_{m,n}|^2$ [a.u.]", ha="center", va="center", rotation="vertical")
+fig[:text](0.022, 0.5, L"$\sum_{m,n} |a_{m,n}|^2$ (arb. units)", ha="center", va="center", rotation="vertical")
 
 fig[:savefig]("../../figures/selection.pdf", bbox_inches="tight", pad_inches=0.0, transparent=true)
-plt.close(fig)
+plt[:close](fig)
 
 
 
 
 
 # plot w.fs. in real space
-fig, axes = plt.subplots(1,length(βreal), figsize=(10, 5))
+fig, axes = plt[:subplots](1,length(βreal), figsize=(10, 5))
 
 for (i,ax) in enumerate(axes)
     ax[:imshow](ψ[st:en,st:en,i], origin="upper", ColorMap("gist_heat_r"), interpolation="none",
@@ -298,12 +293,12 @@ end
 
 
 fig[:savefig]("../../figures/real.pdf", transparent=true, pad_inches=0.0, bbox_inches="tight")
-plt.close(fig)
+plt[:close](fig)
 
 
 # plot w.fs. in  mom space
 
-fig, axes = plt.subplots(2,length(βlan), figsize=(10, 5))
+fig, axes = plt[:subplots](2,length(βlan), figsize=(10, 5))
 
 for i = 1:length(βlan) # loop over columns
     # top row
@@ -344,7 +339,7 @@ end
 
 
 fig[:savefig]("../../figures/momentum.pdf", transparent=true, pad_inches=0.0, bbox_inches="tight")
-plt.close(fig)
+plt[:close](fig)
 
 
 

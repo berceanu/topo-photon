@@ -94,7 +94,7 @@ en = findin(xm, edge)[1]
 
 
 
-f, axes = plt.subplots(2,2, figsize=(5,4.7))
+f, axes = plt[:subplots](2,2, figsize=(5,4.7))
 for i = 1:2 #loop over columns
     #top row: L
     ax = axes[1,i]
@@ -125,7 +125,7 @@ end
 
 f[:tight_layout]()
 f[:savefig]("../../figures/equivalence.pdf", transparent=true, pad_inches=0.0, bbox_inches="tight")
-plt.close(f)
+plt[:close](f)
 
 #in absolute value they are the same, but the phase is different
 using Base.Test

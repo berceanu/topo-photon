@@ -132,20 +132,6 @@ end
 using Base.Test
 
 
-## function foo(px::Array{Float64, 1}, py::Array{Float64, 1})
-##     Q = Array(Float64, length(py), length(px))
-##     for (j,x) in enumerate(px), (i,y) in enumerate(py)
-##         Q[i,j] = x-y
-##     end 
-##     Q
-## end 
-## bazz(px::Array{Float64, 1}, py::Array{Float64, 1}) = [x - y for y in py, x in px]
-
-## R = foo(linspace(1,10,10), linspace(1,5,5))
-## S = bazz(linspace(1,10,10), linspace(1,5,5))
-
-## @test_approx_eq R S
-
 @test_approx_eq δE(1,5,1, 0.,0.,2.) 0.5378296443127227
 
 v1 = A(1,2,5,1, 0.,0.);
@@ -219,7 +205,7 @@ data = [δE(1,5,1, x,y,0.02)::Float64 for y in k, x in kxmbz]
 
 a, b = extrema(data)
 
-fig, ax = plt.subplots(figsize=(5, 5))
+fig, ax = plt[:subplots](figsize=(5, 5))
 img = ax[:imshow](data, origin="upper", ColorMap("gist_heat_r"), interpolation="none",
                  extent=[-π/q, π/q, -π, π],
                  aspect=1/q)
@@ -240,12 +226,12 @@ cbar[:set_label](L"$\delta E(5,0.02)$", rotation=0, labelpad=-20, y=0.5)
 cbar[:solids][:set_edgecolor]("face")
 
 fig[:savefig]("../../figures/correction_mbz.pdf", transparent=true, pad_inches=0.0, bbox_inches="tight")
-plt.close(fig)
+plt[:close](fig)
 
 # various line types
 lines = ["-","--","-.",":"]
 
-fig, axes = plt.subplots(2, figsize=(8, 5))
+fig, axes = plt[:subplots](2, figsize=(8, 5))
 for (i, ax) in enumerate(axes)
     if i == 1 # first panel, with zero-point-energy error
         # marker = "o"
@@ -277,4 +263,4 @@ for (i, ax) in enumerate(axes)
 end 
 
 fig[:savefig]("../../figures/nonabcorr.pdf", transparent=true, pad_inches=0.0, bbox_inches="tight")
-plt.close(fig)
+plt[:close](fig)
