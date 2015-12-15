@@ -101,25 +101,16 @@ for (i,ω) in enumerate(sω0sym)
 end
 
 ## averaging over 100 random phase distributions ##
-# reading result from file | it takes a while to compute ;)
-sprandl = vec(readdlm("sprandl.txt", Float64))
-
-# computing result
-## intvec = zeros(Float64, length(ν));
-## A = spzeros(Complex{Float64}, N^2,N^2);
-## for j=1:100
-##     P=randpmp(j)
-##     for (i,ω) in enumerate(ν)
-##         BP.buildham_landau!(A, N,1/q,κ,γ, ω)
-##         intvec[i] += sum(abs2(A\P))
-##     end 
-## end 
-## sprandl = intvec./100;
-
-#extrema(sprandl)
-
-# writing computed result to file
-## writedlm("sprandl.txt", sprandl)
+intvec = zeros(Float64, length(ν));
+A = spzeros(Complex{Float64}, N^2,N^2);
+for j=1:100
+    P=randpmp(j)
+    for (i,ω) in enumerate(ν)
+        BP.buildham_landau!(A, N,1/q,κ,γ, ω)
+        intvec[i] += sum(abs2(A\P))
+    end 
+end 
+sprandl = intvec./100;
 
 
 ##
