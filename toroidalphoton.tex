@@ -83,7 +83,7 @@ Universit\`{a} di Trento, I-38123 Povo, Italy}
 
 \begin{abstract}
   We theoretically study the driven-dissipative Harper-Hofstadter model on a
-  2D square lattice in the presence of a weak harmonic trap. Without pumping and loss, the eigenstates of this system can be understood, in certain limits, as momentum-space toroidal Landau levels, where the Berry curvature, a geometrical property of an energy band, acts like a momentum-space magnetic field. We show that key features of these eigenstates can be observed in the  steady-state of the driven-dissipative system under a monochromatic coherent drive, and present a realistic proposal for an optical experiment using state-of-the-art coupled cavity arrays. We discuss how such spectroscopic measurements may be used to probe effects associated both with the non-Abelian Berry connection and with the synthetic magnetic gauge.
+  2D square lattice in the presence of a weak harmonic trap. Without pumping and loss, the eigenstates of this system can be understood, in certain limits, as momentum-space toroidal Landau levels, where the Berry curvature, a geometrical property of an energy band, acts like a momentum-space magnetic field. We show that key features of these eigenstates can be observed in the  steady-state of the driven-dissipative system under a monochromatic coherent drive, and present a realistic proposal for an optical experiment using state-of-the-art coupled cavity arrays. We discuss how such spectroscopic measurements may be used to probe effects associated both with the off-diagonal elements of the matrix-valued Berry connection and with the synthetic magnetic gauge.
 \end{abstract}
 
 \maketitle
@@ -110,11 +110,11 @@ circuits~\cite{jia2013circuits}. As first shown in Ref.~\onlinecite{price2014mag
 While previous theoretical works on momentum-space Landau levels have focused on conservative dynamics~\cite{price2014magnetic, Claassen_prl_2015}, photonics systems naturally include driving and dissipation~\cite{carusotto2013fluids}. In this paper, we present a realistic experimental proposal for the observation of these states in a driven-dissipative 2D lattice of cavities, such as the array of coupled silicon ring resonators of Ref.~\cite{hafezi2013imaging}, where link resonators were used to simulate a synthetic gauge field for photons. In our proposal, we combine this set-up with a harmonic potential, introduced, for example, by a spatial modulation of the resonator size. We demonstrate numerically that the main features of momentum-space Landau levels will be observable spectroscopically in this system for realistic parameters. 
 
 In this paper, we also emphasize how the inherent driving and dissipation in photonics can be a key advantage in probing properties that are otherwise inaccessible. 
-Firstly, the spectroscopic measurements discussed here are sensitive to the absolute energy of a state. From this, we show how to extract the energy shift due to the non-Abelian Berry connection $\mathcal{A}_{n,n'}({\bf p})$ relating eigenstates in different bands $n$ and $n'$. Only very recently has the first measurement of effects due to non-Abelian Berry connection been reported in ultracold atomic gases~\cite{Grusdt2014nonabelian,tracy2015arxiv}, and the approach used in this experiment would be difficult to apply in a photonics set-up. Our scheme may therefore be useful for the characterisation of energy bands in topologically-nontrivial photonic systems.
+Firstly, the spectroscopic measurements discussed here are sensitive to the absolute energy of a state. From this, we show how to extract the energy shift due to the off-diagonal matrix elements of the Berry connection $\mathcal{A}_{n,n'}({\bf p})$ relating eigenstates in different bands $n$ and $n'$. Only very recently has the first measurement of such effects been reported in ultracold atomic gases~\cite{Grusdt2014nonabelian,tracy2015arxiv}, and the approach used in this experiment would be difficult to apply in a photonics set-up. Our scheme may therefore be useful for the characterisation of energy bands in topologically-nontrivial photonic systems.
 
-Secondly, since the photon steady-state depends on the overlap between the (observable) spatial amplitude profile of the drive and of the eigenstates~\cite{carusotto2013fluids}, the observables will depend on the phase of the eigenfunctions and thus on the specific synthetic magnetic gauge that is implemented in a given experimental realization of the Harper-Hofstadter Hamiltonian using a synthetic gauge field. We note that a related gauge-sensitivity has also recently been of much interest in ultracold gases, where suitably designed time-of-flight experiments can access the gauge-dependent canonical momentum~\cite{kennedy2015bec,spielman2011gauge,tomoki2015nv}. Experiments on synthetic magnetic fields therefore present the opportunity of going beyond those on real magnetic fields to probe gauge-dependent physics. 
+Secondly, since the photon steady-state depends on the overlap between the (observable) spatial amplitude profile of the drive and of the eigenstates~\cite{carusotto2013fluids}, the observables will depend on the phase of the eigenfunctions and thus on the specific synthetic magnetic gauge that is implemented in a given experimental realization of the Harper-Hofstadter Hamiltonian using a synthetic gauge field. We note that a related gauge-sensitivity has also recently been of much interest in ultracold gases in suitably designed time-of-flight experiments~\cite{kennedy2015bec,spielman2011gauge, spielman_gauge, tomoki2015nv}. Experiments on synthetic magnetic fields therefore present the opportunity of straightforwardly probing gauge-dependent physics. 
 
-This paper is organized as follows: in Section \ref{sec:model} we introduce the trapped Harper-Hofstadter model, before reviewing how the eigenstates can be understood as momentum-space Landau levels in Section \ref{sec:eigenstates}. We discuss the breakdown of approximations in Section \ref{sec:non-abelian-shift}, focusing on the energy shift from the non-Abelian Berry connection. Then in Section \ref{sec:driven-dissipation}, we add driving and dissipation to the model. In Section \ref{sec:selection}, we show numerical results highlighting gauge-dependent effects, before presenting a viable proposal for a
+This paper is organized as follows: in Section \ref{sec:model} we introduce the trapped Harper-Hofstadter model, before reviewing how the eigenstates can be understood as momentum-space Landau levels in Section \ref{sec:eigenstates}. We discuss the breakdown of approximations in Section \ref{sec:berry-shift}, focusing on the energy shift from the off-diagonal matrix elements of the Berry connection. Then in Section \ref{sec:driven-dissipation}, we add driving and dissipation to the model. In Section \ref{sec:selection}, we show numerical results highlighting gauge-dependent effects, before presenting a viable proposal for a
 photonics-based experiment in Section \ref{sec:experiment}. Finally, we draw conclusions in Section \ref{sec:conclusion}. 
 
 
@@ -134,13 +134,13 @@ where $J$ is the real hopping amplitude and $\hat{a}_{m,n}^{\dagger}$ ($\hat{a}_
 
 In the Harper-Hofstadter model $\mathcal{H}_0$, the hopping phases $\phi = (\phi_{m,n}^x, \phi_{m,n}^y)$ are the Peierls phases gained by a charged particle hopping in the presence of a perpendicular magnetic field~\cite{harper1955magnetic,hofstadter1976butterfly}. The sum of the phases around a square plaquette of the lattice is therefore equal to $2\pi\alpha$, where $\alpha$ is the number of magnetic flux quanta through the plaquette (with $\hbar=e=1$). For neutral particles, such as photons, these phases can be imposed artificially to simulate the effects of magnetism, for example, by inserting link resonators into an array of silicon ring resonators as mentioned above~\cite{hafezi2013imaging}. 
 
-Although the sum of phases around a plaquette is set by the external (synthetic) flux, the exact form of the hopping phases themselves depends on the choice of magnetic gauge. In the Landau gauge, for example, $\phi = (0, 2\pi\alpha m)$ such that only the hopping amplitude along one direction is modified. Conversely, in the symmetric gauge, $\phi = (-\pi\alpha n, \pi\alpha m)$ and so hopping terms along both $x$ and $y$ are affected, preserving the $C_4$ rotational invariance of the lattice. This gauge-dependence is reflected in the phase of an eigenstate of $\mathcal{H}$, although this is not typically observable for a charged particle in a real magnetic field. However, in a photonics experiment, the phase of the light field is an observable quantity as we can observe the intensity response of a system to a given external driving, which is determined by the overlap of the spatial amplitude distribution of the pump with the eigenstates. Such experiments will therefore be sensitive to the synthetic magnetic gauge as we discuss in Section \ref{sec:experiment}.
+Although the sum of phases around a plaquette is set by the external (synthetic) flux, the exact form of the hopping phases themselves depends on the choice of magnetic gauge. In the Landau gauge, for example, $\phi = (0, 2\pi\alpha m)$ such that only the hopping amplitude along one direction is modified. Conversely, in the symmetric gauge, $\phi = (-\pi\alpha n, \pi\alpha m)$ and so hopping terms along both $x$ and $y$ are affected, preserving the $C_4$ rotational invariance of the lattice. This gauge-dependence of the hopping phases is reflected in the spatial profile of the phase of an eigenstate of $\mathcal{H}$. In a photonics experiment, this phase is an observable quantity as the intensity response of a system to a given external driving is determined by the overlap of the spatial amplitude distribution of the pump with the eigenstates. Such experiments will therefore be sensitive to the synthetic magnetic gauge as we discuss in Section \ref{sec:experiment}.
 
 \subsection{Toroidal Landau Levels in Momentum Space}\label{sec:eigenstates}
 
 Having introduced the full Hamiltonian  in Eq. \refeq{eq:model}, we now review how the eigenstates of this model in an appropriate limit can be understood as toroidal Landau levels in momentum space~\cite{price2014magnetic}. Throughout the following discussion, we assume that the trap is centered at the origin $(m_0, n_0)= (0,0)$.  
 
-We begin from the eigenstates of the Harper-Hofstadter model $\mathcal{H}_0\ket{\chi_{n,\vt{p}}} = E_n ({\bf p}) \ket{\chi_{n,\vt{p}}}$, where $E_n ({\bf p}) $ is the energy dispersion of band $n$ at crystal momentum $\vt{p}$. As the spatially-dependent hopping phases in $\mathcal{H}_0$ break translational invariance, new magnetic translation operators must be introduced to define a larger magnetic unit cell, containing an integer number of magnetic flux quanta~\cite{zak1964group, zak1964representations, 1chang}. Then translational symmetry is restored and Bloch's theorem can be applied to write the eigenstates as $\ket{\chi_{n,\vt{p}}} = \frac{1}{\sqrt{N}} e^{i\vt{p}\cdot \vt{r}} u_{n,\vt{p}}$, where $u_{n,\vt{p}}$ is the periodic Bloch function and $N$ is the number of lattice sites. Thanks to the new larger unit cell, the crystal momentum and the periodic Bloch functions here are defined in the smaller magnetic Brillouin zone (MBZ). For example, hereafter, we take the number of flux quanta per plaquette to be of the form $\alpha=1/q$, where $q$ is an integer. Then the magnetic unit cell can be chosen to be $q$ times larger than the original unit cell, while the MBZ is $q$ times smaller than the original BZ.
+We begin from the eigenstates of the Harper-Hofstadter model $\mathcal{H}_0\ket{\chi_{n,\vt{p}}} = E_n ({\bf p}) \ket{\chi_{n,\vt{p}}}$, where $E_n ({\bf p}) $ is the energy dispersion of band $n$ at crystal momentum $\vt{p}$. As the spatially-dependent hopping phases in $\mathcal{H}_0$ break translational invariance, new magnetic translation operators must be introduced to define a larger magnetic unit cell, containing an integer number of magnetic flux quanta~\cite{zak1964group, zak1964representations, 1chang}. Then translational symmetry is restored and Bloch's theorem can be applied to write the eigenstates as $\ket{\chi_{n,\vt{p}}} = \frac{1}{\sqrt{N}} e^{i\vt{p}\cdot \vt{r}} \ket{u_{n,\vt{p}}}$, where $\ket{u_{n,\vt{p}}}$ is the periodic Bloch function and $N$ is the number of lattice sites. Thanks to the new larger unit cell, the crystal momentum and the periodic Bloch functions here are defined in the smaller magnetic Brillouin zone (MBZ). For example, hereafter, we take the number of flux quanta per plaquette to be of the form $\alpha=1/q$, where $q$ is an integer. Then the magnetic unit cell can be chosen to be $q$ times larger than the original unit cell, while the MBZ is $q$ times smaller than the original BZ.
 
 Adding the harmonic trap breaks all translational symmetry of the lattice, but we can use the eigenstates of $\mathcal{H}_0$ as a basis in which to expand the new wave function 
 $\ket{\psi} = \sum_n\sum_{\vt{p}} \psi_n(\vt{p})
@@ -150,7 +150,7 @@ $i \partial_t \ket{\psi} = \mathcal{H} \ket{\psi}$, it can be shown that the exp
 \begin{multline} 
   i \partial_t \psi_n(\vt{p}) = E_n(\vt{p}) + \frac{\kappa}{2}\sum_{n^{'},n^{''}}\left(\delta_{n,n^{'}}i \nabla_{\vt{p}} + \mathcal{A}_{n,n^{'}}(\vt{p})\right)\times \\ \times \left(\delta_{n^{'},n^{''}}i\nabla_{\vt{p}} + \mathcal{A}_{n^{'},n^{''}}(\vt{p})\right) \psi_{n^{''}}(\vt{p}) ,  \label{eq:first}
 \end{multline}
-where $\mathcal{A}_{n,n^{'}}(\vt{p}) = i\bra{u_{n,\vt{p}}}\nabla_{\vt{p}}\ket{u_{n^{'},\vt{p}}}$ is the non-Abelian Berry connection. 
+where $\mathcal{A}_{n,n^{'}}(\vt{p}) = i\bra{u_{n,\vt{p}}}\nabla_{\vt{p}}\ket{u_{n^{'},\vt{p}}}$ is the matrix-valued Berry connection. 
 
 To proceed, we consider the harmonic trap to be sufficiently weak compared to the bandgap that we can make a single-band approximation~\cite{price2014magnetic}. This assumes that only one coefficient $\psi_n$ is non-negligible and that the external trap does not significantly mix different energy bands. Then Eq. \ref{eq:first} reduces to
 %
@@ -163,7 +163,7 @@ where we have introduced the effective momentum-space Hamiltonian
   \widetilde{\mathcal{H}} = \frac{\kappa}{2} [i\nabla_{\mathbf{p}} + \mathcal{A}_{n, n}(\mathbf{p})]^2 + E_n(\mathbf{p}) + \frac{\kappa}{2}\sum_{n^{'}\neq n} \abs{\mathcal{A}_{n,n^{'}}(\vt{p})}^2.
 \end{equation}
 %
-For the moment we focus on the first two terms; we discuss the role of the last term, which comes from the non-Abelian Berry connection, in detail in the next subsection.
+For the moment we focus on the first two terms; we discuss the role of the last term, which comes from the off-diagonal matrix elements of the Berry connection, in detail in the next subsection.
 As can be seen, there is a close analogy between the first two terms in the momentum-space Hamiltonian and that of a charged
 particle in an electromagnetic field {\em in real space}:
 %
@@ -185,7 +185,7 @@ As shown in Ref.~\cite{price2014magnetic}, the momentum-space toroidal Landau le
 \end{equation}
 where we have introduced the Landau level quantum number
 $\beta = 0,1,2,\dots$, and where $\kappa |\Omega_n|$ can be recognised as the analogue of the cyclotron frequency
-$\omega_c = e |B| /M $. Again, we note that here we have neglected the contribution from the last term in (\ref{eq:dual}), as this will be discussed in the next subsection. For odd values of $q$, the Chern number of all bands except the middle band is $\mathcal{C}_n = -1$. Then as the Chern number is related to the uniform Berry curvature as $\mathcal{C}_n = (1/2\pi) \Omega_n A_{\text{MBZ}}$, where $A_{\text{MBZ}} = (2\pi)^2/q$ is the MBZ area, the Berry curvature is given by $|\Omega_n| = \frac{1}{2\pi\alpha}$~\cite{price2014magnetic}.  
+$\omega_c = e |B| /M $. Again, we note that here we have neglected the contribution from the last term in (\ref{eq:dual}), as this will be discussed in the next subsection. As can be shown from the Diophantine equation for the Hall conductivity, for odd values of $q$, the Chern number of all bands except the middle band is $\mathcal{C}_n = -1$~\cite{bernevig2013topological}. Then as the Chern number is related to the uniform Berry curvature as $\mathcal{C}_n = (1/2\pi) \Omega_n A_{\text{MBZ}}$, where $A_{\text{MBZ}} = (2\pi)^2/q$ is the MBZ area, the Berry curvature is given by $|\Omega_n| = \frac{1}{2\pi\alpha}$~\cite{price2014magnetic}.  
 
 While the above spectrum does not directly depend on the toroidal topology of momentum space, the topology does enter into the eigenstate degeneracy, which is equal to $|\mathcal{C}_n|$, as well as into the analytical form of the eigenstates in the MBZ. For example, for the bands with $\mathcal{C}_n = -1$, the eigenstates can be written as~\cite{price2014magnetic}
 %
@@ -203,9 +203,9 @@ where $H_\beta$ are the Hermite polynomials and $l_{\Omega_n} = \sqrt{1/|\Omega_
 the magnetic length. Here we have taken the Berry gauge to have a Landau form $\mathcal{A}_n(\mathbf{p}) = \Omega_n p_x \hat{\vt{p}}_y$ parallel to the $\hat{\vt{p}}_y$ unit vector in  momentum space. We have also assumed that the MBZ is of length $2 \pi$ in one momentum direction, and $2 \pi / q$ in the other direction, corresponding to a magnetic unit cell of $q$ plaquettes containing one flux quantum. While this choice of MBZ is valid in any magnetic gauge of the underlying Harper-Hofstadter model, it is particularly natural when the hopping phases in $\mathcal{H}_0$ are in the Landau magnetic gauge $\phi = (0, 2\pi\alpha m)$, as we shall discuss further below. 
 
 
-\subsection{The Non-Abelian shift and the breakdown of approximations}\label{sec:non-abelian-shift}
+\subsection{The Berry connection and the breakdown of approximations}\label{sec:berry-shift}
 
-We now study the effects of the last term in the momentum-space Hamiltonian~(\ref{eq:dual}) which comes from the inter-band Berry connection:
+We now study the effects of the last term in the momentum-space Hamiltonian~(\ref{eq:dual}) which comes from the off-diagonal matrix elements of the Berry connection~\cite{berry}:
 \begin{align}
   \delta E_n(\vt{p}) &\equiv \frac{\kappa}{2}\sum_{n^{'}\neq n} \abs{\mathcal{A}_{n,n^{'}}(\vt{p})}^2
   \notag \\
@@ -215,9 +215,9 @@ We now study the effects of the last term in the momentum-space Hamiltonian~(\re
 \end{align}
 This can be recognised as a momentum-space counterpart of the real-space geometrical scalar potential previously studied in atomic systems~\cite{dum:1996, dutta:1999, dalibardrmp2011}. In these systems, the scalar potential arises from real-space Berry connections, which can be created, for example, by using spatially-dependent optical fields to dress the atoms. 
  
-In the flat-band limit, we have checked numerically that we can approximate the momentum-space geometrical scalar potential as $\delta E_n(\vt{p}) \approx   \delta E_n$ and so this contributes only a uniform constant energy shift. This term was not considered in previous works~\cite{price2014magnetic, ozawa2014momhh}, as these works focused on systems such as ultracold atomic gases, where the absolute energy is not easily experimentally observable. As we will discuss in the next section, spectroscopic measurements in photonics are sensitive to the energy of a state, and so such corrections may be extracted experimentally. We note that an analogous effect has also recently been predicted for the frequency spectrum associated with excitonic states in transition metal dichalcogenides~\cite{srivastava:2015}.
+In the flat-band limit, we have checked numerically that we can approximate the momentum-space geometrical scalar potential as $\delta E_n(\vt{p}) \approx   \delta E_n$ and so this contributes only a uniform constant energy shift. This term was not considered in our previous works~\cite{price2014magnetic, ozawa2014momhh}, as these works focused on systems such as ultracold atomic gases, where the absolute energy is not easily experimentally observable. As we will discuss in the next section, spectroscopic measurements in photonics are sensitive to the energy of a state, and so such corrections may be extracted experimentally. We note that an analogous effect has also been derived for the effective momentum-space magnetic Hamiltonian for a trapped particle in an ideal flat band~\cite{Claassen_prl_2015}, and predicted for the frequency spectrum associated with excitonic states in transition metal dichalcogenides~\cite{srivastava:2015}.
 
-To see under what conditions this non-Abelian Berry connection term is relevant, we compare the energy $E_{\text{ex}}$ obtained from an exact numerical diagonalization of Eq. \ref{eq:model} with the analytical eigenenergy $  E_{\text{an}}$ predicted by Eq.~\eqref{eq:ladders}. We focus on the lowest ladder of states, associated with band $n=0$ (Eq. \ref{eq:ladders}), at energies which are below the onset of the second ladder around energy $E_1$. This allow us to easily identify which numerical eigenvalue should correspond to which Landau level quantum number~\cite{price2014magnetic}. 
+To see under what conditions the off-diagonal elements of the Berry connection are relevant, we compare the energy $E_{\text{ex}}$ obtained from an exact numerical diagonalization of Eq. \ref{eq:model} with the analytical eigenenergy $  E_{\text{an}}$ predicted by Eq.~\eqref{eq:ladders}. We focus on the lowest ladder of states, associated with band $n=0$ (Eq. \ref{eq:ladders}), at energies which are below the onset of the second ladder around energy $E_1$. This allow us to easily identify which numerical eigenvalue should correspond to which Landau level quantum number~\cite{price2014magnetic}. 
 
 We introduce two dimensionless parameters $\eta_{\text{zpe}}$ and $\eta_{\text{lev}}$ to quantify deviations between the numerics and analytics. The former represents the error in the ``zero-point energy", and is defined as the energy of the lowest numerical state relative to analytical $n=0, \beta=0$ Landau level. The latter is the level spacing error, which we define as the difference between the numerical energy spacing between two neighbouring states and the analytical spacing between states with $\beta$ and $\beta-1$ quantum numbers.  
 
@@ -234,17 +234,17 @@ We then define the dimensionless parameter $\eta_{\text{zpe}}$ as
 \eta_{\text{zpe}} = \frac{4\pi\alpha}{\kappa} (E_{\text{ex}} -E_{\text{an}}). 
 \end{equation}
 This dimensionless error is plotted with a dashed line as a function of $q$ for $\kappa=0.02 J$ in the top panel of Fig.~\ref{fig:zpe}. At small $q$, there is a large bandgap between the lowest two Harper-Hofstadter energy bands, but the lowest band also has a large bandwidth. In this regime, the single-band approximation is reasonable, while the flat-band approximation breaks down leading to large errors. This limit requires a different analytical approach as  previously presented in Ref.~\onlinecite{ozawa2014momhh}.
-To account for the error at large $q$, we include the non-Abelian Berry shift (Eq. \ref{eq:shift}). We calculate this shift numerically from the eigenstates of the Harper-Hofstadter model, and we incorporate it into a second parameter 
+To account for the error at large $q$, we include the shift from the off-diagonal matrix elements of the Berry connection (Eq. \ref{eq:shift}). We calculate this shift numerically from the eigenstates of the Harper-Hofstadter model, and we incorporate it into a second parameter 
 \begin{equation}
 \eta_{\text{zpe}}^{\text{nab}} = \frac{4\pi\alpha}{\kappa}(E_{\text{ex}} - E_{\text{an}} - \left<\delta  E_0(\vt{p})\right>_{\vt{p}}).
 \end{equation}
-This is plotted as a solid line in the top panel of Fig.~\ref{fig:zpe}. As can be seen, the non-Abelian Berry shift dramatically reduces the error in the zero point energy at large $q$. We also calculate the non-Abelian Berry shift considering only the effects of band mixing with the second lowest band $n=1$; this is indistinguishable on this scale from the full non-Abelian Berry shift. This can be understood from the dependence on the bandgaps in Eq.~\ref{eq:shift}, which shows that the contributions of high-energy bands are suppressed. As discussed further in Section \ref{sec:experiment}, it would be possible experimentally to extract the energy of the lowest state; this could constitute the first direct measurement of non-Abelian Berry connection effects in a photonics system.
+This is plotted as a solid line in the top panel of Fig.~\ref{fig:zpe}. As can be seen, this shift dramatically reduces the error in the zero point energy at large $q$. We also calculate this shift considering only the effects of band mixing with the second lowest band $n=1$; this is indistinguishable on this scale from the full shift. This can be understood from the dependence on the bandgaps in Eq.~\ref{eq:shift}, which shows that the contributions of high-energy bands are suppressed. As discussed further in Section \ref{sec:experiment}, it would be possible experimentally to extract the energy of the lowest state; this could constitute the first direct measurement of the effects of the off-diagonal matrix elements of the Berry connection in a photonics system.
 
 \begin{figure}[tb]\centering
   \includegraphics[width=0.9\linewidth]{nonabcorr} % anc/scripts/nonabelian_fig.jl
   \caption{\emph{Top panel}: ``Zero-point energy" error, with (solid curve,
     $\eta_{\text{zpe}}^{\text{nab}}$) and without (dashed line,
-    $\eta_{\text{zpe}}$) the non-Abelian shift. Including just the
+    $\eta_{\text{zpe}}$) the shift from the off-diagonal matrix elements of the Berry connection. Including just the
     first term in the sum Eq.~\eqref{eq:shift} gives an identical
     curve to the one of $\eta_{\text{zpe}}^{\text{nab}}$. The chosen
     trap strength is $\kappa = 0.02 J$.  \emph{Bottom panel}: Level-spacing
@@ -260,7 +260,7 @@ We turn now to the level-spacing error $\eta_{\text{lev}}$. This can be expresse
 - E_{\text{ex}}(\beta - 1)] -1, 
 \end{equation}
 where we have used that the analytical level spacing from Eq. \ref{eq:ladders} is simply $\kappa / 2\pi \alpha$. 
-We plot the level-spacing error in the bottom panel of Fig.~\ref{fig:zpe} for $\beta = 1, 2, 3$ and 4. As can be seen here, there is a large variation in the errors at small $q$ due to the large bandwidth~\cite{ozawa2014momhh}. On the other hand, we see that $\eta_{\text{lev}} \ll 1$, for $q \gtrsim 6$, where the flat-band approximation improves. In this regime, the level-spacing error is much smaller than the zero-point error. This is because when the non-Abelian Berry shift (Eq. \ref{eq:shift}) is approximately uniform over the MBZ at large $q$, it just acts as a uniform energy shift on all the states in a  ladder with band index $n$. Consequently, the non-Abelian Berry shift drops out of the level spacing error between states, leaving only higher-order band-mixing terms. From perturbation theory, it is expected that mixing with other bands leads to a negative energy shift on states in the lowest band, and indeed this can be seen in both $\eta_{\text{zpe}}^{\text{nab}}$ and $\eta_{\text{lev}}$ in the small negative errors found at large $q$. 
+We plot the level-spacing error in the bottom panel of Fig.~\ref{fig:zpe} for $\beta = 1, 2, 3$ and 4. As can be seen here, there is a large variation in the errors at small $q$ due to the large bandwidth~\cite{ozawa2014momhh}. On the other hand, we see that $\eta_{\text{lev}} \ll 1$, for $q \gtrsim 6$, where the flat-band approximation improves. In this regime, the level-spacing error is much smaller than the zero-point error. This is because when the shift from the off-diagonal matrix elements of the Berry connection (Eq. \ref{eq:shift}) is approximately uniform over the MBZ at large $q$, it just acts as a uniform energy shift on all the states in a  ladder with band index $n$. Consequently, this shift drops out of the level spacing error between states, leaving only higher-order band-mixing terms. From perturbation theory, it is expected that mixing with other bands leads to a negative energy shift on states in the lowest band, and indeed this can be seen in both $\eta_{\text{zpe}}^{\text{nab}}$ and $\eta_{\text{lev}}$ in the small negative errors found at large $q$. 
 
 \subsection{Driving and dissipation}\label{sec:driven-dissipation}
 
@@ -269,14 +269,7 @@ characterized by a loss rate $\gamma$, and that the pump is
 monochromatic, with frequency $\omega_0$ and a spatial profile
 $f_{m,n}$. Following the treatment of Ref.~\onlinecite{ozawa2014qhe}, we replace the bosonic creation and annihilation operators with their expectation
 values, as can be justified for a noninteracting system. The steady state evolution of the photon-field amplitude in a cavity then follows that of
-the pump as $a_{m,n}(t) = a_{m,n} e^{-i \omega_0 t}$. We solve the resulting Heisenberg equation of motion:
-%
-\begin{equation}
-i\partial_{t}a_{m,n}(t)+i\gamma
-a_{m,n}(t)-f_{m,n}e^{-i\omega_{0}t}=\left[a_{m,n}(t),\mathcal{H}\right] ,
-\end{equation}
-%
-to arrive at a set of linear equations that can be solved numerically for the steady-state:
+the pump as $a_{m,n}(t) = a_{m,n} e^{-i \omega_0 t}$. Combining Hamiltonian evolution with pumping and losses, one arrives at a set of linear coupled equations that can be solved numerically for the steady-state\cite{cohen1992atom}:
 %
 \begin{eqnarray}\label{eq:linear_problem}
 f_{m,n} =J&&\left[e^{-i\phi_{m,n}^x}a_{m+1,n}+e^{i\phi_{m-1,n}^x}a_{m-1,n} \right. \nonumber\\ &&\left. +e^{-i\phi_{m,n}^y}a_{m,n+1}+e^{i\phi_{m,n-1}^y}a_{m,n-1}\right] \nonumber\\
@@ -294,7 +287,7 @@ profile of the pump and the underlying eigenstate of $\mathcal{H}$ at that energ
 Secondly, when the pump frequency is set on resonance with a given mode, the intensity profiles in both real- and momentum-space reproduce the wave function of that mode~\cite{carusotto2013fluids}. This corresponds respectively to measuring the near-field and far-field spatial emission of photons from the cavity array. We note that the far-field emission is simply the Fourier-transform of the real-space wave function and so will be a function of crystal momentum defined in the full BZ. To reach the MBZ, a  further processing step is required; for example, if the Harper-Hofstadter Hamiltonian is in the Landau gauge and if we choose a magnetic unit cell of $q$ plaquettes along $\hat{x}$, the appropriate transformation takes a particularly simple form~\cite{price2014magnetic}:
 %
 \begin{equation} \label{eq:trans}
-  \abs{\psi_n(\vt{p}_\mathrm{MBZ})}^2 = \sum_j \abs{\psi(\vt{p}_\mathrm{BZ} = \vt{p}_\mathrm{MBZ}- j\vt{G})}^2 ,
+  \sum_n \abs{\psi_n(\vt{p}_\mathrm{MBZ})}^2 = \sum_j \abs{\psi(\vt{p}_\mathrm{BZ} = \vt{p}_\mathrm{MBZ}- j\vt{G})}^2 ,
 \end{equation}
 %
 where $\psi_n(\vt{p}_\mathrm{MBZ})$ is the wave function coefficient in the MBZ, while $\psi(\vt{p}_\mathrm{BZ})$ is that in the original BZ. In this expression, $j$ is an integer, while $\vt{G} = (2\pi/q) \hat{\vt{p}}_x $ is the magnetic reciprocal lattice vector, where the factor of $q$ is due to the enlarged magnetic unit cell. We note that for other magnetic gauges or for other choices of the magnetic unit cell, this transformation will in general be more complicated. In this sense, we call this choice of magnetic unit cell, a ``natural" choice when the Harper-Hofstadter Hamiltonian is in the Landau gauge.
@@ -308,7 +301,7 @@ In the rest of the article, we denote the momentum in the original BZ as $\mathb
 
 \begin{figure}[tb]\centering
   \includegraphics[width=\linewidth]{selection} % anc/scripts/selection_fig.jl
-  \caption{Intensity spectra for different pumping conditions: (a)
+  \caption{(Color online) Intensity spectra for different pumping conditions: (a)
     pumping the single site (5,5), (b) pumping with a Gaussian
     profile centered at site (5,5) with width $\sigma=1$, (c) homogeneous pumping across all lattice sites and (d) pumping with a random
     phase across all lattice sites. These results were obtained by numerical solving Eq.~\eqref{eq:linear_problem} for the steady-state in a lattice of
@@ -322,14 +315,13 @@ $\gamma = 0.001 J$ and $\alpha = 1/11$.
   \label{fig:pumping_schemes}
 \end{figure}
 
-As introduced above, spectroscopic measurements can be used in a driven-dissipative photonics experiment to study the trapped Harper-Hofstadter model and hence toroidal Landau levels in momentum space. In this section, we focus on the effects of the pumping, exploring how different pumping schemes excite the eigenstates with different weights. We find that such spectroscopic measurements are sensitive to the underlying synthetic magnetic gauge of the Harper-Hofstadter Hamiltonian, in contrast to experiments without driving or with real magnetic fields. 
+As introduced above, spectroscopic measurements can be used in a driven-dissipative photonics experiment to study the trapped Harper-Hofstadter model and hence toroidal Landau levels in momentum space. In this section, we focus on the effects of the pumping, exploring how different pumping schemes excite the eigenstates with different weights. We find that such spectroscopic measurements are sensitive to the underlying synthetic magnetic gauge chosen in a given implementation of the Harper-Hofstadter Hamiltonian. 
 
 To best illustrate these gauge-dependent effects, we present the results of numerically solving
 Eq.~\eqref{eq:linear_problem} for the steady-state in a large lattice of
 $N \times N = 45 \times 45$ sites, with $\kappa = 0.02 J$,
 $\gamma = 0.001 J$ and $\alpha = 1/11$.  These parameters are chosen to highlight the key features of different pumping schemes; we will present numerical results for a more realistic experimental system in Section \ref{sec:experiment}.  The numerical code was written
-in \textsc{Julia}~\cite{bezanson2014julia} and is available online as ancillary
-files for this preprint. 
+in \textsc{Julia}~\cite{bezanson2014julia} and is available in the Supplemental Material~\footnote{See Supplemental Material.}. 
 
 The intensity spectrum of the steady-state as a function of pump
 frequency is shown in Fig.~\ref{fig:pumping_schemes}, where we compare results for both the Landau and symmetric gauge for four pumping
@@ -349,7 +341,7 @@ Fig.~\ref{fig:pumping_schemes} (a).
 \begin{figure}[tb]
   \centering
   \includegraphics[width=0.9\linewidth]{real} % anc/scripts/selection_fig.jl
-  \caption{Real space reconstruction of the states $\beta=3$, 6, 15
+  \caption{(Color online) Real space reconstruction of the states $\beta=3$, 6, 15
     and 26 of Fig.~\ref{fig:pumping_schemes}(a).}
   \label{fig:delta_real_sp}
 \end{figure}
@@ -364,7 +356,7 @@ counterpart, where states have higher amplitude close to the centre of the BZ an
 
 \begin{figure}[tb]\centering
   \includegraphics[width=0.9\linewidth]{momentum} % anc/scripts/selection_fig.jl
-  \caption{Momentum space reconstruction of the
+  \caption{(Color online) Momentum space reconstruction of the
     eigenstates. \emph{Top row}: states corresponding to $\beta=0$, 2,
     4 and 6 in Fig.~\ref{fig:pumping_schemes}(c), using the
     Landau gauge.  \emph{Bottom row}: states corresponding to
@@ -394,7 +386,7 @@ increasing momentum-space ring discussed above.
 \begin{figure}[tb]
   \centering
   \includegraphics[width=0.9\linewidth]{sym_ring} % anc/scripts/torus_edge_fig.jl
-  \caption{Momentum space reconstruction of the eigenstates in the
+  \caption{(Color online) Momentum space reconstruction of the eigenstates in the
     full BZ, using the symmetric gauge and homogeneous pumping with a random on-site
     phase. \emph{Top row}: states corresponding to
     $\beta = 9, 20, 30$.  \emph{Bottom row}: states corresponding to
@@ -418,7 +410,7 @@ As shown in Fig.~\ref{fig:moving_trap}, a shift in the harmonic trap centre in o
 \begin{figure}[htb]
   \centering
   \includegraphics[width=\linewidth]{fringe_trap} % anc/scripts/torus_edge_fig.jl
-  \caption{Momentum space reconstruction of the eigenstates in the
+  \caption{(Color online) Momentum space reconstruction of the eigenstates in the
     full BZ, using the Landau (top row) and symmetric gauge (middle
     and bottom row) and a spatially homogeneous pump with
     a random on-site phase. We have considered the state $\beta = 4$ for
@@ -453,16 +445,16 @@ spectrum.
 \begin{figure}[tb]
   \centering
   \includegraphics[width=\linewidth]{exp_fig} % anc/scripts/experimental_fig.jl
-  \caption{\emph{Top row}: Intensity spectrum for a small lattice of $11 \times 11$ sites, with
+  \caption{(Color online) \emph{Top row}: Intensity spectrum for a small lattice of $11 \times 11$ sites, with
     $\gamma = 0.05 J$, $\kappa = 0.2 J$ and $\alpha=1/7$. The orange vertical (dashed) lines
     show the first ladder of eigenstates of $\mathcal{H}$ from Eq.~\eqref{eq:model}. The second ladder of states is indicated with green vertical dash-dotted lines.
   \emph{Second row}: Profile of the $\beta=7$ state in real space
-    (left), momentum space (center) and the MBZ (right) for the conservative system with no pumping nor decay.
-    \emph{Third row}: Reconstruction of the $\beta=7$ mode wavefunction in real space (left), momentum space (center) and the MBZ (right) obtained in the driven-dissipative system by setting the pump frequency at $\omega_0 = -1.63 J$ on resonance with the desired mode (black dotted line in the top panel).
+    (left), momentum space (center) and the population over bands in the MBZ (right) for the conservative system with no pumping nor decay.
+    \emph{Third row}: Reconstruction of the $\beta=7$ mode wavefunction in real space (left), momentum space (center) and the population over bands in the MBZ (right) obtained in the driven-dissipative system by setting the pump frequency at $\omega_0 = -1.63 J$ on resonance with the desired mode (black dotted line in the top panel).
 The $\delta$-like pump at (0,5) is visible as a dark square in the left panel.
     \emph{Bottom row}: Slice along the $p_x^0 = 0$ line in the MBZ
     (solid black line) compared to the analytical prediction of
-    Eq.~\eqref{eq:chi}, $|\chi_7(0,p_y)|^2$ (blue dotted line) and to the eigenstate of the non-dissipative system (dashed orange line).}
+    Eq.~\eqref{eq:chi}, $|\chi_7(0,p_y)|^2$ (blue dotted line) and to the population over bands for the nondissipative system (dashed orange line).}
   \label{fig:exp}
 \end{figure}
 
@@ -470,7 +462,7 @@ The $\delta$-like pump at (0,5) is visible as a dark square in the left panel.
 Setting the pump frequency at the energy indicated by the black dotted
 line, we plot the numerical near- and far-field emission in the left and center panels of the 3rd row of Fig.~\ref{fig:exp}. This corresponds to 
 the wave function in real space and in the full
-BZ respectively. By applying the transformation in Eq. \ref{eq:trans}, we can also map the wave function in the full BZ to that in the MBZ, as shown in the right panel of the 3rd row of Fig.~\ref{fig:exp}. For comparison, we plot these
+BZ respectively. By applying the transformation in Eq. \ref{eq:trans}, we can also map the wave function in the full BZ to the population over bands in the MBZ, as shown in the right panel of the 3rd row of Fig.~\ref{fig:exp}. For comparison, we plot these
 quantities for the corresponding numerical eigenstate of $\mathcal{H}$ (Eq.~\eqref{eq:model})
 in the second row of Fig.~\ref{fig:exp}, for which there is no pumping and dissipation. 
 
@@ -486,18 +478,17 @@ levels give rise to real-space cyclotron orbits under the effect of the magnetic
 Landau levels can provide clear evidence of a cyclotron orbit in momentum space under the effect of the Berry curvature, whose effect is indeed that of a momentum-space magnetic field.
 
 Finally, we briefly summarize how one can practically measure the
-non-Abelian contribution $\delta E_0$ and hence the non-Abelian Berry
-connection (see Eq.~\eqref{eq:shift}) from the intensity spectrum. Starting from an experimental
+contribution $\delta E_0$ from the off-diagonal matrix elements of the Berry connection
+ (see Eq.~\eqref{eq:shift}) from the intensity spectrum. Starting from an experimental
 spectrum, one first needs to select a particular peak and determine
 its $\beta$ label by comparing the MBZ reconstruction with the
 analytical result. The distance between two neighbouring peaks gives
-the level spacing $\kappa \abs{\Omega_0}$. Finally, to separate the
-non-Abelian shift $\delta E_0$ from the Harper-Hofstadter ground state
+the level spacing $\kappa \abs{\Omega_0}$. Finally, to separate the shift $\delta E_0$ from the Harper-Hofstadter ground state
 energy $E_0$ in Eq.~\eqref{eq:ladders}, one can make use of the fact
 that the former depends on the trap strength $\kappa$, while the
 latter does not. Preparing two otherwise identical samples with different trap
 strengths and subtracting the ground state energy will then allow for a
-direct measurement of the contribution from the non-Abelian Berry connection.
+direct measurement of the contribution from the off-diagonal matrix elements of the Berry connection. 
 
 \section{Conclusion}
 \label{sec:conclusion}
