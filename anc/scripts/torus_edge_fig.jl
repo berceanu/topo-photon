@@ -37,15 +37,11 @@ sprans = BP.Spectrum(ν,randpmp(1234), :symmetric, prm...)
 # default exact spectrum, first 100 eigenvalues
 exdef = BP.ExactStates(100, :symmetric, N, 1/q, κ)
 
-
-
 # selected states for plotting
 βs = [9, 20, 30,
       38, 59, 99]
 ηs = βs + 1
 sω0s = [exdef.νs[state]::Float64 for state in ηs] # 6 frequencies
-
-
 
 # matplotlib parameters
 matplotlib["rcParams"][:update](["axes.labelsize" => 22,
@@ -64,31 +60,25 @@ matplotlib["rcParams"][:update](["axes.labelsize" => 22,
                                  "text.usetex" => true,
                                  "figure.autolayout" => true])
 
-
 fig, axes = plt[:subplots](2,3, figsize=(10, 7.3))
 for i = 1:3 #loop over columns
     # top row
     ax = axes[1,i]
     img = ax[:imshow](abs2(BP.myfft2(BP.getstate(sprans, sω0s[i]), k,k)), origin="upper", ColorMap("gist_heat_r"), interpolation="none",
     extent=[-π, π, -π, π])
-        
     ax[:set_xticklabels]([])
-
     ax[:set_xticks]([-π,0,π])
     ax[:set_yticks]([-π,0,π])
-
     if i == 1 #leftmost panel
         ax[:set_ylabel](L"$p_y$")
         ax[:set_yticklabels]([L"$-\pi$",L"$0$",L"$\pi$"])
     else
         ax[:set_yticklabels]([])
     end
-    
     #bottom row
     ax = axes[2,i]
     ax[:imshow](abs2(BP.myfft2(BP.getstate(sprans, sω0s[i+3]), k,k)), origin="upper", ColorMap("gist_heat_r"), interpolation="none",
     extent=[-π, π, -π, π])
-
     ax[:set_xlabel](L"$p_x$")
     ax[:set_xticks]([-π,0,π])
     ax[:set_yticks]([-π,0,π])
@@ -99,25 +89,18 @@ for i = 1:3 #loop over columns
     else
         ax[:set_yticklabels]([])
     end
-
 end 
-
 fig[:savefig]("../../figures/sym_ring.pdf", transparent=true, pad_inches=0.0, bbox_inches="tight")
 plt[:close](fig)
 
-
 # moving the trap
 β = 4 # selected state
-
 ω0 = exdef.νs[β + 1]
-
 # trap positions
 pos = [(0.0, 0.0) (2.0, 0.0) (5.5, 0.0) (11.0, 0.0);
        (0.0, 0.0) (2.0, 0.0) (5.5, 0.0) (11.0, 0.0);
        (0.0, 2.0) (0.0, 5.5) (0.0, 11.0) (11.0, 11.0)]
-
-
-bz = Array(Float64, (3,4,Nk,Nk)) ##
+bz = Array(Float64, (3,4,Nk,Nk)) 
 for col = 1:4, row = 1:3
     if row == 1 # landau gauge
         spran = BP.Spectrum([ω0], randpmp(1234), :landau, prm...,  pos[row, col][1], pos[row, col][2])
@@ -129,50 +112,40 @@ for col = 1:4, row = 1:3
     bz[row, col, :, :] = abs2(statefft)
 end 
 
-
 fig = plt[:figure]()
-
 gs = gspec.GridSpec(3, 4)
 gs[:update](top=0.99, bottom=0.08, left=0.07, right=0.99, hspace=0.05)
-
-axes = Array(PyObject, (3,4)) ##
+axes = Array(PyObject, (3,4)) 
 for col = 0:3, row = 0:2
     axes[row + 1, col + 1] = plt[:subplot](get(gs, (row, col)))
 end 
-
 for col = 1:4, row = 1:3
     axes[row, col][:imshow](squeeze(bz[row, col, :, :], (1,2)), origin="upper", ColorMap("gist_heat_r"),
                             interpolation="none", extent=[-π, π, -π, π])
     axes[row, col][:set_xticks]([-π,0,π])
     axes[row, col][:set_yticks]([-π,0,π])
 end 
-
 # disable tick labels for bulk panels
 for col = 2:4, row = 1:2
     axes[row, col][:set_yticklabels]([])
     axes[row, col][:set_xticklabels]([])
 end 
-
 # left margin
 for row = 1:2
     axes[row, 1][:set_yticklabels]([L"$-\pi$",L"$0$",L"$\pi$"])
     axes[row, 1][:set_xticklabels]([])
     axes[row, 1][:set_ylabel](L"$p_y$", labelpad=-9)
 end 
-
 # bottom margin
 for col = 2:4
     axes[3, col][:set_xticklabels]([L"$-\pi$",L"$0$",L"$\pi$"])
     axes[3, col][:set_yticklabels]([])
     axes[3, col][:set_xlabel](L"$p_x$", labelpad=-3)
 end 
-
 # bottom left corner
 axes[3, 1][:set_xticklabels]([L"$-\pi$",L"$0$",L"$\pi$"])
 axes[3, 1][:set_yticklabels]([L"$-\pi$",L"$0$",L"$\pi$"])
 axes[3, 1][:set_xlabel](L"$p_x$", labelpad=-3)
 axes[3, 1][:set_ylabel](L"$p_y$", labelpad=-9)
-
-
 fig[:savefig]("../../figures/fringe_trap.pdf", transparent=true, pad_inches=0.0, bbox_inches="tight")
 plt[:close](fig)

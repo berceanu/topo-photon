@@ -127,7 +127,6 @@ function getstate(s::Spectrum, ω::Float64)
     i::Int = indmin(abs(s.νs .- ω))
     return reshape(s.states[i].ψ, (s.N, s.N))
 end 
-##
 
 #Check that matrix is square
 function chksquare(A::AbstractMatrix)
@@ -206,9 +205,6 @@ buildhamexactlandau! = buildham_exact!
 function buildhamexactsymmetric!(S::SparseMatrixCSC{Complex{Float64},Int}, N::Int,α::Float64,κ::Float64, m₀::Float64, n₀::Float64)
     @hambody(1/2*κ*((n-n₀)^2+(m-m₀)^2), -exp(-im*π*α*n), -exp(im*π*α*n), -exp(-im*π*α*m), -exp(im*π*α*m))
 end
-
-## for sym in {:landau,:symmetric,:exact}
-##     @eval function $(symbol(string("buildham_", sym)))(n::Int)
 
 
 function genspmat(l::Function,r::Function,u::Function,d::Function,s::Function, N::Int,nz::Int,α::Float64)
@@ -294,11 +290,7 @@ function genspmat(l::Function,r::Function,u::Function,d::Function,s::Function, N
     return sparse(I,J,V)
 end
 
-
-
-########################
 #various pumping schemes
-########################
 function δpmp(N::Int; A=1., seed=0, σ=0., n0=0, m0=0)
     i = (m0+div(N-1,2)) * N + (div(N-1,2)-n0) + 1
     f = zeros(Complex{Float64}, N^2)
@@ -329,10 +321,7 @@ function homopmp(N::Int; A=1., seed=0, σ=0., n0=0, m0=0)
     A .* ones(Complex{Float64}, N^2)
 end
 
-
-#########################
 #arbitrary resolution fft
-#########################
 function myfft2(ψr::Matrix{Complex{Float64}}, k1::Float64, k2::Float64, xs1::Float64, xs2::Float64, Δx1::Float64, Δx2::Float64)
     (N1,N2) = size(ψr)
 
@@ -356,31 +345,13 @@ function myfft2(ψr::Matrix{Complex{Float64}}, k1, k2)
     out
 end
 
-# Magnetic Brillouin Zone
-function mbz(data, q, N)
-    #l = div(N-1, q)
-    l = N
-
-    V = zeros(Float64,size(data)[1],l)
-    
-    for i in 1:l
-        idx = i
-        while idx <= q*N
-               V[:,i] += data[:,idx]
-            idx += l
-        end
-    end
-
-    V/(4π^2)
-end
-
 # maps any momentum to the first brillouin zone
 function fbz(mom::Float64)
     m = mod(mom, 2π)
     m <= π ? m : m - 2π
 end 
 
-# new method
+# Magnetic Brillouin Zone
 function mbz(data::Array{Float64,2}, r::Int, q::Int, kxmbz::FloatRange{Float64}, k::FloatRange{Float64})
     # data is |ψ(FBZ)|², input
     V = zeros(Float64, (length(k), r)) # |ψ(MBZ)|², output
@@ -395,9 +366,7 @@ function mbz(data::Array{Float64,2}, r::Int, q::Int, kxmbz::FloatRange{Float64},
     V/(4π^2)
 end
 
-########################
 #comparison to analytics
-########################
 function compute_hermite_polynomial(n)
     P = Poly([1])
     const x = Poly([0; 1])                                                                                 
