@@ -8,14 +8,12 @@ type WaveFunction
     int::Float64
     ψ::Vector{Complex{Float64}}
 end
-
 WaveFunction(S::SparseMatrixCSC{Complex{Float64},Int64},
-             ω::Float64,P::Vector{Complex{Float64}}) = WaveFunction(S,ω,P,:landau)
-
+             ω::Float64,P::Vector{Complex{Float64}}) =
+                WaveFunction(S,ω,P,:landau)
 WaveFunction(S::SparseMatrixCSC{Complex{Float64},Int64},
              ω::Float64,P::Vector{Complex{Float64}},gauge::Symbol) =
     WaveFunction(S,ω,P,gauge,1/11,0.001,0.02,0.,0.)
-
 WaveFunction(S::SparseMatrixCSC{Complex{Float64},Int64},
              ω::Float64,P::Vector{Complex{Float64}},gauge::Symbol,
              α::Float64,γ::Float64,κ::Float64) =
@@ -23,9 +21,10 @@ WaveFunction(S::SparseMatrixCSC{Complex{Float64},Int64},
 
 function WaveFunction(S::SparseMatrixCSC{Complex{Float64},Int64},
                       ω::Float64,P::Vector{Complex{Float64}},gauge::Symbol,
-                      α::Float64,γ::Float64,κ::Float64, m₀::Float64, n₀::Float64)
+                      α::Float64,γ::Float64,κ::Float64, m₀::Float64,
+                      n₀::Float64)
     N::Int = sqrt(length(P))
-    eval(:($(symbol(string("buildham_", gauge, "!")))))(S, N,α,κ,γ,ω,m₀,n₀) 
+    eval(:($(symbol(string("buildham_", gauge, "!")))))(S, N,α,κ,γ,ω,m₀,n₀)
     X = S\P
     return WaveFunction(N,sum(abs2(X)),X)
 end
@@ -36,7 +35,6 @@ type ExactStates
     νs::Vector{Float64}
     states::Matrix{Complex{Float64}}
 end
-
 ExactStates(nev::Int, gauge::Symbol) = ExactStates(nev, gauge, 45)
 ExactStates(nev::Int, gauge::Symbol, N::Int) = ExactStates(nev, gauge,
    N, 1/11, 0.02, 0., 0.)
@@ -46,19 +44,19 @@ ExactStates(nev::Int, gauge::Symbol, N::Int, α::Float64, κ::Float64) =
 function ExactStates(nev::Int, gauge::Symbol, N::Int, α::Float64,
    κ::Float64, m₀::Float64, n₀::Float64)
     M = spzeros(Complex{Float64}, N^2,N^2)
-    eval(:($(symbol(string("buildhamexact", gauge, "!")))))(M, N,α,κ,m₀,n₀) 
-    (d, v, nconv, niter, nmult, resid) = eigs(M, nev=nev, which=:SR, ritzvec=true)
+    eval(:($(symbol(string("buildhamexact", gauge, "!")))))(M, N,α,κ,m₀,n₀)
+    (d, v, nconv, niter, nmult, resid) = eigs(M, nev=nev, which=:SR,
+       ritzvec=true)
     return ExactStates(N, gauge, real(d), v)
 end
 
 function getstate(s::ExactStates, ω::Float64)
     i::Int = indmin(abs(s.νs .- ω))
     return reshape(s.states[:,i], (s.N, s.N))
-end 
-
+end
 function getstate(s::ExactStates, η::Int)
     return reshape(s.states[:,η], (s.N, s.N))
-end 
+end
 
 type Spectrum
     N::Int
@@ -68,7 +66,6 @@ type Spectrum
     intensity::Vector{Float64}
     states::Vector{WaveFunction}
 end
-
 Spectrum(ν::Vector{Float64},P::Vector{Complex{Float64}}) = Spectrum(ν,P,:landau)
 
 function Spectrum(ν::Vector{Float64},P::Vector{Complex{Float64}},gauge::Symbol)
@@ -79,10 +76,9 @@ function Spectrum(ν::Vector{Float64},P::Vector{Complex{Float64}},gauge::Symbol)
     for (i,ω) in enumerate(ν)
         statevec[i] = WaveFunction(A, ω, P, gauge)
         intvec[i] = statevec[i].int
-    end 
+    end
     return Spectrum(N, gauge, P, ν, intvec, statevec)
 end
-
 function Spectrum(ν::Vector{Float64},P::Vector{Complex{Float64}},gauge::Symbol,
                   α::Float64,γ::Float64,κ::Float64)
     statevec = Array(WaveFunction, length(ν))
@@ -92,10 +88,9 @@ function Spectrum(ν::Vector{Float64},P::Vector{Complex{Float64}},gauge::Symbol,
     for (i,ω) in enumerate(ν)
         statevec[i] = WaveFunction(A, ω, P, gauge, α,γ,κ)
         intvec[i] = statevec[i].int
-    end 
+    end
     return Spectrum(N, gauge, P, ν, intvec, statevec)
 end
-
 function Spectrum(ν::Vector{Float64},P::Vector{Complex{Float64}},gauge::Symbol,
                   α::Float64,γ::Float64,κ::Float64, m₀::Float64, n₀::Float64)
     statevec = Array(WaveFunction, length(ν))
@@ -105,14 +100,14 @@ function Spectrum(ν::Vector{Float64},P::Vector{Complex{Float64}},gauge::Symbol,
     for (i,ω) in enumerate(ν)
         statevec[i] = WaveFunction(A, ω, P, gauge, α,γ,κ, m₀,n₀)
         intvec[i] = statevec[i].int
-    end 
+    end
     return Spectrum(N, gauge, P, ν, intvec, statevec)
 end
 
 function getstate(s::Spectrum, ω::Float64)
     i::Int = indmin(abs(s.νs .- ω))
     return reshape(s.states[i].ψ, (s.N, s.N))
-end 
+end
 
 #Check that matrix is square
 function chksquare(A::AbstractMatrix)
@@ -124,8 +119,10 @@ end
 #Find radius of ring
 function radius(M::Matrix{Float64}, axis::Vector)
     N = chksquare(M)
-    isodd(N) || throw(DimensionMismatch("invalid matrix size N=$N. N must be odd"))
-    length(axis) == N || throw(DimensionMismatch("axis size must match matrix dimensions"))
+    isodd(N) || throw(DimensionMismatch("invalid matrix size N=$N. N
+       must be odd"))
+    length(axis) == N || throw(DimensionMismatch("axis size must match
+       matrix dimensions"))
     @test_approx_eq_eps(M, transpose(M), 1e-5)
     half = div(N-1, 2) + 1
     v1 = axis[half:end]
@@ -147,52 +144,62 @@ macro hambody(fself, fleft, fright, fup, fdown)
         for m in -border:border, n in -border:border
             i  = geti(m,n,N)
             S[i,i] = $fself
-        end 
+        end
         for m in -border+1:border, n in -border:border
             i  = geti(m,n,N)
             S[i,i-N] = $fleft
-        end 
+        end
         for m in -border:border-1, n in -border:border
             i  = geti(m,n,N)
             S[i,i+N] = $fright
-        end 
+        end
         for m in -border:border, n in -border:border-1
             i  = geti(m,n,N)
             S[i,i-1] = $fup
-        end 
+        end
         for m in -border:border, n in -border+1:border
             i  = geti(m,n,N)
             S[i,i+1] = $fdown
         end
-    end 
-end 
-
-function buildham_landau!(S::SparseMatrixCSC{Complex{Float64},Int}, N::Int,α::Float64,κ::Float64,γ::Float64,ω::Float64, m₀::Float64, n₀::Float64)
-    @hambody(ω + im*γ - 1/2*κ*((n-n₀)^2+(m-m₀)^2), 1, 1, exp(-im*2π*α*m), exp(im*2π*α*m))
+    end
 end
 
-function buildham_symmetric!(S::SparseMatrixCSC{Complex{Float64},Int}, N::Int,α::Float64,κ::Float64,γ::Float64,ω::Float64, m₀::Float64, n₀::Float64)
-    @hambody(ω + im*γ - 1/2*κ*((n-n₀)^2+(m-m₀)^2), exp(-im*π*α*n), exp(im*π*α*n), exp(-im*π*α*m), exp(im*π*α*m))
+function buildham_landau!(S::SparseMatrixCSC{Complex{Float64},Int},
+   N::Int,α::Float64,κ::Float64,γ::Float64,ω::Float64, m₀::Float64,
+   n₀::Float64)
+    @hambody(ω + im*γ - 1/2*κ*((n-n₀)^2+(m-m₀)^2), 1, 1,
+       exp(-im*2π*α*m), exp(im*2π*α*m))
 end
-
-buildham_exact!(S::SparseMatrixCSC{Complex{Float64},Int}, N::Int,α::Float64,κ::Float64) = buildham_exact!(S, N,α,κ, 0., 0.)
-
-function buildham_exact!(S::SparseMatrixCSC{Complex{Float64},Int}, N::Int,α::Float64,κ::Float64, m₀::Float64, n₀::Float64)
-    @hambody(1/2*κ*((n-n₀)^2+(m-m₀)^2), -1, -1, -exp(-im*2π*α*m), -exp(im*2π*α*m))
+function buildham_symmetric!(S::SparseMatrixCSC{Complex{Float64},Int},
+   N::Int,α::Float64,κ::Float64,γ::Float64,ω::Float64, m₀::Float64,
+   n₀::Float64)
+    @hambody(ω + im*γ - 1/2*κ*((n-n₀)^2+(m-m₀)^2), exp(-im*π*α*n),
+       exp(im*π*α*n), exp(-im*π*α*m), exp(im*π*α*m))
 end
-
+buildham_exact!(S::SparseMatrixCSC{Complex{Float64},Int},
+   N::Int,α::Float64,κ::Float64) = buildham_exact!(S, N,α,κ, 0., 0.)
+function buildham_exact!(S::SparseMatrixCSC{Complex{Float64},Int},
+   N::Int,α::Float64,κ::Float64, m₀::Float64, n₀::Float64)
+    @hambody(1/2*κ*((n-n₀)^2+(m-m₀)^2), -1, -1, -exp(-im*2π*α*m),
+       -exp(im*2π*α*m))
+end
 buildhamexactlandau! = buildham_exact!
-function buildhamexactsymmetric!(S::SparseMatrixCSC{Complex{Float64},Int}, N::Int,α::Float64,κ::Float64, m₀::Float64, n₀::Float64)
-    @hambody(1/2*κ*((n-n₀)^2+(m-m₀)^2), -exp(-im*π*α*n), -exp(im*π*α*n), -exp(-im*π*α*m), -exp(im*π*α*m))
+function
+   buildhamexactsymmetric!(S::SparseMatrixCSC{Complex{Float64},Int},
+   N::Int,α::Float64,κ::Float64, m₀::Float64, n₀::Float64)
+    @hambody(1/2*κ*((n-n₀)^2+(m-m₀)^2), -exp(-im*π*α*n),
+       -exp(im*π*α*n), -exp(-im*π*α*m), -exp(im*π*α*m))
 end
 
-function genspmat(l::Function,r::Function,u::Function,d::Function,s::Function, N::Int,nz::Int,α::Float64)
-    iseven(N) && throw(ArgumentError("invalid system size N=$N. N must be odd"))
+function
+   genspmat(l::Function,r::Function,u::Function,d::Function,s::Function,
+   N::Int,nz::Int,α::Float64)
+    iseven(N) && throw(ArgumentError("invalid system size N=$N. N must
+       be odd"))
     # Preallocate
     I = Array(Int64,nz)
     J = Array(Int64,nz)
     V = Array(Complex{Float64},nz)
-
     function setnzelem(i::Int,n::Int,m::Int; pos::ASCIIString = "self")
         if pos=="left"
             k += 1
@@ -228,11 +235,11 @@ function genspmat(l::Function,r::Function,u::Function,d::Function,s::Function, N
             setnzelem(i,n,m; pos="left")
             setnzelem(i,n,m; pos="down")
         #bottom right
-        elseif n==-maxm && m==maxm 
+        elseif n==-maxm && m==maxm
             setnzelem(i,n,m; pos="left")
             setnzelem(i,n,m; pos="up")
         #bottom left
-        elseif n==-maxm && m==-maxm 
+        elseif n==-maxm && m==-maxm
             setnzelem(i,n,m; pos="right")
             setnzelem(i,n,m; pos="up")
         #edges
@@ -274,7 +281,7 @@ function δpmp(N::Int; A=1., seed=0, σ=0., n0=0, m0=0)
     f
 end
 function gausspmp(N::Int; A=1., seed=0, σ=1., n0=0, m0=0)
-    x0=m0 
+    x0=m0
     y0=n0
     f = zeros(Complex{Float64}, N,N)
     m = [-div(N-1,2):div(N-1,2)]
@@ -298,7 +305,8 @@ function homopmp(N::Int; A=1., seed=0, σ=0., n0=0, m0=0)
 end
 
 #arbitrary resolution fft
-function myfft2(ψr::Matrix{Complex{Float64}}, k1::Float64, k2::Float64, xs1::Float64, xs2::Float64, Δx1::Float64, Δx2::Float64)
+function myfft2(ψr::Matrix{Complex{Float64}}, k1::Float64,
+   k2::Float64, xs1::Float64, xs2::Float64, Δx1::Float64, Δx2::Float64)
     (N1,N2) = size(ψr)
     s = zero(Complex{Float64})
     for n2 in 1:N2, n1 in 1:N1
@@ -318,14 +326,14 @@ function myfft2(ψr::Matrix{Complex{Float64}}, k1, k2)
     out
 end
 
-# maps any momentum to the first brillouin zone
+# maps any momentum to the first Brillouin Zone
 function fbz(mom::Float64)
     m = mod(mom, 2π)
     m <= π ? m : m - 2π
-end 
-
+end
 # Magnetic Brillouin Zone
-function mbz(data::Array{Float64,2}, r::Int, q::Int, kxmbz::FloatRange{Float64}, k::FloatRange{Float64})
+function mbz(data::Array{Float64,2}, r::Int, q::Int,
+   kxmbz::FloatRange{Float64}, k::FloatRange{Float64})
     # data is |ψ(FBZ)|², input
     V = zeros(Float64, (length(k), r)) # |ψ(MBZ)|², output
     for (i,px) in enumerate(kxmbz) # loop over momenta in MBZ
@@ -341,7 +349,7 @@ end
 #comparison to analytics
 function compute_hermite_polynomial(n)
     P = Poly([1])
-    const x = Poly([0; 1])   
+    const x = Poly([0; 1])
     for i = 1:n
         P = 2x*P - polyder(P)
     end
@@ -356,5 +364,4 @@ function χ(kx0, ky, α, β)
     end
     sum
 end
-
-end
+end #module

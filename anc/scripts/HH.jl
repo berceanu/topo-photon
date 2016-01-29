@@ -3,7 +3,8 @@ module HH
 import BP
 
 #in-place builder of the q x q HH matrix in mom. sp.
-momsphhmat!(A::Matrix{Complex{Float64}}, kx0::Float64,ky::Float64) = momsphhmat!(A, kx0,ky, 1)
+momsphhmat!(A::Matrix{Complex{Float64}}, kx0::Float64,ky::Float64) =
+   momsphhmat!(A, kx0,ky, 1)
 
 function momsphhmat!(A::Matrix{Complex{Float64}},
                      kx0::Float64,ky::Float64,
@@ -14,16 +15,16 @@ function momsphhmat!(A::Matrix{Complex{Float64}},
     #upper subdiagonal
     for i in diagind(A,1)
         A[i] = -one(Complex{Float64})
-    end 
+    end
     #lower subdiagonal
     for i in diagind(A,-1)
         A[i] = -one(Complex{Float64})
-    end 
+    end
     #main diagonal
     α = p/q
     for (j,i) in enumerate(diagind(A))
         A[i] = -2*cos(kx0 + 2*π*α*j)
-    end 
+    end
     nothing
 end
 
@@ -32,7 +33,6 @@ hhladder(q::Int) = hhladder(1,q)
 function hhladder(p::Int, q::Int)
     ky = linspace(-π, π, 100)
     kx₀= linspace(-π/q, π/q, 100)
-
     E = Array(Float64, (length(ky),length(kx₀),q))
     H = zeros(Complex{Float64}, (q,q))
     for col=1:length(kx₀), row=1:length(ky)
@@ -41,14 +41,12 @@ function hhladder(p::Int, q::Int)
     end
     return E
 end
-
 hhladder!(E::Array{Float64,3}) = hhladder!(E, 1)
 function hhladder!(E::Array{Float64, 3}, p::Int)
     ky = linspace(-π, π, size(E,1))
     q = size(E,3)
     kx₀= linspace(-π/q, π/q, size(E,2))
     H = zeros(Complex{Float64}, (q,q))
-
     for col=1:length(kx₀), row=1:length(ky)
         momsphhmat!(H, kx₀[col], ky[row], p)
         E[row,col,:] = eigvals(H)
@@ -58,10 +56,9 @@ end
 
 # ground state energy of the HH hamiltonian
 hhgrstate!(ve::Matrix{Float64}, q::Int) = hhgrstate!(ve, 1, q)
-function hhgrstate!(ve::Matrix{Float64}, p::Int, q::Int) 
+function hhgrstate!(ve::Matrix{Float64}, p::Int, q::Int)
     ky = linspace(-π, π, size(ve,1))
     kx₀= linspace(-π/q, π/q, size(ve,2))
-    
     H = zeros(Complex{Float64}, (q,q))
     for col=1:length(kx₀), row=1:length(ky)
         momsphhmat!(H, kx₀[col], ky[row], p)
@@ -70,12 +67,13 @@ function hhgrstate!(ve::Matrix{Float64}, p::Int, q::Int)
     nothing
 end
 
-
 # zero point energy error
 ηzpe(q::Int, κ::Float64) = ηzpe(1, q, κ)
-ηzpe(p::Int, q::Int, κ::Float64) = (N=15; A = spzeros(Complex{Float64}, N^2,N^2); ηzpe(A, p, q, κ))
+ηzpe(p::Int, q::Int, κ::Float64) = (N=15; A =
+   spzeros(Complex{Float64}, N^2,N^2); ηzpe(A, p, q, κ))
 
-function ηzpe(M::SparseMatrixCSC{Complex{Float64},Int}, p::Int, q::Int, κ::Float64)
+function ηzpe(M::SparseMatrixCSC{Complex{Float64},Int}, p::Int,
+   q::Int, κ::Float64)
     N::Int = sqrt(size(M,1))
     α::Float64 = p/q
     gs = Array(Float64, 25,25)
@@ -88,11 +86,10 @@ function ηzpe(M::SparseMatrixCSC{Complex{Float64},Int}, p::Int, q::Int, κ::Flo
 end
 
 ηzpe(q::Int, κs::Vector{Float64}) = vec(ηzpe([q], κs))
-
 ηzpe(qs::UnitRange{Int}, κ::Float64) = ηzpe([qs], κ)
 ηzpe(qs::Vector{Int}, κ::Float64) = vec(ηzpe(qs, [κ]))
-
 ηzpe(qs::UnitRange{Int}, κs::Vector{Float64}) = ηzpe([qs], κs)
+
 function ηzpe(qs::Vector{Int}, κs::Vector{Float64})
     N=15
     A = spzeros(Complex{Float64}, N^2,N^2)
@@ -101,13 +98,15 @@ function ηzpe(qs::Vector{Int}, κs::Vector{Float64})
         η[row,col] = ηzpe(A, 1, qs[row], κs[col])
     end
     return η
-end 
+end
 
 # level error
 ηlev(q::Int, κ::Float64) = ηlev(1, q, κ)
-ηlev(p::Int, q::Int, κ::Float64) = (N=15; A = spzeros(Complex{Float64}, N^2,N^2); ηlev(A, p, q, κ))
+ηlev(p::Int, q::Int, κ::Float64) = (N=15; A =
+   spzeros(Complex{Float64}, N^2,N^2); ηlev(A, p, q, κ))
 
-function ηlev(M::SparseMatrixCSC{Complex{Float64},Int}, p::Int, q::Int, κ::Float64) 
+function ηlev(M::SparseMatrixCSC{Complex{Float64},Int}, p::Int,
+   q::Int, κ::Float64)
     N::Int = sqrt(size(M,1))
     α::Float64 = p/q
     BP.buildham_exact!(M, N,α,κ)
@@ -116,7 +115,6 @@ function ηlev(M::SparseMatrixCSC{Complex{Float64},Int}, p::Int, q::Int, κ::Flo
     #calculate level spacing
     return 2π*α/κ*diff(bilevel[1:2])[1] - 1
 end
-
 function ηlev(qs::UnitRange{Int}, κ::Float64, lowβ::Int, highβ::Int)
     N=15 # system size is NxN
     # initialize (sparse) Hamiltonian matrix
@@ -127,27 +125,27 @@ function ηlev(qs::UnitRange{Int}, κ::Float64, lowβ::Int, highβ::Int)
         # q dependent, need to loop over all q!
         BP.buildham_exact!(M, N,1/q,κ)
         # get first 5 levels of spectrum of M
-        levels = real(eigs(M, nev=5, which=:SR, ritzvec=false)[1]) #Array{Float64,1}
+        levels = real(eigs(M, nev=5, which=:SR, ritzvec=false)[1])
         #calculate level spacing
         diffs[i] = 2π/(q*κ) * (levels[highβ+1] - levels[lowβ+1]) - 1.0
-    end 
+    end
     return diffs
-end 
-    
+end
+
 ηlev(q::Int, κs::Vector{Float64}) = vec(ηlev([q], κs))
-ηlev(qs::UnitRange{Int}, κ::Float64) = ηlev([qs], κ) 
-ηlev(qs::Vector{Int}, κ::Float64) = vec(ηlev(qs, [κ])) 
+ηlev(qs::UnitRange{Int}, κ::Float64) = ηlev([qs], κ)
+ηlev(qs::Vector{Int}, κ::Float64) = vec(ηlev(qs, [κ]))
 ηlev(qs::UnitRange{Int}, κs::Vector{Float64}) = ηlev([qs], κs)
 
-function ηlev(qs::Vector{Int}, κs::Vector{Float64}) 
+function ηlev(qs::Vector{Int}, κs::Vector{Float64})
     N=15
     A = spzeros(Complex{Float64}, N^2,N^2)
     η = Array(Float64, length(qs), length(κs))
     for col=1:length(κs), row=1:length(qs)
-        η[row,col] = ηlev(A, 1, qs[row], κs[col]) 
+        η[row,col] = ηlev(A, 1, qs[row], κs[col])
     end
     return η
-end 
+end
 
 bwidth(qs::UnitRange{Int}) = bwidth([qs])
 bwidth(qs::Vector{Int}) = [bwidth(q) for q in qs]
@@ -171,5 +169,4 @@ function bgap(p::Int, q::Int)
     e2 = mean(ladder[:,:,2])
     return e2-e1
 end
-
 end #module
