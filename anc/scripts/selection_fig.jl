@@ -1,4 +1,6 @@
 using PyPlot
+PyPlot.ioff()
+push!(LOAD_PATH, "/home/berceanu/Development/topo-photon/anc/scripts")
 using PyCall
 @pyimport mpl_toolkits.axes_grid1.inset_locator as axloc
 @pyimport matplotlib.gridspec as gspec
@@ -104,7 +106,8 @@ matplotlib["rcParams"][:update](Dict("axes.labelsize" => 22,
                                      "ytick.labelsize" => 20,
                                      "ytick.major.size" => 5.5,
                                      "ytick.major.width" => 1.5,
-                                     "text.usetex" => true))
+                                     "text.usetex" => true,
+                                     "figure.autolayout" => true))
 
 ics=3.0
 el = 0.86/(3/ics + 5)
@@ -194,7 +197,7 @@ end
 # set common y label to all subplots
 fig[:text](0.022, 0.5, L"$\sum_{m,n} |a_{m,n}|^2$ (arb. units)",
    ha="center", va="center", rotation="vertical")
-fig[:savefig]("../../figures/selection.pdf", pad_inches=0.0, transparent=true)
+fig[:savefig]("../../figures/selection.pdf", pad_inches=0.0, transparent=true, bbox_inches="tight")
 plt[:close](fig)
 
 # plot w.fs. in real space
@@ -202,7 +205,7 @@ fig, axes = plt[:subplots](1,length(βreal), figsize=(10, 5))
 for (i,ax) in enumerate(axes)
 
     ax[:imshow](ψ[st:en,st:en,i], origin="upper",
-                     ColorMap("gist_heat_r"), interpolation="none",
+                     ColorMap("viridis"), interpolation="none",
                      extent=[-edge, edge, -edge, edge])
     ax[:set_xlabel](L"$m$")
     if i == 1 # leftmost panel
@@ -211,7 +214,7 @@ for (i,ax) in enumerate(axes)
         ax[:set_yticklabels]([])
     end
 end
-fig[:savefig]("../../figures/real.pdf", transparent=true, pad_inches=0.0)
+fig[:savefig]("../../figures/real.pdf", transparent=true, pad_inches=0.0, bbox_inches="tight")
 plt[:close](fig)
 
 # plot w.fs. in  mom space
@@ -219,14 +222,14 @@ fig, axes = plt[:subplots](2,length(βlan), figsize=(10, 5))
 for i = 1:length(βlan) # loop over columns
     # top row
     ax = axes[1,i]
-    ax[:imshow](ψL[:,:,i], origin="upper", ColorMap("gist_heat_r"),
+    ax[:imshow](ψL[:,:,i], origin="upper", ColorMap("viridis"),
                      interpolation="none",
                      extent=[-π, π, -π, π])
     ax[:set_xticklabels]([])
     ax[:set_xticks]([-π,0,π])
     ax[:set_yticks]([-π,0,π])
     if i == 1 # leftmost panel
-        ax[:set_ylabel](L"$p_y$")
+        ax[:set_ylabel](L"$k_y$")
         ax[:set_yticklabels]([L"$-\pi$",L"$0$",L"$\pi$"])
     else
         ax[:set_yticklabels]([])
@@ -235,24 +238,24 @@ for i = 1:length(βlan) # loop over columns
     ax = axes[2,i]
     if i == 3 # third pannel
         ax[:imshow](ψS[:,:,i], origin="upper",
-                         ColorMap("gist_heat_r"), interpolation="none",
+                         ColorMap("viridis"), interpolation="none",
                          extent=[-π, π, -π, π],
                          vmin=0, vmax=270000)
     else
         ax[:imshow](ψS[:,:,i], origin="upper",
-                         ColorMap("gist_heat_r"), interpolation="none",
+                         ColorMap("viridis"), interpolation="none",
                          extent=[-π, π, -π, π])
     end
-    ax[:set_xlabel](L"$p_x$")
+    ax[:set_xlabel](L"$k_x$")
     ax[:set_xticks]([-π,0,π])
     ax[:set_yticks]([-π,0,π])
     ax[:set_xticklabels]([L"$-\pi$",L"$0$",L"$\pi$"])
     if i == 1 # leftmost panel
-        ax[:set_ylabel](L"$p_y$")
+        ax[:set_ylabel](L"$k_y$")
         ax[:set_yticklabels]([L"$-\pi$",L"$0$",L"$\pi$"])
     else
         ax[:set_yticklabels]([])
     end
 end
-fig[:savefig]("../../figures/momentum.pdf", transparent=true, pad_inches=0.0)
+fig[:savefig]("../../figures/momentum.pdf", transparent=true, pad_inches=0.0, bbox_inches="tight")
 plt[:close](fig)

@@ -1,4 +1,6 @@
 using PyPlot
+PyPlot.ioff()
+push!(LOAD_PATH, "/home/berceanu/Development/topo-photon/anc/scripts")
 import BP
 using PyCall
 @pyimport matplotlib.gridspec as gspec
@@ -31,33 +33,34 @@ sω0s = [exdef.νs[state]::Float64 for state in ηs] # 6 frequencies
 
 # matplotlib parameters
 matplotlib["rcParams"][:update](Dict("axes.labelsize" => 22,
-                                 "axes.titlesize" => 20,
-                                 "font.size" => 18,
-                                 "legend.fontsize" => 14,
-                                 "axes.linewidth" => 1.5,
-                                 "font.family" => "serif",
-                                 "font.serif" => "Computer Modern Roman",
-                                 "xtick.labelsize" => 20,
-                                 "xtick.major.size" => 5.5,
-                                 "xtick.major.width" => 1.5,
-                                 "ytick.labelsize" => 20,
-                                 "ytick.major.size" => 5.5,
-                                 "ytick.major.width" => 1.5,
-                                 "text.usetex" => true))
+                                     "axes.titlesize" => 20,
+                                     "font.size" => 18,
+                                     "legend.fontsize" => 14,
+                                     "axes.linewidth" => 1.5,
+                                     "font.family" => "serif",
+                                     "font.serif" => "Computer Modern Roman",
+                                     "xtick.labelsize" => 20,
+                                     "xtick.major.size" => 5.5,
+                                     "xtick.major.width" => 1.5,
+                                     "ytick.labelsize" => 20,
+                                     "ytick.major.size" => 5.5,
+                                     "ytick.major.width" => 1.5,
+                                     "text.usetex" => true,
+                                     "figure.autolayout" => true))
 
-fig, axes = plt[:subplots](2,3, figsize=(10, 7.3))
+fig, axes = plt[:subplots](2,3, figsize=(10,7.3))
 for i = 1:3 #loop over columns
     # top row
     ax = axes[1,i]
     img = ax[:imshow](abs2(BP.myfft2(BP.getstate(sprans, sω0s[i]),
-       k,k)), origin="upper", ColorMap("gist_heat_r"),
+       k,k)), origin="upper", ColorMap("viridis"),
        interpolation="none",
        extent=[-π, π, -π, π])
     ax[:set_xticklabels]([])
     ax[:set_xticks]([-π,0,π])
     ax[:set_yticks]([-π,0,π])
     if i == 1 #leftmost panel
-        ax[:set_ylabel](L"$p_y$")
+        ax[:set_ylabel](L"$k_y$")
         ax[:set_yticklabels]([L"$-\pi$",L"$0$",L"$\pi$"])
     else
         ax[:set_yticklabels]([])
@@ -65,20 +68,20 @@ for i = 1:3 #loop over columns
     #bottom row
     ax = axes[2,i]
     ax[:imshow](abs2(BP.myfft2(BP.getstate(sprans, sω0s[i+3]), k,k)),
-       origin="upper", ColorMap("gist_heat_r"), interpolation="none",
+       origin="upper", ColorMap("viridis"), interpolation="none",
        extent=[-π, π, -π, π])
-    ax[:set_xlabel](L"$p_x$")
+    ax[:set_xlabel](L"$k_x$")
     ax[:set_xticks]([-π,0,π])
     ax[:set_yticks]([-π,0,π])
     ax[:set_xticklabels]([L"$-\pi$",L"$0$",L"$\pi$"])
     if i == 1 # leftmost panel
-        ax[:set_ylabel](L"$p_y$")
+        ax[:set_ylabel](L"$k_y$")
         ax[:set_yticklabels]([L"$-\pi$",L"$0$",L"$\pi$"])
     else
         ax[:set_yticklabels]([])
     end
 end
-fig[:savefig]("../../figures/sym_ring.pdf", transparent=true, pad_inches=0.0)
+fig[:savefig]("../../figures/sym_ring.pdf", transparent=true, pad_inches=0.0, bbox_inches="tight")
 plt[:close](fig)
 
 # moving the trap
@@ -111,7 +114,7 @@ for col = 0:3, row = 0:2
 end
 for col = 1:4, row = 1:3
     axes[row, col][:imshow](squeeze(bz[row, col, :, :], (1,2)),
-                            origin="upper", ColorMap("gist_heat_r"),
+                            origin="upper", ColorMap("viridis"),
                             interpolation="none", extent=[-π, π, -π, π])
     axes[row, col][:set_xticks]([-π,0,π])
     axes[row, col][:set_yticks]([-π,0,π])
@@ -125,18 +128,18 @@ end
 for row = 1:2
     axes[row, 1][:set_yticklabels]([L"$-\pi$",L"$0$",L"$\pi$"])
     axes[row, 1][:set_xticklabels]([])
-    axes[row, 1][:set_ylabel](L"$p_y$", labelpad=-9)
+    axes[row, 1][:set_ylabel](L"$k_y$", labelpad=-9)
 end
 # bottom margin
 for col = 2:4
     axes[3, col][:set_xticklabels]([L"$-\pi$",L"$0$",L"$\pi$"])
     axes[3, col][:set_yticklabels]([])
-    axes[3, col][:set_xlabel](L"$p_x$", labelpad=-3)
+    axes[3, col][:set_xlabel](L"$k_x$", labelpad=-3)
 end
 # bottom left corner
 axes[3, 1][:set_xticklabels]([L"$-\pi$",L"$0$",L"$\pi$"])
 axes[3, 1][:set_yticklabels]([L"$-\pi$",L"$0$",L"$\pi$"])
-axes[3, 1][:set_xlabel](L"$p_x$", labelpad=-3)
-axes[3, 1][:set_ylabel](L"$p_y$", labelpad=-9)
-fig[:savefig]("../../figures/fringe_trap.pdf", transparent=true, pad_inches=0.0)
+axes[3, 1][:set_xlabel](L"$k_x$", labelpad=-3)
+axes[3, 1][:set_ylabel](L"$k_y$", labelpad=-9)
+fig[:savefig]("../../figures/fringe_trap.pdf", transparent=true, pad_inches=0.0, bbox_inches="tight")
 plt[:close](fig)

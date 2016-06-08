@@ -1,24 +1,27 @@
+using PyPlot
+PyPlot.ioff()
+push!(LOAD_PATH, "/home/berceanu/Development/topo-photon/anc/scripts")
 import BP
 import HH
-using PyPlot
 using PyCall
 @pyimport matplotlib.gridspec as gspec
 
 # matplotlib parameters
 matplotlib["rcParams"][:update](Dict("axes.labelsize" => 14,
-                                 "axes.titlesize" => 20,
-                                 "font.size" => 18,
-                                 "legend.fontsize" => 14,
-                                 "axes.linewidth" => 1.5,
-                                 "font.family" => "serif",
-                                 "font.serif" => "Computer Modern Roman",
-                                 "xtick.labelsize" => 12,
-                                 "xtick.major.size" => 5.5,
-                                 "xtick.major.width" => 1.5,
-                                 "ytick.labelsize" => 12,
-                                 "ytick.major.size" => 5.5,
-                                 "ytick.major.width" => 1.5,
-                                 "text.usetex" => true))
+                                     "axes.titlesize" => 20,
+                                     "font.size" => 18,
+                                     "legend.fontsize" => 14,
+                                     "axes.linewidth" => 1.5,
+                                     "font.family" => "serif",
+                                     "font.serif" => "Computer Modern Roman",
+                                     "xtick.labelsize" => 12,
+                                     "xtick.major.size" => 5.5,
+                                     "xtick.major.width" => 1.5,
+                                     "ytick.labelsize" => 12,
+                                     "ytick.major.size" => 5.5,
+                                     "ytick.major.width" => 1.5,
+                                     "text.usetex" => true,
+                                     "figure.autolayout" => true))
 
 # system parameters
 sN=11 # true system size
@@ -138,7 +141,7 @@ axes = [ax2 ax3 ax4;
 #real space
 for (i,ψ) in enumerate((ψrex, ψr))
     ax = axes[i,1]
-    img = ax[:imshow](ψ, origin="upper", ColorMap("gist_heat_r"),
+    img = ax[:imshow](ψ, origin="upper", ColorMap("viridis"),
                      interpolation="none",
                      extent=[-5.5, 5.5, -5.5, 5.5], aspect=1,
                      vmin=0, vmax=0.1)
@@ -154,14 +157,14 @@ end
 #momentum space
 for (i,ψ) in enumerate((ψkex, ψk))
     ax = axes[i,2]
-    img = ax[:imshow](ψ, origin="upper", ColorMap("gist_heat_r"),
+    img = ax[:imshow](ψ, origin="upper", ColorMap("viridis"),
                      interpolation="none",
                      extent=[-π, π, -π, π], aspect=1,
                      vmin=0, vmax=14)
-    ax[:set_ylabel](L"$p_y$", labelpad=-8)
+    ax[:set_ylabel](L"$k_y$", labelpad=-8)
     ax[:set_xticks]([-π,0,π])
     if i == 2
-        ax[:set_xlabel](L"$p_x$")
+        ax[:set_xlabel](L"$k_x$")
         ax[:set_xticklabels]([L"$-\pi$",L"$0$",L"$\pi$"])
     else
         ax[:set_xticklabels]([])
@@ -172,16 +175,16 @@ end
 #MBZ
 for (i,ψ) in enumerate((ψkmbzex, ψkmbz))
     ax = axes[i,3]
-    img = ax[:imshow](ψ, origin="upper", ColorMap("gist_heat_r"),
+    img = ax[:imshow](ψ, origin="upper", ColorMap("viridis"),
                       interpolation="none",
                       extent=[-π/q, π/q, -π, π], aspect=1/q,
                       vmin=0, vmax=1)
     # vertical line to indicate slice
     ax[:axvline](x = 0.0, color = "k", linestyle = "-.", linewidth = 2.5)
-    ax[:set_ylabel](L"$p_y$", labelpad=-8)
+    ax[:set_ylabel](L"$k_y$", labelpad=-8)
     ax[:set_xticks]([-π/q,0,π/q])
     if i == 2
-        ax[:set_xlabel](L"$p_x^0$")
+        ax[:set_xlabel](L"$k_x^0$")
         ax[:set_xticklabels]([L"$-\pi/7$",L"$0$",L"$\pi/7$"])
     else
         ax[:set_xticklabels]([])
@@ -198,8 +201,8 @@ ax8[:plot](k, reverse(ψkmbzex[:,6]), color="orange", ls="--", linewidth = 2.0)
 ax8[:set_xlim](-π, π)
 ax8[:set_xticks]([-π,-π/2,0,π/2,π])
 ax8[:set_xticklabels]([L"$-\pi$",L"$-\pi/2$",L"$0$",L"$\pi/2$",L"$\pi$"])
-ax8[:set_ylabel](L"$|\chi_7(0,p_y)|^2$")
-ax8[:set_xlabel](L"$p_y$")
+ax8[:set_ylabel](L"$|\chi_7(0,k_y)|^2$")
+ax8[:set_xlabel](L"$k_y$")
 ax8[:yaxis][:set_ticks]([0.,0.2,0.4])
-fig[:savefig]("../../figures/exp_fig.pdf", pad_inches=0.0, transparent=true)
+fig[:savefig]("../../figures/exp_fig.pdf", pad_inches=0.0, transparent=true, bbox_inches="tight")
 plt[:close](fig)
