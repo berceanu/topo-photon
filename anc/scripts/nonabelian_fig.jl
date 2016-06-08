@@ -1,8 +1,10 @@
+using PyPlot
+PyPlot.ioff()
+push!(LOAD_PATH, "/home/berceanu/Development/topo-photon/anc/scripts")
 import HH
 import BP
-
 using Base.Test
-using PyPlot
+
 
 # calculates zero-point energy, with and without nonabelian correction
 ηzpenew(q::Int, κ::Float64) = (α=1/q; 4π*α/κ * endiffnonab(q, κ))
@@ -124,7 +126,8 @@ matplotlib["rcParams"][:update](Dict("axes.labelsize" => 22,
                                      "ytick.labelsize" => 20,
                                      "ytick.major.size" => 5.5,
                                      "ytick.major.width" => 1.5,
-                                     "text.usetex" => true))
+                                     "text.usetex" => true,
+                                     "figure.autolayout" => true))
 
 ## checking δE(kₓ,k_y) flat for q = 5
 # system parameters
