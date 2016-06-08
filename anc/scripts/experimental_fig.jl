@@ -5,7 +5,7 @@ using PyCall
 @pyimport matplotlib.gridspec as gspec
 
 # matplotlib parameters
-matplotlib["rcParams"][:update](["axes.labelsize" => 14,
+matplotlib["rcParams"][:update](Dict("axes.labelsize" => 14,
                                  "axes.titlesize" => 20,
                                  "font.size" => 18,
                                  "legend.fontsize" => 14,
@@ -18,8 +18,7 @@ matplotlib["rcParams"][:update](["axes.labelsize" => 14,
                                  "ytick.labelsize" => 12,
                                  "ytick.major.size" => 5.5,
                                  "ytick.major.width" => 1.5,
-                                 "text.usetex" => true,
-                                 "figure.autolayout" => true])
+                                 "text.usetex" => true))
 
 # system parameters
 sN=11 # true system size
@@ -64,7 +63,7 @@ sω2=-1.0
 dδ=0.001
 #spectral range
 ν =  sω1:dδ:sω2
-sp = BP.Spectrum([ν], P, :landau, 1/q, sγ, sκ)
+sp = BP.Spectrum(collect(ν), P, :landau, 1/q, sγ, sκ)
 
 # no pumping or dissipation
 state = BP.getstate(exexp, η)
@@ -202,6 +201,5 @@ ax8[:set_xticklabels]([L"$-\pi$",L"$-\pi/2$",L"$0$",L"$\pi/2$",L"$\pi$"])
 ax8[:set_ylabel](L"$|\chi_7(0,p_y)|^2$")
 ax8[:set_xlabel](L"$p_y$")
 ax8[:yaxis][:set_ticks]([0.,0.2,0.4])
-fig[:savefig]("../../figures/exp_fig.pdf", bbox_inches="tight",
-   pad_inches=0.0, transparent=true)
+fig[:savefig]("../../figures/exp_fig.pdf", pad_inches=0.0, transparent=true)
 plt[:close](fig)

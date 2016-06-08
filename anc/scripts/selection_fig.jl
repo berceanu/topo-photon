@@ -9,7 +9,7 @@ const N = 45
 const q = 11
 const κ = 0.02
 const γ = 0.001
-const ν = linspace(-3.45,-2.47,981)
+const ν = collect(linspace(-3.45,-2.47,981))
 
 const r = 11 # points in MBZ
 
@@ -21,7 +21,7 @@ const δk = 2π/Nk # resolution in mom space
 const k = x * δk
 
 # full plot range, both in x and y
-const xm = [-div(N-1,2):div(N-1,2)]
+const xm = collect(-div(N-1,2):div(N-1,2))
 # zoom in
 const edge = 10
 const st = findin(xm, -edge)[1]
@@ -84,28 +84,27 @@ A = spzeros(Complex{Float64}, N^2,N^2);
 for j=1:100
     P=randpmp(j)
     for (i,ω) in enumerate(ν)
-        BP.buildham_landau!(A, N,1/q,κ,γ, ω)
+        BP.buildham_landau!(A, N,1/q,κ,γ,ω)
         intvec[i] += sum(abs2(A\P))
     end
 end
 sprandl = intvec./100;
 
 # matplotlib parameters
-matplotlib["rcParams"][:update](["axes.labelsize" => 22,
-                                 "axes.titlesize" => 20,
-                                 "font.size" => 18,
-                                 "legend.fontsize" => 14,
-                                 "axes.linewidth" => 1.5,
-                                 "font.family" => "serif",
-                                 "font.serif" => "Computer Modern Roman",
-                                 "xtick.labelsize" => 20,
-                                 "xtick.major.size" => 5.5,
-                                 "xtick.major.width" => 1.5,
-                                 "ytick.labelsize" => 20,
-                                 "ytick.major.size" => 5.5,
-                                 "ytick.major.width" => 1.5,
-                                 "text.usetex" => true,
-                                 "figure.autolayout" => true])
+matplotlib["rcParams"][:update](Dict("axes.labelsize" => 22,
+                                     "axes.titlesize" => 20,
+                                     "font.size" => 18,
+                                     "legend.fontsize" => 14,
+                                     "axes.linewidth" => 1.5,
+                                     "font.family" => "serif",
+                                     "font.serif" => "Computer Modern Roman",
+                                     "xtick.labelsize" => 20,
+                                     "xtick.major.size" => 5.5,
+                                     "xtick.major.width" => 1.5,
+                                     "ytick.labelsize" => 20,
+                                     "ytick.major.size" => 5.5,
+                                     "ytick.major.width" => 1.5,
+                                     "text.usetex" => true))
 
 ics=3.0
 el = 0.86/(3/ics + 5)
@@ -195,8 +194,7 @@ end
 # set common y label to all subplots
 fig[:text](0.022, 0.5, L"$\sum_{m,n} |a_{m,n}|^2$ (arb. units)",
    ha="center", va="center", rotation="vertical")
-fig[:savefig]("../../figures/selection.pdf", bbox_inches="tight",
-   pad_inches=0.0, transparent=true)
+fig[:savefig]("../../figures/selection.pdf", pad_inches=0.0, transparent=true)
 plt[:close](fig)
 
 # plot w.fs. in real space
@@ -213,8 +211,7 @@ for (i,ax) in enumerate(axes)
         ax[:set_yticklabels]([])
     end
 end
-fig[:savefig]("../../figures/real.pdf", transparent=true,
-   pad_inches=0.0, bbox_inches="tight")
+fig[:savefig]("../../figures/real.pdf", transparent=true, pad_inches=0.0)
 plt[:close](fig)
 
 # plot w.fs. in  mom space
@@ -257,6 +254,5 @@ for i = 1:length(βlan) # loop over columns
         ax[:set_yticklabels]([])
     end
 end
-fig[:savefig]("../../figures/momentum.pdf", transparent=true,
-   pad_inches=0.0, bbox_inches="tight")
+fig[:savefig]("../../figures/momentum.pdf", transparent=true, pad_inches=0.0)
 plt[:close](fig)

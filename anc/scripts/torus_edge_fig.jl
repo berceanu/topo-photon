@@ -8,7 +8,7 @@ const N = 45
 const q = 11
 const κ = 0.02
 const γ = 0.001
-const ν = [-3.45:0.001:-0.47]
+const ν = collect(-3.45:0.001:-0.47)
 prm = (1/q,γ,κ);
 const r = 11 # points in MBZ
 # Nk should be an odd multiple of q
@@ -30,7 +30,7 @@ exdef = BP.ExactStates(100, :symmetric, N, 1/q, κ)
 sω0s = [exdef.νs[state]::Float64 for state in ηs] # 6 frequencies
 
 # matplotlib parameters
-matplotlib["rcParams"][:update](["axes.labelsize" => 22,
+matplotlib["rcParams"][:update](Dict("axes.labelsize" => 22,
                                  "axes.titlesize" => 20,
                                  "font.size" => 18,
                                  "legend.fontsize" => 14,
@@ -43,8 +43,7 @@ matplotlib["rcParams"][:update](["axes.labelsize" => 22,
                                  "ytick.labelsize" => 20,
                                  "ytick.major.size" => 5.5,
                                  "ytick.major.width" => 1.5,
-                                 "text.usetex" => true,
-                                 "figure.autolayout" => true])
+                                 "text.usetex" => true))
 
 fig, axes = plt[:subplots](2,3, figsize=(10, 7.3))
 for i = 1:3 #loop over columns
@@ -79,8 +78,7 @@ for i = 1:3 #loop over columns
         ax[:set_yticklabels]([])
     end
 end
-fig[:savefig]("../../figures/sym_ring.pdf", transparent=true,
-   pad_inches=0.0, bbox_inches="tight")
+fig[:savefig]("../../figures/sym_ring.pdf", transparent=true, pad_inches=0.0)
 plt[:close](fig)
 
 # moving the trap
@@ -140,6 +138,5 @@ axes[3, 1][:set_xticklabels]([L"$-\pi$",L"$0$",L"$\pi$"])
 axes[3, 1][:set_yticklabels]([L"$-\pi$",L"$0$",L"$\pi$"])
 axes[3, 1][:set_xlabel](L"$p_x$", labelpad=-3)
 axes[3, 1][:set_ylabel](L"$p_y$", labelpad=-9)
-fig[:savefig]("../../figures/fringe_trap.pdf", transparent=true,
-   pad_inches=0.0, bbox_inches="tight")
+fig[:savefig]("../../figures/fringe_trap.pdf", transparent=true, pad_inches=0.0)
 plt[:close](fig)
