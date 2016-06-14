@@ -183,12 +183,12 @@ for (i, ax) in enumerate(axes)
         ax[:yaxis][:set_ticks]([-3.6, -2.4, -1.2, 0., 1.2])
         ax[:set_yticklabels]([L"$-3.6$", L"$-2.4$", L"$-1.2$", L"$0$",
            L"$1.2$"])
-        ax[:set_ylabel](L"$\eta_{\text{zpe}}$")
+        ax[:set_ylabel](L"$\eta_{zpe}$")
     else # second panel, with level spacing error
         for i = 1:4
             ax[:plot](qs, ηL[:,i], "black", ls=lines[i]) # $\kappa=0.02$
         end
-        ax[:set_ylabel](L"$\eta_{\text{lev}}$")
+        ax[:set_ylabel](L"$\eta_{lev}$")
         ax[:yaxis][:set_ticks]([-1, 0, 1, 2, 3])
         ax[:set_xlabel](L"$q$")
     end
