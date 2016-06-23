@@ -205,7 +205,7 @@ fig, axes = plt[:subplots](1,length(βreal), figsize=(10, 5))
 for (i,ax) in enumerate(axes)
 
     ax[:imshow](ψ[st:en,st:en,i], origin="upper",
-                     ColorMap("viridis"), interpolation="none",
+                     ColorMap("gist_heat_r"), interpolation="none",
                      extent=[-edge, edge, -edge, edge])
     ax[:set_xlabel](L"$m$")
     if i == 1 # leftmost panel
@@ -222,7 +222,7 @@ fig, axes = plt[:subplots](2,length(βlan), figsize=(10, 5))
 for i = 1:length(βlan) # loop over columns
     # top row
     ax = axes[1,i]
-    ax[:imshow](ψL[:,:,i], origin="upper", ColorMap("viridis"),
+    ax[:imshow](ψL[:,:,i], origin="upper", ColorMap("gist_heat_r"),
                      interpolation="none",
                      extent=[-π, π, -π, π])
     ax[:set_xticklabels]([])
@@ -238,12 +238,12 @@ for i = 1:length(βlan) # loop over columns
     ax = axes[2,i]
     if i == 3 # third pannel
         ax[:imshow](ψS[:,:,i], origin="upper",
-                         ColorMap("viridis"), interpolation="none",
+                         ColorMap("gist_heat_r"), interpolation="none",
                          extent=[-π, π, -π, π],
                          vmin=0, vmax=270000)
     else
         ax[:imshow](ψS[:,:,i], origin="upper",
-                         ColorMap("viridis"), interpolation="none",
+                         ColorMap("gist_heat_r"), interpolation="none",
                          extent=[-π, π, -π, π])
     end
     ax[:set_xlabel](L"$k_x$")

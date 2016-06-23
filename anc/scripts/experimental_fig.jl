@@ -141,7 +141,7 @@ axes = [ax2 ax3 ax4;
 #real space
 for (i,ψ) in enumerate((ψrex, ψr))
     ax = axes[i,1]
-    img = ax[:imshow](ψ, origin="upper", ColorMap("viridis"),
+    img = ax[:imshow](ψ, origin="upper", ColorMap("gist_heat_r"),
                      interpolation="none",
                      extent=[-5.5, 5.5, -5.5, 5.5], aspect=1,
                      vmin=0, vmax=0.1)
@@ -157,7 +157,7 @@ end
 #momentum space
 for (i,ψ) in enumerate((ψkex, ψk))
     ax = axes[i,2]
-    img = ax[:imshow](ψ, origin="upper", ColorMap("viridis"),
+    img = ax[:imshow](ψ, origin="upper", ColorMap("gist_heat_r"),
                      interpolation="none",
                      extent=[-π, π, -π, π], aspect=1,
                      vmin=0, vmax=14)
@@ -175,7 +175,7 @@ end
 #MBZ
 for (i,ψ) in enumerate((ψkmbzex, ψkmbz))
     ax = axes[i,3]
-    img = ax[:imshow](ψ, origin="upper", ColorMap("viridis"),
+    img = ax[:imshow](ψ, origin="upper", ColorMap("gist_heat_r"),
                       interpolation="none",
                       extent=[-π/q, π/q, -π, π], aspect=1/q,
                       vmin=0, vmax=1)

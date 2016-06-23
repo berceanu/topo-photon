@@ -53,7 +53,7 @@ for i = 1:3 #loop over columns
     # top row
     ax = axes[1,i]
     img = ax[:imshow](abs2(BP.myfft2(BP.getstate(sprans, sω0s[i]),
-       k,k)), origin="upper", ColorMap("viridis"),
+       k,k)), origin="upper", ColorMap("gist_heat_r"),
        interpolation="none",
        extent=[-π, π, -π, π])
     ax[:set_xticklabels]([])
@@ -68,7 +68,7 @@ for i = 1:3 #loop over columns
     #bottom row
     ax = axes[2,i]
     ax[:imshow](abs2(BP.myfft2(BP.getstate(sprans, sω0s[i+3]), k,k)),
-       origin="upper", ColorMap("viridis"), interpolation="none",
+       origin="upper", ColorMap("gist_heat_r"), interpolation="none",
        extent=[-π, π, -π, π])
     ax[:set_xlabel](L"$k_x$")
     ax[:set_xticks]([-π,0,π])
@@ -114,7 +114,7 @@ for col = 0:3, row = 0:2
 end
 for col = 1:4, row = 1:3
     axes[row, col][:imshow](squeeze(bz[row, col, :, :], (1,2)),
-                            origin="upper", ColorMap("viridis"),
+                            origin="upper", ColorMap("gist_heat_r"),
                             interpolation="none", extent=[-π, π, -π, π])
     axes[row, col][:set_xticks]([-π,0,π])
     axes[row, col][:set_yticks]([-π,0,π])
